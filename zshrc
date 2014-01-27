@@ -5,23 +5,17 @@ ZSH=$HOME/.oh-my-zsh
 # Look in ~/.oh-my-zsh/themes/
 ZSH_THEME="robbyrussell"
 
-# cop_cli config
-export COP_HOST="http://10.200.7.43/cop_api"
-
 # Aliases
 alias zshconfig="vim ~/.zshrc; source ~/.zshrc"
 alias lg="ls | grep -i"
 alias sagi="sudo apt-get install"
 alias mixer="alsamixer"
-alias cowzen='curl https://api.github.com/zen -s | cowsay'
 alias now='date +"%r"'
-alias 'h?'='history | grep'
-alias note=geeknote
 alias tmux='tmux -2'
 
 export TERM=xterm-256color
 
-# screen-256color of tmux is running
+# screen-256color if tmux is running
 if [ -n "$TMUX" ]; then
   export TERM=screen-256color
 fi
@@ -32,11 +26,7 @@ export GOBIN=$GOPATH/bin
 export ARTI=/usr/local/arti
 export EDITOR=vim
 
-dual () {
-  xrandr --output HDMI1 --auto   
-  xrandr --output VGA1 --auto --left-of HDMI1
-}
-
+# Go stuff that should not be here ...
 gow () {
   while true; do
     clear
@@ -48,50 +38,26 @@ gow () {
 }
 
 gdbb () {
-
-  # build with debug flags
   go build -gcflags "-N -l" -o out
-
-  # make sure the build didn't fail
   if [ $? != 0 ]; then return; fi
-
-  # extract debugger comments
   gdbb-extract "*.go" > .breakpoints
-
-  # break on main if no breakpoints were found
   if [ ! -s .breakpoints ]; then echo "break main.main" > .breakpoints; fi
-
-  # launch gdb
   gdb -x .breakpoints -ex run -tui --args out "$@"
-
-  # clean up
   rm .breakpoints out
 }
 
 # test
 gdbbtest () {
-
-  # build with debug flags
   go test -c -gcflags "-N -l" "$@"
-
-  # make sure the build didn't fail
   if [ $? != 0 ]; then return; fi
-
-  # extract debugger comments
   gdbb-extract "*.go" > .breakpoints
-
-  # if breakpoints were found, run on start
   if [ -s .breakpoints ]; then
     gdb -x .breakpoints -ex run *.test
   else
     gdb *.test
   fi
-
-  # clean up
   rm .breakpoints *.test
 }
-
-wvim () { vim $(which $1); }
 
 # Uncomment following line if you want to disable command autocorrection
 DISABLE_CORRECTION="true"

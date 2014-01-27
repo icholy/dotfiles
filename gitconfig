@@ -1,0 +1,13 @@
+[push]
+	default = simple
+[user]
+	name = Ilia Choly
+	email = icholy@accipiterradar.com
+[color]
+	diff = auto
+[alias]
+	lg = log --graph --oneline --all --decorate --abbrev-commit
+	s = status --short
+	st = status --short
+	grep = grep -n -C 2 --color=always --heading --break
+	find = grep -n -C 2 --color=always --heading --break

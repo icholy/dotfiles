@@ -1,7 +1,7 @@
 #!/bin/sh
 
-ln -s zshrc ~/.zshrc
-ln -s gitconfig ~/.gitconfig
-ln -s tmux.conf ~/.tmux.conf
-ln -s vimrc ~/.vimrc
+cp zshrc ~/.zshrc
+cp -s gitconfig ~/.gitconfig
+cp -s tmux.conf ~/.tmux.conf
+cp -s vimrc ~/.vimrc
 

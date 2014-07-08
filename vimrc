@@ -10,6 +10,9 @@ set shortmess+=I
 let mapleader = "\<Space>"
 nnoremap <Space> <Nop>
 
+" enable mouse
+set mouse=a
+
 " Hide Toolbar
 if has("gui_running")
     set guioptions=egmrt
@@ -40,22 +43,27 @@ Bundle 'osyo-manga/unite-quickfix'
 Bundle 'Raimondi/delimitMate.git'
 Bundle 'tpope/vim-surround.git'
 Bundle 'godlygeek/tabular.git'
-Bundle 'jayflo/vim-skip'
 Bundle 'tpope/vim-dispatch'
 Bundle 'mhinz/vim-tmuxify'
 Bundle 'tComment'
-" Bundle 'Valloric/YouCompleteMe.git'
+Bundle 'kshenoy/vim-signature.git'
 
+
+" Bundle 'jayflo/vim-skip'
+" Bundle 'Valloric/YouCompleteMe.git'
 " Bundle 'jpalardy/vim-slime.git'
 " Bundle 'junegunn/vim-easy-align'
 " Bundle 'AndrewRadev/switch.vim'
+" Bundle 'davidhalter/jedi-vim'
+Bundle 'tpope/vim-fugitive.git'
+" Bundle 'ciaranm/detectindent.git'
+
+Bundle 'ivalkeen/vim-simpledb'
 
 " Visual
 Bundle 'chriskempson/tomorrow-theme.git', { 'rtp': 'vim/' }
 Bundle 'bling/vim-airline'
 Bundle 'itchyny/calendar.vim'
-Bundle 'tpope/vim-fugitive.git'
-Bundle 'nathanaelkane/vim-indent-guides'
 
 " Syntax
 Bundle 'groenewege/vim-less.git'
@@ -65,12 +73,9 @@ Bundle 'wting/rust.vim.git'
 Bundle 'hylang/vim-hy.git'
 Bundle 'findango/mdxdotvim'
 Bundle 'JuliaLang/julia-vim'
-" Bundle 'davidhalter/jedi-vim'
-Bundle 'ciaranm/detectindent.git'
 
 " Go
-Bundle 'Blackrush/vim-gocode'
-Bundle 'dgryski/vim-godef.git'
+Bundle 'fatih/vim-go.git'
 
 filetype plugin indent on
 set backspace=indent,eol,start
@@ -127,7 +132,7 @@ call unite#filters#matcher_default#use(['matcher_fuzzy'])
 let g:unite_source_history_yank_enable = 1
 let g:unite_source_grep_command = 'ag'
 
-map <expr> <C-@> ':Unite -start-insert -toggle buffer tab file_rec<CR>'
+map <expr> <C-@> ':Unite -start-insert -toggle buffer<CR>'
 
 map <Leader>uf :Unite -toggle -start-insert file_rec<CR>
 map <Leader>ub :Unite -toggle -start-insert buffer<CR>
@@ -142,6 +147,9 @@ map <Leader>ut :Unite -toggle -start-insert tab<CR>
 command! -nargs=1 -range TabFirst exec <line1> . ',' . <line2> . 'Tabularize /^[^' . escape(<q-args>, '\^$.[?*~') . ']*\zs' . escape(<q-args>, '\^$.[?*~')
 command! -nargs=1 -range Tab exec <line1> . ',' . <line2> . 'Tabularize /' . escape(<q-args>, '\^$.[?*~') 
 map <Leader>t :TabFirst 
+
+" disable word wrapping
+set nowrap
 
 " disable arrow keys
 map <up> <nop>
@@ -175,38 +183,7 @@ nmap <expr> <F9> &ft ==# 'calendar' ? "\<Plug>(calendar_exit)" : ":\<C-u>Calenda
 " Run :make
 nmap <F5> :make<CR>
 
-" Tagbar
-nmap <F8> :TagbarToggle<CR>
-let g:tagbar_type_go = {
-    \ 'ctagstype' : 'go',
-    \ 'kinds'     : [
-        \ 'p:package',
-        \ 'i:imports:1',
-        \ 'c:constants',
-        \ 'v:variables',
-        \ 't:types',
-        \ 'n:interfaces',
-        \ 'w:fields',
-        \ 'e:embedded',
-        \ 'm:methods',
-        \ 'r:constructor',
-        \ 'f:functions'
-    \ ],
-    \ 'sro' : '.',
-    \ 'kind2scope' : {
-        \ 't' : 'ctype',
-        \ 'n' : 'ntype'
-    \ },
-    \ 'scope2kind' : {
-        \ 'ctype' : 't',
-        \ 'ntype' : 'n'
-    \ },
-    \ 'ctagsbin'  : 'gotags',
-    \ 'ctagsargs' : '-sort -silent'
-\ }
-
 " Airline
-
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ''
 

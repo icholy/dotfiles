@@ -29,52 +29,30 @@ call vundle#rc()
 
 Bundle 'gmarik/vundle'
 
-" Search
 Bundle 'scrooloose/nerdtree.git'
-Bundle 'tmhedberg/matchit.git'
 Bundle 'Shougo/unite.vim.git'
-Bundle 'majutsushi/tagbar'
-Bundle 'vim-scripts/ZoomWin'
 Bundle 't9md/vim-unite-ack'
-Bundle 'ujihisa/unite-colorscheme'
 Bundle 'osyo-manga/unite-quickfix'
 
-" Speed
 Bundle 'Raimondi/delimitMate.git'
-Bundle 'tpope/vim-surround.git'
+Bundle 'tmhedberg/matchit.git'
 Bundle 'godlygeek/tabular.git'
-Bundle 'tpope/vim-dispatch'
-Bundle 'mhinz/vim-tmuxify'
+Bundle 'tpope/vim-surround.git'
 Bundle 'tComment'
-Bundle 'kshenoy/vim-signature.git'
+Bundle "MarcWeber/vim-addon-mw-utils"
+Bundle "tomtom/tlib_vim"
+Bundle "garbas/vim-snipmate"
+Bundle "honza/vim-snippets"
 
-
-" Bundle 'jayflo/vim-skip'
-" Bundle 'Valloric/YouCompleteMe.git'
-" Bundle 'jpalardy/vim-slime.git'
-" Bundle 'junegunn/vim-easy-align'
-" Bundle 'AndrewRadev/switch.vim'
-" Bundle 'davidhalter/jedi-vim'
-Bundle 'tpope/vim-fugitive.git'
-" Bundle 'ciaranm/detectindent.git'
-
-Bundle 'ivalkeen/vim-simpledb'
-
-" Visual
 Bundle 'chriskempson/tomorrow-theme.git', { 'rtp': 'vim/' }
 Bundle 'bling/vim-airline'
-Bundle 'itchyny/calendar.vim'
 
-" Syntax
 Bundle 'groenewege/vim-less.git'
 Bundle 'digitaltoad/vim-jade.git'
 Bundle 'pangloss/vim-javascript.git'
 Bundle 'wting/rust.vim.git'
 Bundle 'hylang/vim-hy.git'
-Bundle 'findango/mdxdotvim'
 Bundle 'JuliaLang/julia-vim'
-
-" Go
 Bundle 'fatih/vim-go.git'
 
 filetype plugin indent on
@@ -98,9 +76,11 @@ set hidden
 set wildmenu
 set wildmode=list:longest
 set laststatus=2
-command! W write 
+command! W write
 nnoremap Q <nop>
-" imap <C-[> <nop>
+inoremap kj <Esc>
+inoremap <C-c> <nop>
+inoremap <C-[> <nop>
 
 " Backups
 set backup
@@ -130,18 +110,19 @@ map <Leader>n :NERDTreeToggle<CR>
 " Unite
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 let g:unite_source_history_yank_enable = 1
-let g:unite_source_grep_command = 'ag'
+let g:unite_source_grep_command = 'git grep'
 
 map <expr> <C-@> ':Unite -start-insert -toggle buffer<CR>'
+inoremap <expr> <C-@> '<Esc>:UniteClose<CR>'
 
 map <Leader>uf :Unite -toggle -start-insert file_rec<CR>
 map <Leader>ub :Unite -toggle -start-insert buffer<CR>
 map <Leader>ua :Unite -auto-preview -auto-highlight ack<CR>
 map <Leader>uy :Unite -toggle history/yank<CR>
 map <Leader>uq :Unite -toggle quickfix<CR>
-map <Leader>uc :Unite colorscheme<CR>
 map <Leader>ux :Unite command<CR>
 map <Leader>ut :Unite -toggle -start-insert tab<CR>
+map <Leader>up :Unite -toggle -start-insert process<CR>
 
 " Tabularize
 command! -nargs=1 -range TabFirst exec <line1> . ',' . <line2> . 'Tabularize /^[^' . escape(<q-args>, '\^$.[?*~') . ']*\zs' . escape(<q-args>, '\^$.[?*~')
@@ -177,9 +158,6 @@ nnoremap <C-l> <C-w>l
 let g:godef_split=0
 let g:godef_same_file_in_same_window=1
 
-" Calendar
-nmap <expr> <F9> &ft ==# 'calendar' ? "\<Plug>(calendar_exit)" : ":\<C-u>Calendar\<CR>"
-
 " Run :make
 nmap <F5> :make<CR>
 
@@ -201,7 +179,3 @@ let g:airline_symbols.linenr = ''
 
 let g:airline_section_b = '%{strftime("%c")}'
 let g:airline_section_y = 'BN: %{bufnr("%")}'
-
-" Tmuxify
-
-let g:tmuxify_map_prefix = '<leader>m'

@@ -53,6 +53,16 @@ Bundle 'hylang/vim-hy.git'
 Bundle 'JuliaLang/julia-vim'
 Bundle 'junegunn/goyo.vim.git'
 
+map <Leader>d :Goyo<CR>
+
+function! s:goyo_enter()
+  set relativenumber
+  set number
+endfunction
+
+autocmd! User GoyoEnter
+autocmd  User GoyoEnter nested call <SID>goyo_enter()
+
 Bundle 'tpope/vim-vinegar'
 
 map <Leader>n :call VexToggle("")<CR>
@@ -67,6 +77,10 @@ fun! VexToggle(dir)
 endf
 
 fun! VexOpen(dir)
+
+  " Close Goyo
+  exe "Goyo!"
+
   let g:netrw_browse_split=4    " open files in previous window
   let g:netrw_banner=0          " no banner
   let vex_width = 27
@@ -237,6 +251,7 @@ imap <right> <nop>
 
 " relative line numbers 
 set relativenumber
+set number
 nnoremap <Leader>l :set norelativenumber!<CR>
 
 " faster pane switching
@@ -244,3 +259,4 @@ nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
+

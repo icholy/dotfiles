@@ -213,6 +213,7 @@ nnoremap Q <nop>
 
 inoremap kj <Esc>
 inoremap jk <Esc>
+inoremap <C-C> <nop>
 
 " select pasted
 nnoremap gp `[v`]

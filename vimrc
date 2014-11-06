@@ -80,6 +80,9 @@ fun! VexOpen(dir)
 
   " Close Goyo
   exe "Goyo!"
+  if exists("t:vex_buf_nr")
+    return
+  endif
 
   let g:netrw_browse_split=4    " open files in previous window
   let g:netrw_banner=0          " no banner

@@ -258,6 +258,10 @@ set relativenumber
 set number
 nnoremap <Leader>l :set norelativenumber!<CR>
 
+" faster quickfix naviation
+map ]q :cnext<CR>
+map [q :cprevious<CR>
+
 " faster pane switching
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j

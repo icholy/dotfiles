@@ -41,9 +41,6 @@ Bundle 'tpope/vim-surround.git'
 Bundle 'tComment'
 Bundle "MarcWeber/vim-addon-mw-utils"
 Bundle "tomtom/tlib_vim"
-Bundle "garbas/vim-snipmate"
-Bundle "honza/vim-snippets"
-Bundle "tpope/vim-fugitive"
 Bundle 'chriskempson/tomorrow-theme.git', { 'rtp': 'vim/' }
 Bundle 'groenewege/vim-less.git'
 Bundle 'digitaltoad/vim-jade.git'
@@ -137,21 +134,18 @@ inoremap <expr> <C-@> '<Esc>:UniteClose<CR>'
 
 map <Leader>uf :Unite -toggle -start-insert file_rec<CR>
 map <Leader>ug :exe 'silent Ggrep -i '.input("Pattern: ")<Bar>Unite quickfix -no-quit<CR>
+map <Leader>u* :exe 'silent Ggrep -i '.expand("<cword>")<Bar>Unite quickfix -no-quit<CR>
 map <Leader>ub :Unite -toggle -start-insert buffer<CR>
 map <Leader>uq :Unite -toggle quickfix<CR>
 map <Leader>ux :Unite command<CR>
 map <Leader>ut :Unite -toggle -start-insert tab<CR>
 map <Leader>up :Unite -toggle -start-insert process<CR>
 
-Bundle 'mhinz/vim-startify.git'
 Bundle 'Raimondi/delimitMate.git'
 Bundle 'tmhedberg/matchit.git'
-Bundle 'godlygeek/tabular.git'
+Bundle 'junegunn/vim-easy-align.git'
 
-" Tabularize
-command! -nargs=1 -range TabFirst exec <line1> . ',' . <line2> . 'Tabularize /^[^' . escape(<q-args>, '\^$.[?*~') . ']*\zs' . escape(<q-args>, '\^$.[?*~')
-command! -nargs=1 -range Tab exec <line1> . ',' . <line2> . 'Tabularize /' . escape(<q-args>, '\^$.[?*~') 
-map <Leader>t :TabFirst 
+map <Leader>t :EasyAlign<CR>
 
 Bundle 'fatih/vim-go.git'
 
@@ -180,10 +174,8 @@ let g:airline_symbols.linenr = ''
 let g:airline_section_b = '%{strftime("%c")}'
 let g:airline_section_y = 'BN: %{bufnr("%")}'
 
-let g:startify_custom_header = map(split(system('quotes'), '\n'), '"\t\t" . v:val')
 
 " Other
-
 filetype plugin indent on
 set backspace=indent,eol,start
 set listchars=tab:↪\ ,extends:❯,precedes:❮,nbsp:␣,eol:$
@@ -268,35 +260,25 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
+" Delete all hidden buffers
 function! Wipeout()
-  " list of *all* buffer numbers
   let l:buffers = range(1, bufnr('$'))
-
-  " what tab page are we in?
   let l:currentTab = tabpagenr()
   try
-    " go through all tab pages
     let l:tab = 0
     while l:tab < tabpagenr('$')
       let l:tab += 1
-
-      " go through all windows
       let l:win = 0
       while l:win < winnr('$')
         let l:win += 1
-        " whatever buffer is in this window in this tab, remove it from
-        " l:buffers list
         let l:thisbuf = winbufnr(l:win)
         call remove(l:buffers, index(l:buffers, l:thisbuf))
       endwhile
     endwhile
-
-    " if there are any buffers left, delete them
     if len(l:buffers)
       execute 'bwipeout' join(l:buffers)
     endif
   finally
-    " go back to our original tab page
     execute 'tabnext' l:currentTab
   endtry
 endfunction

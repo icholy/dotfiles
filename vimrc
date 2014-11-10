@@ -134,7 +134,7 @@ map <expr> <C-@> ':Unite -start-insert -toggle buffer<CR>'
 inoremap <expr> <C-@> '<Esc>:UniteClose<CR>'
 
 map <Leader>uf :Unite -toggle -start-insert file_rec<CR>
-map <Leader>ug :exe 'silent Ggrep -i '.input("Pattern: ")<Bar>Unite quickfix -no-quit<CR>
+map <Leader>ug :exe 'silent Ggrep -i '.input("Pattern: ")<Bar>Unite quickfix -no-quit -auto-preview<CR>
 map <Leader>u* :exe 'silent Ggrep -i '.expand("<cword>")<Bar>Unite quickfix -no-quit<CR>
 map <Leader>ub :Unite -toggle -start-insert buffer<CR>
 map <Leader>uq :Unite -toggle quickfix<CR>
@@ -254,6 +254,14 @@ nnoremap <Leader>l :set norelativenumber!<CR>
 " faster quickfix naviation
 map ]q :cnext<CR>
 map [q :cprevious<CR>
+
+" faster buffer naviation
+map ]b :bnext<CR>
+map [b :bprevious<CR>
+
+" faster tab naviation
+map ]t :tnext<CR>
+map [t :tprevious<CR>
 
 " faster pane switching
 nnoremap <C-h> <C-w>h

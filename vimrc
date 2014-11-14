@@ -211,6 +211,9 @@ inoremap <C-C> <Nop>
 " select pasted
 nnoremap gp `[v`]
 
+" faster replace
+nnoremap <Leader>s :%s/<C-r><C-w>/
+
 " Backups
 set backup
 set backupdir-=.

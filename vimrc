@@ -13,6 +13,9 @@ nnoremap <Space> <Nop>
 " enable mouse
 set mouse=a
 
+" enable syntax
+syntax on
+
 " Hide Toolbar
 if has("gui_running")
     set guioptions=egmrt
@@ -37,6 +40,7 @@ set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
 Bundle 'gmarik/vundle'
+Bundle 'leafgarland/typescript-vim.git'
 Bundle 'tpope/vim-fugitive.git'
 Bundle 'tpope/vim-surround.git'
 Bundle 'tComment'
@@ -48,75 +52,21 @@ Bundle 'digitaltoad/vim-jade.git'
 Bundle 'pangloss/vim-javascript.git'
 Bundle 'wting/rust.vim.git'
 Bundle 'hylang/vim-hy.git'
+Bundle 'gorkunov/smartpairs.vim.git'
 Bundle 'JuliaLang/julia-vim'
-Bundle 'junegunn/goyo.vim.git'
 
-map <Leader>d :Goyo<CR>
+Bundle 'scrooloose/nerdtree.git'
 
-function! s:goyo_enter()
-  set relativenumber
-  set number
+function! ToggleNerdTree()
+  if !exists("b:NERDTreeType")
+    execute "NERDTree"
+  else
+    execute "NERDTreeToggle"
+  endif
 endfunction
 
-autocmd! User GoyoEnter
-autocmd  User GoyoEnter nested call <SID>goyo_enter()
-
-Bundle 'tpope/vim-vinegar'
-
-map <Leader>n :call VexToggle("")<CR>
-
-" ··········· netrw ···················· {{{2
-fun! VexToggle(dir)
-  if exists("t:vex_buf_nr")
-    call VexClose()
-  else
-    call VexOpen(a:dir)
-  endif
-endf
-
-fun! VexOpen(dir)
-
-  " Close Goyo
-  exe "Goyo!"
-  if exists("t:vex_buf_nr")
-    return
-  endif
-
-  let g:netrw_browse_split=4    " open files in previous window
-  let g:netrw_banner=0          " no banner
-  let vex_width = 27
-
-  exe "Vexplore " . a:dir
-  let t:vex_buf_nr = bufnr("%")
-  wincmd H
-
-  call VexSize(vex_width)
-endf
-
-fun! VexClose()
-  let cur_win_nr = winnr()
-  let target_nr = ( cur_win_nr == 1 ? winnr("#") : cur_win_nr )
-
-  1wincmd w
-  close
-  unlet t:vex_buf_nr
-
-  exe (target_nr - 1) . "wincmd w"
-  call NormalizeWidths()
-endf
-
-fun! VexSize(vex_width)
-  exe "vertical resize" . a:vex_width
-  set winfixwidth
-  call NormalizeWidths()
-endf
-
-fun! NormalizeWidths()
-  let eadir_pref = &eadirection
-  set eadirection=hor
-  set equalalways! equalalways!
-  let &eadirection = eadir_pref
-endf
+map <Leader>n :call ToggleNerdTree()<CR>
+map - :call ToggleNerdTree()<CR>
 
 Bundle 'Shougo/unite.vim.git'
 Bundle 'Shougo/vimproc.vim.git'
@@ -232,6 +182,7 @@ set foldlevel=100
 
 " Search
 set incsearch
+let g:incsearch#auto_nohlsearch = 1
 set ignorecase
 set smartcase
 set complete-=i
@@ -271,6 +222,9 @@ nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
+
+" Create file under cursor
+map gF :e <cfile><cr>
 
 " Delete all hidden buffers
 function! Wipeout()

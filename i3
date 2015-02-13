@@ -9,148 +9,117 @@
 #
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
-set $mod Mod4
+set $alt Mod1
+set $win Mod4
 
 # font for window titles. ISO 10646 = Unicode
 font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 
-# Use Mouse+$mod to drag floating windows to their wanted position
-floating_modifier $mod
+# Use Mouse+$win to drag floating windows to their wanted position
+floating_modifier $win
 
 # start a terminal
-bindsym $mod+Return exec i3-sensible-terminal
+bindsym $win+Return exec i3-sensible-terminal
 
 # kill focused window
-bindsym $mod+Shift+Q kill
+bindsym $win+Shift+Q kill
 
 # start dmenu (a program launcher)
-bindsym $mod+d exec dmenu_run -l 20
+bindsym $win+d exec dmenu_run -l 20
 
 # change focus
-bindsym $mod+h focus left
-bindsym $mod+j focus down
-bindsym $mod+k focus up
-bindsym $mod+l focus right
+bindsym $win+h focus left
+bindsym $win+j focus down
+bindsym $win+k focus up
+bindsym $win+l focus right
 
 # alternatively, you can use the cursor keys:
-bindsym $mod+Left focus left
-bindsym $mod+Down focus down
-bindsym $mod+Up focus up
-bindsym $mod+Right focus right
+bindsym $win+Left focus left
+bindsym $win+Down focus down
+bindsym $win+Up focus up
+bindsym $win+Right focus right
 
 # move focused window
-bindsym $mod+Shift+H move left
-bindsym $mod+Shift+J move down
-bindsym $mod+Shift+K move up
-bindsym $mod+Shift+L move right
-
-# alternatively, you can use the cursor keys:
-bindsym $mod+Shift+Left move left
-bindsym $mod+Shift+Down move down
-bindsym $mod+Shift+Up move up
-bindsym $mod+Shift+Right move right
+bindsym $win+Shift+H move left
+bindsym $win+Shift+J move down
+bindsym $win+Shift+K move up
+bindsym $win+Shift+L move right
 
 # split in horizontal orientation
-bindsym $mod+b split h
+bindsym $win+b split h
 
 # split in vertical orientation
-bindsym $mod+v split v
+bindsym $win+v split v
 
 # enter fullscreen mode for the focused container
-bindsym $mod+f fullscreen
+bindsym $win+f fullscreen
 
 # change container layout (stacked, tabbed, default)
-bindsym $mod+s layout stacking
-bindsym $mod+w layout tabbed
-bindsym $mod+e layout default
+bindsym $win+s layout stacking
+bindsym $win+w layout tabbed
+bindsym $win+e layout default
 
 # toggle tiling / floating
-bindsym $mod+Shift+space floating toggle
+bindsym $win+Shift+space floating toggle
 
 # change focus between tiling / floating windows
-bindsym $mod+space focus mode_toggle
+bindsym $win+space focus mode_toggle
 
 # focus the parent container
-bindsym $mod+a focus parent
+bindsym $win+p focus parent
 
 # focus the child container
-#bindcode $mod+d focus child
+bindsym $win+c focus child
 
 # switch to workspace
-bindsym $mod+1 workspace 1
-bindsym $mod+2 workspace 2
-bindsym $mod+3 workspace 3
-bindsym $mod+4 workspace 4
-bindsym $mod+5 workspace 5
-bindsym $mod+6 workspace 6
-bindsym $mod+7 workspace 7
-bindsym $mod+8 workspace 8
-bindsym $mod+9 workspace 9
-bindsym $mod+0 workspace 10
+bindsym $win+1 workspace 1
+bindsym $win+2 workspace 2
+bindsym $win+3 workspace 3
+bindsym $win+4 workspace 4
+bindsym $win+5 workspace 5
+bindsym $win+6 workspace 6
+bindsym $win+7 workspace 7
+bindsym $win+8 workspace 8
+bindsym $win+9 workspace 9
+bindsym $win+0 workspace 10
 
 # move focused container to workspace
-bindsym $mod+Shift+exclam move workspace 1
-bindsym $mod+Shift+at move workspace 2
-bindsym $mod+Shift+numbersign move workspace 3
-bindsym $mod+Shift+dollar move workspace 4
-bindsym $mod+Shift+percent move workspace 5
-bindsym $mod+Shift+asciicircum move workspace 6
-bindsym $mod+Shift+ampersand move workspace 7
-bindsym $mod+Shift+asterisk move workspace 8
-bindsym $mod+Shift+parenleft move workspace 9
-bindsym $mod+Shift+parenright move workspace 10
+bindsym $win+Shift+exclam move workspace 1
+bindsym $win+Shift+at move workspace 2
+bindsym $win+Shift+numbersign move workspace 3
+bindsym $win+Shift+dollar move workspace 4
+bindsym $win+Shift+percent move workspace 5
+bindsym $win+Shift+asciicircum move workspace 6
+bindsym $win+Shift+ampersand move workspace 7
+bindsym $win+Shift+asterisk move workspace 8
+bindsym $win+Shift+parenleft move workspace 9
+bindsym $win+Shift+parenright move workspace 10
 
 # reload the configuration file
-bindsym $mod+Shift+C reload
+bindsym $win+Shift+C reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-bindsym $mod+Shift+R restart
+bindsym $win+Shift+R restart
 # exit i3 (logs you out of your X session)
-bindsym $mod+Shift+E exit
+bindsym $win+Shift+E exit
 
-# resize window (you can also use the mouse for that)
-mode "resize" {
-        # These bindings trigger as soon as you enter the resize mode
+# resizing
+bindsym $alt+h resize grow left 10 px or 10 ppt
+bindsym $alt+Shift+H resize shrink right 10 px or 10 ppt
 
-        # They resize the border in the direction you pressed, e.g.
-        # when pressing left, the window is resized so that it has
-        # more space on its left
+bindsym $alt+j resize grow down 10 px or 10 ppt
+bindsym $alt+Shift+J resize shrink up 10 px or 10 ppt
 
-bindsym j resize shrink left 10 px or 10 ppt
-bindsym Shift+J resize grow   left 10 px or 10 ppt
+bindsym $alt+k resize grow up 10 px or 10 ppt
+bindsym $alt+Shift+K resize shrink down 10 px or 10 ppt
 
-bindsym k resize shrink down 10 px or 10 ppt
-bindsym Shift+K resize grow   down 10 px or 10 ppt
-
-bindsym l resize shrink up 10 px or 10 ppt
-bindsym Shift+L resize grow   up 10 px or 10 ppt
-
-bindsym semicolon resize shrink right 10 px or 10 ppt
-bindsym Shift+colon resize grow   right 10 px or 10 ppt
-
-        # same bindings, but for the arrow keys
-bindsym Left resize shrink left 10 px or 10 ppt
-bindsym Shift+Left resize grow   left 10 px or 10 ppt
-
-bindsym Down resize shrink down 10 px or 10 ppt
-bindsym Shift+Down resize grow   down 10 px or 10 ppt
-
-bindsym Up resize shrink up 10 px or 10 ppt
-bindsym Shift+Up resize grow   up 10 px or 10 ppt
-
-bindsym Right resize shrink right 10 px or 10 ppt
-bindsym Shift+Right resize grow   right 10 px or 10 ppt
-
-        # back to normal: Enter or Escape
-bindsym Return mode "default"
-bindsym Escape mode "default"
-}
-
-bindsym $mod+r mode "resize"
-
-bindsym $mod+y move workspace to output left
+bindsym $alt+l resize grow right 10 px or 10 ppt
+bindsym $alt+Shift+L resize shrink left 10 px or 10 ppt
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
         status_command i3status
 }
+
+exec --no-startup-id feh --bg-scale ~/Pictures/keep-it-simple.png
+

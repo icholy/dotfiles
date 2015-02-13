@@ -12,8 +12,7 @@
 set $alt Mod1
 set $win Mod4
 
-# font for window titles. ISO 10646 = Unicode
-font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
+# font for window titles. ISO 10646 = Unicode font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 
 # Use Mouse+$win to drag floating windows to their wanted position
 floating_modifier $win
@@ -103,17 +102,19 @@ bindsym $win+Shift+R restart
 bindsym $win+Shift+E exit
 
 # resizing
-bindsym $alt+h resize grow left 10 px or 10 ppt
-bindsym $alt+Shift+H resize shrink right 10 px or 10 ppt
+set $resize_speed = 30
 
-bindsym $alt+j resize grow down 10 px or 10 ppt
-bindsym $alt+Shift+J resize shrink up 10 px or 10 ppt
+bindsym $alt+h resize grow left $resize_speed px
+bindsym $alt+Shift+H resize shrink right $resize_speed px
 
-bindsym $alt+k resize grow up 10 px or 10 ppt
-bindsym $alt+Shift+K resize shrink down 10 px or 10 ppt
+bindsym $alt+j resize grow down $resize_speed px
+bindsym $alt+Shift+J resize shrink up $resize_speed px
 
-bindsym $alt+l resize grow right 10 px or 10 ppt
-bindsym $alt+Shift+L resize shrink left 10 px or 10 ppt
+bindsym $alt+k resize grow up $resize_speed px
+bindsym $alt+Shift+K resize shrink down $resize_speed px
+
+bindsym $alt+l resize grow right $resize_speed px
+bindsym $alt+Shift+L resize shrink left $resize_speed px
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)

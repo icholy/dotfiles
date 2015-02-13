@@ -123,4 +123,3 @@ bar {
 }
 
 exec --no-startup-id feh --bg-scale ~/Pictures/keep-it-simple.png
-

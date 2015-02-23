@@ -81,9 +81,9 @@ let g:Cmd2_cmd_mappings = {
       \ "CB": {'command': function('Cmd2#ext#complete#Main'), 'type': 'function'},
       \ }
 
-cmap <C-S> <Plug>Cmd2  " Change this to your preferred mapping
+" cmap <C-S> <Plug>Cmd2  " Change this to your preferred mapping
 cmap <expr> <Tab> Cmd2#ext#complete#InContext() ? "\<Plug>Cmd2CF" : "\<Tab>"
-cmap <expr> <S-Tab> Cmd2#ext#complete#InContext() ? "\<Plug>Cmd2CB" : "\<S-Tab>"
+" cmap <expr> <S-Tab> Cmd2#ext#complete#InContext() ? "\<Plug>Cmd2CB" : "\<S-Tab>"
 
 set wildcharm=<Tab>
 
@@ -269,6 +269,10 @@ nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
+
+" move lines up/down in visual mode
+vnoremap <C-j> :m '>+1<CR>gv=gv
+vnoremap <C-k> :m '<-2<CR>gv=gv
 
 " Create file under cursor
 map gF :e <cfile><cr>

@@ -11,6 +11,7 @@
   st = status --short
   grep = grep -n -C 2 --color=always --heading --break
   find = grep -n -C 2 --color=always --heading --break
+
 [push]
   default = current
 

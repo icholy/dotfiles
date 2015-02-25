@@ -1,6 +1,6 @@
 [user]
   name = Ilia Choly
-	email = ilia.choly@gmail.com
+  email = ilia.choly@gmail.com
 
 [color]
   diff = auto
@@ -12,7 +12,7 @@
   grep = grep -n -C 2 --color=always --heading --break
   find = grep -n -C 2 --color=always --heading --break
 [push]
-	default = current
+  default = current
 
 [merge]
   tool = vimdiff

@@ -87,18 +87,13 @@ cmap <expr> <Tab> Cmd2#ext#complete#InContext() ? "\<Plug>Cmd2CF" : "\<Tab>"
 
 set wildcharm=<Tab>
 
-Bundle 'leafgarland/typescript-vim.git'
+Bundle 'sheerun/vim-polyglot.git'
 Bundle 'tpope/vim-fugitive.git'
 Bundle 'tpope/vim-surround.git'
 Bundle 'tComment'
 Bundle "MarcWeber/vim-addon-mw-utils"
 Bundle "tomtom/tlib_vim"
 Bundle 'chriskempson/tomorrow-theme.git', { 'rtp': 'vim/' }
-Bundle 'groenewege/vim-less.git'
-Bundle 'digitaltoad/vim-jade.git'
-Bundle 'pangloss/vim-javascript.git'
-Bundle 'elixir-lang/vim-elixir.git'
-Bundle 'wting/rust.vim.git'
 Bundle 'hylang/vim-hy.git'
 Bundle 'gorkunov/smartpairs.vim.git'
 

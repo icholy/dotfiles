@@ -1,13 +1,22 @@
-[push]
-	default = simple
 [user]
-	name = Ilia Choly
-	email = icholy@accipiterradar.com
+  name = Ilia Choly
+	email = ilia.choly@gmail.com
+
 [color]
-	diff = auto
+  diff = auto
+
 [alias]
-	lg = log --graph --oneline --all --decorate --abbrev-commit
-	s = status --short
-	st = status --short
-	grep = grep -n -C 2 --color=always --heading --break
-	find = grep -n -C 2 --color=always --heading --break
+  lg = log --graph --oneline --all --decorate --abbrev-commit
+  s = status --short
+  st = status --short
+  grep = grep -n -C 2 --color=always --heading --break
+  find = grep -n -C 2 --color=always --heading --break
+[push]
+	default = current
+
+[merge]
+  tool = vimdiff
+  conflixtstyle = diff3
+
+[mergetool]
+  prompt = false

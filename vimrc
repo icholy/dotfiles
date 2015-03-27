@@ -40,6 +40,14 @@ set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
 Bundle 'gmarik/vundle'
+Bundle 'Valloric/YouCompleteMe'
+
+if !exists("g:ycm_semantic_triggers")
+   let g:ycm_semantic_triggers = {}
+endif
+let g:ycm_semantic_triggers['typescript'] = ['.']
+set completeopt-=preview
+
 Bundle 'gelguy/Cmd2.vim.git'
 
 function! s:CustomFuzzySearch(string)
@@ -88,6 +96,7 @@ cmap <expr> <Tab> Cmd2#ext#complete#InContext() ? "\<Plug>Cmd2CF" : "\<Tab>"
 set wildcharm=<Tab>
 
 Bundle 'sheerun/vim-polyglot.git'
+Bundle 'jason0x43/vim-js-indent'
 Bundle 'tpope/vim-fugitive.git'
 Bundle 'tpope/vim-surround.git'
 Bundle 'tComment'
@@ -196,6 +205,8 @@ command! W :w
 noremap <leader>w :w !sudo tee %<CR>
 nnoremap Q <nop>
 
+tnoremap jk <C-\><C-n>
+tnoremap kj <C-\><C-n>
 inoremap kj <Esc>
 inoremap jk <Esc>
 inoremap <C-C> <Nop>
@@ -296,3 +307,6 @@ function! Wipeout()
 endfunction
 
 map <Leader>o :call Wipeout()<CR>
+
+au BufRead,BufNewFile *.ts        setlocal filetype=typescript
+Bundle "icholy/typescript-tools.git"

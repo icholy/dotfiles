@@ -204,6 +204,7 @@ set complete-=i
 
 " disable word wrapping
 set nowrap
+autocmd BufReadPost quickfix set wrap
 
 " disable arrow keys
 map <up> <nop>

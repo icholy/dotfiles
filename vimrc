@@ -36,10 +36,11 @@ set dictionary+=/usr/share/dict/words
 
 " Vundle
 filetype off
-set rtp+=~/.vim/bundle/vundle/
+set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#rc()
 
-Bundle 'gmarik/vundle'
+Bundle 'gmarik/Vundle.vim'
+
 Bundle 'Valloric/YouCompleteMe'
 
 if !exists("g:ycm_semantic_triggers")
@@ -48,65 +49,27 @@ endif
 let g:ycm_semantic_triggers['typescript'] = ['.']
 set completeopt-=preview
 
-Bundle 'gelguy/Cmd2.vim.git'
-
-function! s:CustomFuzzySearch(string)
-  let pattern = ""
-  let ignore_case = g:Cmd2__complete_ignorecase ? '\c' : ''
-  let char = matchstr(a:string, ".", byteidx(a:string, 0))
-  let pattern = '\V' . ignore_case
-  let pattern .= '\<\%(\[agls]\:\)\?'
-  let pattern .= '\%(\%(\k\*\[._\-#]\)\?' . char . '\|\k\*\%(' . char . '\&\L\)\)'
-  if g:Cmd2__complete_fuzzy
-    let result = ''
-    let i = 1
-    while i < len(a:string)
-      let char = matchstr(a:string, ".", byteidx(a:string, i))
-      let result .= '\%(' . '\%(\k\*\[._\-#]\)\?' . char . '\|'
-      let result .= '\k\*\%(' . char . '\&\L\)' . '\)'
-      let i += len(char)
-    endwhile
-    let pattern .= result
-  else
-    let pattern .= a:string
-  endif
-  let pattern .= g:Cmd2__complete_end_pattern
-  return pattern
-endfunction
-
-let g:Cmd2_options = {
-      \ '_complete_ignorecase': 1,
-      \ '_complete_uniq_ignorecase': 0,
-      \ '_complete_pattern_func': function('s:CustomFuzzySearch'),
-      \ '_complete_start_pattern': '\<\(\[agls]\:\)\?\(\k\*\[_\-#]\)\?',
-      \ '_complete_fuzzy': 1,
-      \ '_complete_string_pattern': '\v\k(\k|\.)*$',
-      \ '_complete_loading_text': '...',
-      \ }
-
-let g:Cmd2_cmd_mappings = {
-      \ "CF": {'command': function('Cmd2#ext#complete#Main'), 'type': 'function'},
-      \ "CB": {'command': function('Cmd2#ext#complete#Main'), 'type': 'function'},
-      \ }
-
-" cmap <C-S> <Plug>Cmd2  " Change this to your preferred mapping
-cmap <expr> <Tab> Cmd2#ext#complete#InContext() ? "\<Plug>Cmd2CF" : "\<Tab>"
-" cmap <expr> <S-Tab> Cmd2#ext#complete#InContext() ? "\<Plug>Cmd2CB" : "\<S-Tab>"
-
 set wildcharm=<Tab>
 
-Bundle 'sheerun/vim-polyglot.git'
+Bundle 'sheerun/vim-polyglot'
 Bundle 'jason0x43/vim-js-indent'
-Bundle 'tpope/vim-fugitive.git'
-Bundle 'tpope/vim-surround.git'
+Bundle 'tpope/vim-fugitive'
+
+map <Leader>gs :Gstatus<CR>
+map <Leader>gd :Gdiff<CR>
+map <Leader>gc :Gcommit<CR>
+map <Leader>ge :Gedit<CR>
+map <Leader>gr :Gread<CR>
+map <Leader>gw :Gwrite<CR>
+
+Bundle 'tpope/vim-surround'
 Bundle 'tComment'
 Bundle "MarcWeber/vim-addon-mw-utils"
 Bundle "tomtom/tlib_vim"
-Bundle 'chriskempson/tomorrow-theme.git', { 'rtp': 'vim/' }
-Bundle 'hylang/vim-hy.git'
-Bundle 'gorkunov/smartpairs.vim.git'
-
-Bundle 'scrooloose/nerdtree.git'
+Bundle 'chriskempson/tomorrow-theme', { 'rtp': 'vim/' }
+Bundle 'hylang/vim-hy'
+Bundle 'gorkunov/smartpairs.vim'
+Bundle 'scrooloose/nerdtree'
 
 function! ToggleNerdTree()
   if !exists("b:NERDTreeType")
@@ -116,11 +79,12 @@ function! ToggleNerdTree()
   endif
 endfunction
 
+let NERDTreeMapHelp='<f1>'
 map <Leader>n :NERDTreeToggle<CR>
 map - :NERDTreeToggle<CR>
 
-Bundle 'Shougo/unite.vim.git'
-Bundle 'Shougo/vimproc.vim.git'
+Bundle 'Shougo/unite.vim'
+Bundle 'Shougo/vimproc.vim'
 Bundle 't9md/vim-unite-ack'
 Bundle 'osyo-manga/unite-quickfix'
 Bundle 'rking/ag.vim'
@@ -143,13 +107,13 @@ map <Leader>ux :Unite command<CR>
 map <Leader>ut :Unite -toggle -start-insert tab<CR>
 map <Leader>up :Unite -toggle -start-insert process<CR>
 
-Bundle 'Raimondi/delimitMate.git'
-Bundle 'tmhedberg/matchit.git'
-Bundle 'junegunn/vim-easy-align.git'
+Bundle 'Raimondi/delimitMate'
+Bundle 'tmhedberg/matchit'
+Bundle 'junegunn/vim-easy-align'
 
 map <Leader>t :EasyAlign<CR>
 
-Bundle 'fatih/vim-go.git'
+Bundle 'fatih/vim-go'
 
 " GoDef
 let g:godef_split=0
@@ -205,8 +169,6 @@ command! W :w
 noremap <leader>w :w !sudo tee %<CR>
 nnoremap Q <nop>
 
-tnoremap jk <C-\><C-n>
-tnoremap kj <C-\><C-n>
 inoremap kj <Esc>
 inoremap jk <Esc>
 inoremap <C-C> <Nop>
@@ -309,4 +271,4 @@ endfunction
 map <Leader>o :call Wipeout()<CR>
 
 au BufRead,BufNewFile *.ts        setlocal filetype=typescript
-Bundle "icholy/typescript-tools.git"
+Bundle "icholy/typescript-tools"

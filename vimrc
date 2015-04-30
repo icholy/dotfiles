@@ -34,6 +34,11 @@ endif
 " Dictionary
 set dictionary+=/usr/share/dict/words
 
+" Folding
+set foldmethod=indent
+set foldlevel=100
+set foldlevelstart=100
+
 " Vundle
 filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -248,36 +253,10 @@ vnoremap <C-k> :m '<-2<CR>gv=gv
 " Create file under cursor
 map gF :e <cfile><cr>
 
-" Delete all hidden buffers
-function! Wipeout()
-  let l:buffers = range(1, bufnr('$'))
-  let l:currentTab = tabpagenr()
-  try
-    let l:tab = 0
-    while l:tab < tabpagenr('$')
-      let l:tab += 1
-      let l:win = 0
-      while l:win < winnr('$')
-        let l:win += 1
-        let l:thisbuf = winbufnr(l:win)
-        call remove(l:buffers, index(l:buffers, l:thisbuf))
-      endwhile
-    endwhile
-    if len(l:buffers)
-      execute 'bwipeout' join(l:buffers)
-    endif
-  finally
-    execute 'tabnext' l:currentTab
-  endtry
-endfunction
+Bundle 'schickling/vim-bufonly'
 
-map <Leader>o :call Wipeout()<CR>
+map <Leader>o :BufOnly<CR>
 
-Bundle 'icholy/tsuquyomi'
+Bundle 'Quramy/tsuquyomi'
 map gd <C-]>
 let g:tsuquyomi_definition_split = 0
-
-" Folding
-set foldmethod=indent
-set foldlevel=100
-set foldlevelstart=100

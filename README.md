@@ -7,6 +7,6 @@
 * GDrive: https://github.com/prasmussen/gdrive
 
 ``` sh
-$ sudo apt-get install vim tmux git xmonad zsh silversearcher-ag
+$ sudo apt-get install vim git xmonad zsh silversearcher-ag
 $ chsh -s /bin/zsh
 ```

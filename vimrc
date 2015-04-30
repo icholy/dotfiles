@@ -54,6 +54,7 @@ set wildcharm=<Tab>
 Bundle 'sheerun/vim-polyglot'
 Bundle 'jason0x43/vim-js-indent'
 Bundle 'tpope/vim-fugitive'
+Bundle 'airblade/vim-gitgutter'
 
 map <Leader>gs :Gstatus<CR>
 map <Leader>gd :Gdiff<CR>
@@ -61,6 +62,10 @@ map <Leader>gc :Gcommit<CR>
 map <Leader>ge :Gedit<CR>
 map <Leader>gr :Gread<CR>
 map <Leader>gw :Gwrite<CR>
+map <Leader>g] :GitGutterNextHunk<CR>
+map <Leader>g[ :GitGutterPrevHunk<CR>
+map <Leader>gh :GitGutterStageHunk<CR>
+map <Leader>gu :GitGutterRevertHunk<CR>
 
 Bundle 'tpope/vim-surround'
 Bundle 'tComment'
@@ -191,9 +196,6 @@ set autoread
 nnoremap <C-e> 3<C-e>
 nnoremap <C-y> 3<C-y>
 
-" Folding
-set foldmethod=indent
-set foldlevel=100
 
 " Search
 set incsearch
@@ -271,5 +273,11 @@ endfunction
 
 map <Leader>o :call Wipeout()<CR>
 
-au BufRead,BufNewFile *.ts        setlocal filetype=typescript
-Bundle "icholy/typescript-tools"
+Bundle 'icholy/tsuquyomi'
+map gd <C-]>
+let g:tsuquyomi_definition_split = 0
+
+" Folding
+set foldmethod=indent
+set foldlevel=100
+set foldlevelstart=100

@@ -46,6 +46,16 @@ call vundle#rc()
 
 Bundle 'gmarik/Vundle.vim'
 
+Bundle 'kassio/neoterm'
+
+nnoremap <silent> <f5> :call neoterm#repl#line()<cr>
+vnoremap <silent> <f5> :call neoterm#repl#selection()<cr>
+tnoremap <C-h> <C-\><C-n><C-w>h
+tnoremap <C-j> <C-\><C-n><C-w>j
+tnoremap <C-k> <C-\><C-n><C-w>k
+tnoremap <C-l> <C-\><C-n><C-w>l
+tnoremap jk <C-\><C-n>
+
 Bundle 'Valloric/YouCompleteMe'
 
 if !exists("g:ycm_semantic_triggers")
@@ -59,7 +69,6 @@ set wildcharm=<Tab>
 Bundle 'sheerun/vim-polyglot'
 Bundle 'jason0x43/vim-js-indent'
 Bundle 'tpope/vim-fugitive'
-Bundle 'airblade/vim-gitgutter'
 
 map <Leader>gs :Gstatus<CR>
 map <Leader>gd :Gdiff<CR>
@@ -67,10 +76,7 @@ map <Leader>gc :Gcommit<CR>
 map <Leader>ge :Gedit<CR>
 map <Leader>gr :Gread<CR>
 map <Leader>gw :Gwrite<CR>
-map <Leader>g] :GitGutterNextHunk<CR>
-map <Leader>g[ :GitGutterPrevHunk<CR>
-map <Leader>gh :GitGutterStageHunk<CR>
-map <Leader>gu :GitGutterRevertHunk<CR>
+map <Leader>gp :Git push<CR>
 
 Bundle 'tpope/vim-surround'
 Bundle 'tComment'
@@ -237,8 +243,8 @@ map ]b :bnext<CR>
 map [b :bprevious<CR>
 
 " faster tab naviation
-map ]t :tnext<CR>
-map [t :tprevious<CR>
+map ]t :tabnext<CR>
+map [t :tabprevious<CR>
 
 " faster pane switching
 nnoremap <C-h> <C-w>h

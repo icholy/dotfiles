@@ -9,7 +9,7 @@
 * git-hub: https://github.com/ingydotnet/git-hub
 
 ``` sh
-$ sudo apt-get install vim git xmonad zsh silversearcher-ag
+$ sudo apt-get install vim git i3 zsh silversearcher-ag
 $ chsh -s /bin/zsh
 ```
 

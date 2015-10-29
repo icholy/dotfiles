@@ -46,6 +46,7 @@ call vundle#rc()
 
 Bundle 'gmarik/Vundle.vim'
 
+Bundle 'marijnh/tern_for_vim'
 Bundle 'kassio/neoterm'
 
 nnoremap <silent> <f5> :call neoterm#repl#line()<cr>
@@ -55,14 +56,6 @@ tnoremap <C-j> <C-\><C-n><C-w>j
 tnoremap <C-k> <C-\><C-n><C-w>k
 tnoremap <C-l> <C-\><C-n><C-w>l
 tnoremap jk <C-\><C-n>
-
-Bundle 'Valloric/YouCompleteMe'
-
-if !exists("g:ycm_semantic_triggers")
-   let g:ycm_semantic_triggers = {}
-endif
-let g:ycm_semantic_triggers['typescript'] = ['.']
-set completeopt-=preview
 
 set wildcharm=<Tab>
 
@@ -97,7 +90,6 @@ endfunction
 
 let NERDTreeMapHelp='<f1>'
 map <Leader>n :NERDTreeToggle<CR>
-map - :NERDTreeToggle<CR>
 
 Bundle 'Shougo/unite.vim'
 Bundle 'Shougo/vimproc.vim'
@@ -207,10 +199,10 @@ set autoread
 nnoremap <C-e> 3<C-e>
 nnoremap <C-y> 3<C-y>
 
-
 " Search
 set incsearch
 let g:incsearch#auto_nohlsearch = 1
+set nohlsearch
 set ignorecase
 set smartcase
 set complete-=i
@@ -232,7 +224,6 @@ imap <right> <nop>
 " relative line numbers 
 set relativenumber
 set number
-nnoremap <Leader>l :set norelativenumber!<CR>
 
 " faster quickfix naviation
 map ]q :cnext<CR>
@@ -256,9 +247,6 @@ nnoremap <C-l> <C-w>l
 vnoremap <C-j> :m '>+1<CR>gv=gv
 vnoremap <C-k> :m '<-2<CR>gv=gv
 
-" Create file under cursor
-map gF :e <cfile><cr>
-
 Bundle 'schickling/vim-bufonly'
 
 map <Leader>o :BufOnly<CR>
@@ -266,3 +254,12 @@ map <Leader>o :BufOnly<CR>
 Bundle 'Quramy/tsuquyomi'
 map gd <C-]>
 let g:tsuquyomi_definition_split = 0
+
+Bundle 'Valloric/YouCompleteMe'
+
+if !exists("g:ycm_semantic_triggers")
+   let g:ycm_semantic_triggers = {}
+endif
+let g:ycm_semantic_triggers['javascript'] = ['.']
+set completeopt-=preview
+

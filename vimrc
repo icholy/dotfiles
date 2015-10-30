@@ -60,6 +60,9 @@ tnoremap jk <C-\><C-n>
 set wildcharm=<Tab>
 
 Bundle 'sheerun/vim-polyglot'
+
+let g:polyglot_disabled = ['javascript']
+
 Bundle 'jason0x43/vim-js-indent'
 Bundle 'tpope/vim-fugitive'
 

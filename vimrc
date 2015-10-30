@@ -16,12 +16,6 @@ set mouse=a
 " enable syntax
 syntax on
 
-" Hide Toolbar
-if has("gui_running")
-    set guioptions=egmrt
-    set guifont=Droid\ Sans\ Mono\ for \Powerline:h12
-endif
-
 " Automatically change filetype
 if has('autocmd')
   " assuming filetype plugin indent on
@@ -45,6 +39,13 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#rc()
 
 Bundle 'gmarik/Vundle.vim'
+
+Bundle 'junegunn/fzf'
+Bundle 'icholy/fzf.vim'
+
+map <Leader>ff :GitFiles<CR>
+map <Leader>gg :GitGrep 
+
 
 Bundle 'marijnh/tern_for_vim'
 Bundle 'kassio/neoterm'
@@ -104,19 +105,8 @@ Bundle 'rking/ag.vim'
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 call unite#filters#sorter_default#use(['sorter_rank'])
 let g:unite_source_history_yank_enable = 1
-let g:unite_source_grep_command = 'ag'
-
 map <expr> <C-@> ':Unite -start-insert -toggle buffer<CR>'
 inoremap <expr> <C-@> '<ESC>:Unite -start-insert -toggle buffer<CR>'
-
-map <Leader>uf :Unite -toggle -start-insert file_rec<CR>
-map <Leader>ug :exe 'silent Ggrep -i '.input("Pattern: ")<Bar>Unite quickfix -no-quit -auto-preview<CR>
-map <Leader>u* :exe 'silent Ggrep -i '.expand("<cword>")<Bar>Unite quickfix -no-quit<CR>
-map <Leader>ub :Unite -toggle -start-insert buffer<CR>
-map <Leader>uq :Unite -toggle quickfix<CR>
-map <Leader>ux :Unite command<CR>
-map <Leader>ut :Unite -toggle -start-insert tab<CR>
-map <Leader>up :Unite -toggle -start-insert process<CR>
 
 Bundle 'Raimondi/delimitMate'
 Bundle 'tmhedberg/matchit'
@@ -159,7 +149,6 @@ set listchars=tab:↪\ ,extends:❯,precedes:❮,nbsp:␣,eol:$
 
 " Font
 set t_Co=256
-set encoding=utf-8
 colorscheme Tomorrow
 
 " Spacing

@@ -104,7 +104,7 @@ let g:unite_source_history_yank_enable = 1
 let g:unite_source_grep_command = 'ag'
 
 map <expr> <C-@> ':Unite -start-insert -toggle buffer<CR>'
-inoremap <expr> <C-@> '<Esc>:UniteClose<CR>'
+inoremap <expr> <C-@> '<ESC>:Unite -start-insert -toggle buffer<CR>'
 
 map <Leader>uf :Unite -toggle -start-insert file_rec<CR>
 map <Leader>ug :exe 'silent Ggrep -i '.input("Pattern: ")<Bar>Unite quickfix -no-quit -auto-preview<CR>
@@ -260,6 +260,7 @@ Bundle 'Valloric/YouCompleteMe'
 if !exists("g:ycm_semantic_triggers")
    let g:ycm_semantic_triggers = {}
 endif
+let g:ycm_key_invoke_completion = ''
 let g:ycm_semantic_triggers['javascript'] = ['.']
 set completeopt-=preview
 

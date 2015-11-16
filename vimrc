@@ -244,7 +244,6 @@ Bundle 'schickling/vim-bufonly'
 map <Leader>o :BufOnly<CR>
 
 Bundle 'Quramy/tsuquyomi'
-map gd <C-]>
 let g:tsuquyomi_definition_split = 0
 
 Bundle 'Valloric/YouCompleteMe'
@@ -255,4 +254,7 @@ endif
 let g:ycm_key_invoke_completion = ''
 let g:ycm_semantic_triggers['javascript'] = ['.']
 set completeopt-=preview
+
+autocmd FileType typescript map gd :YcmCompleter GoToDefinition<CR>
+autocmd FileType typescript map K :YcmCompleter GetDoc<CR>
 

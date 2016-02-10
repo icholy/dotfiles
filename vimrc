@@ -17,13 +17,10 @@ set mouse=a
 syntax on
 
 " Automatically change filetype
-if has('autocmd')
-  " assuming filetype plugin indent on
-  augroup filetype_detect_on_rename
-    autocmd!
-    autocmd BufFilePost * filetype detect
-  augroup END
-endif
+augroup filetype_detect_on_rename
+  autocmd!
+  autocmd BufFilePost * filetype detect
+augroup END
 
 " Dictionary
 set dictionary+=/usr/share/dict/words
@@ -40,6 +37,10 @@ call vundle#rc()
 
 Bundle 'gmarik/Vundle.vim'
 
+Bundle 'wellle/targets.vim'
+
+Bundle 'dhruvasagar/vim-table-mode'
+
 Bundle 'junegunn/fzf'
 Bundle 'icholy/fzf.vim'
 
@@ -47,7 +48,6 @@ map <Leader>ff :GitFiles<CR>
 map <Leader>gg :GitGrep 
 
 
-Bundle 'marijnh/tern_for_vim'
 Bundle 'kassio/neoterm'
 
 nnoremap <silent> <f5> :call neoterm#repl#line()<cr>
@@ -113,6 +113,7 @@ Bundle 'tmhedberg/matchit'
 Bundle 'junegunn/vim-easy-align'
 
 map <Leader>t :EasyAlign<CR>
+
 
 Bundle 'fatih/vim-go'
 
@@ -243,8 +244,8 @@ Bundle 'schickling/vim-bufonly'
 
 map <Leader>o :BufOnly<CR>
 
-Bundle 'Quramy/tsuquyomi'
-let g:tsuquyomi_definition_split = 0
+" Bundle 'Quramy/tsuquyomi'
+" let g:tsuquyomi_definition_split = 0
 
 Bundle 'Valloric/YouCompleteMe'
 
@@ -253,8 +254,17 @@ if !exists("g:ycm_semantic_triggers")
 endif
 let g:ycm_key_invoke_completion = ''
 let g:ycm_semantic_triggers['javascript'] = ['.']
+let g:ycm_semantic_triggers['haskell'] = ['.']
+let g:ycm_semantic_triggers['rust'] = ['.', '::']
 set completeopt-=preview
 
 autocmd FileType typescript map gd :YcmCompleter GoToDefinition<CR>
 autocmd FileType typescript map K :YcmCompleter GetDoc<CR>
 
+nnoremap <C-LeftMouse> <LeftMouse>:YcmCompleter GoToDefinition<CR>
+
+command! CopyLocationToClipboard execute "let @+=expand(\"%:p\").\":\".line(\".\")"
+
+Bundle 'eagletmt/neco-ghc'
+
+autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc

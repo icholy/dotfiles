@@ -6,31 +6,22 @@ set nocompatible
 " Plugins
 call plug#begin('~/.vim/plugged')
 
-Plug 'powerman/vim-plugin-autosess'
 Plug 'wellle/targets.vim'
-Plug 'dhruvasagar/vim-table-mode'
-Plug 'junegunn/fzf'
-Plug 'icholy/fzf.vim'
 Plug 'sheerun/vim-polyglot'
-Plug 'jason0x43/vim-js-indent'
+Plug 'jason0x43/vim-js-indent', { 'for': 'js' }
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tComment'
 Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'tomtom/tlib_vim'
 Plug 'chriskempson/tomorrow-theme', { 'rtp': 'vim/' }
-Plug 'hylang/vim-hy'
-Plug 'gorkunov/smartpairs.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'Shougo/unite.vim'
 Plug 'Shougo/vimproc.vim'
-Plug 't9md/vim-unite-ack'
-Plug 'osyo-manga/unite-quickfix'
-Plug 'rking/ag.vim'
 Plug 'Raimondi/delimitMate'
 Plug 'tmhedberg/matchit'
 Plug 'junegunn/vim-easy-align'
-Plug 'fatih/vim-go'
+Plug 'fatih/vim-go', { 'for': 'go' }
 Plug 'bling/vim-airline'
 Plug 'schickling/vim-bufonly'
 Plug 'Valloric/YouCompleteMe'
@@ -67,17 +58,11 @@ function! ToggleNerdTree()
 endfunction
 
 let NERDTreeMapHelp='<f1>'
-map <Leader>n :NERDTreeToggle<CR>
 
 " Unite
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 call unite#filters#sorter_default#use(['sorter_rank'])
 let g:unite_source_history_yank_enable = 1
-map <expr> <C-@> ':Unite -start-insert -toggle buffer<CR>'
-inoremap <expr> <C-@> '<ESC>:Unite -start-insert -toggle buffer<CR>'
-
-" Easy Align
-map <Leader>t :EasyAlign<CR>
 
 " GoDef
 let g:godef_split=0
@@ -101,14 +86,6 @@ let g:airline_symbols.linenr = ''
 
 let g:airline_section_b = '%{strftime("%c")}'
 let g:airline_section_y = 'BN: %{bufnr("%")}'
-
-" YouCompleteMe
-autocmd FileType typescript map gd :YcmCompleter GoToDefinition<CR>
-autocmd FileType typescript map gt :YcmCompleter GoToType<CR>
-autocmd FileType typescript map gr :YcmCompleter GoToReferences<CR>
-autocmd FileType typescript map K :YcmCompleter GetDoc<CR>
-
-nnoremap <C-LeftMouse> <LeftMouse>:YcmCompleter GoToDefinition<CR>
 
 " Other
 set mouse=a
@@ -143,10 +120,6 @@ set noswapfile
 set nowritebackup
 set autoread
 
-" Faster Scrolling
-nnoremap <C-e> 3<C-e>
-nnoremap <C-y> 3<C-y>
-
 " Search
 set incsearch
 let g:incsearch#auto_nohlsearch = 1
@@ -164,6 +137,23 @@ autocmd BufReadPost quickfix set wrap
 " leader
 let mapleader = "\<Space>"
 nnoremap <Space> <Nop>
+
+" YouCompleteMe
+autocmd FileType typescript map gd :YcmCompleter GoToDefinition<CR>
+autocmd FileType typescript map gt :YcmCompleter GoToType<CR>
+autocmd FileType typescript map gr :YcmCompleter GoToReferences<CR>
+autocmd FileType typescript map K :YcmCompleter GetDoc<CR>
+nnoremap <C-LeftMouse> <LeftMouse>:YcmCompleter GoToDefinition<CR>
+
+" Easy Align
+map <Leader>t :EasyAlign<CR>
+
+" NerdTree
+map <Leader>n :NERDTreeToggle<CR>
+
+" Unite
+map <expr> <C-@> ':Unite -start-insert -toggle buffer<CR>'
+inoremap <expr> <C-@> '<ESC>:Unite -start-insert -toggle buffer<CR>'
 
 " disable arrow keys
 map <up> <nop>
@@ -208,8 +198,6 @@ nnoremap <Leader>s :%s/<C-r><C-w>/
 map <Leader>o :BufOnly<CR>
 
 " Git
-map <Leader>ff :GitFiles<CR>
-map <Leader>gg :GitGrep 
 map <Leader>gs :Gstatus<CR>
 map <Leader>gd :Gdiff<CR>
 map <Leader>gc :Gcommit<CR>
@@ -221,3 +209,7 @@ map <Leader>gp :Git push<CR>
 " Commands
 command! W :w
 command! CopyLocationToClipboard execute "let @+=expand(\"%:p\").\":\".line(\".\")"
+
+" Faster Scrolling
+nnoremap <C-e> 3<C-e>
+nnoremap <C-y> 3<C-y>

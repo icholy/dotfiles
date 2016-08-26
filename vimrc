@@ -3,15 +3,39 @@
 set shell=zsh
 set nocompatible
 
-" disable splash
-set shortmess+=I
+" Plugins
+call plug#begin('~/.vim/plugged')
 
-" leader
-let mapleader = "\<Space>"
-nnoremap <Space> <Nop>
+Plug 'powerman/vim-plugin-autosess'
+Plug 'wellle/targets.vim'
+Plug 'dhruvasagar/vim-table-mode'
+Plug 'junegunn/fzf'
+Plug 'icholy/fzf.vim'
+Plug 'sheerun/vim-polyglot'
+Plug 'jason0x43/vim-js-indent'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-surround'
+Plug 'tComment'
+Plug 'MarcWeber/vim-addon-mw-utils'
+Plug 'tomtom/tlib_vim'
+Plug 'chriskempson/tomorrow-theme', { 'rtp': 'vim/' }
+Plug 'hylang/vim-hy'
+Plug 'gorkunov/smartpairs.vim'
+Plug 'scrooloose/nerdtree'
+Plug 'Shougo/unite.vim'
+Plug 'Shougo/vimproc.vim'
+Plug 't9md/vim-unite-ack'
+Plug 'osyo-manga/unite-quickfix'
+Plug 'rking/ag.vim'
+Plug 'Raimondi/delimitMate'
+Plug 'tmhedberg/matchit'
+Plug 'junegunn/vim-easy-align'
+Plug 'fatih/vim-go'
+Plug 'bling/vim-airline'
+Plug 'schickling/vim-bufonly'
+Plug 'Valloric/YouCompleteMe'
 
-" enable mouse
-set mouse=a
+call plug#end()
 
 " enable syntax
 syntax on
@@ -30,60 +54,10 @@ set foldmethod=indent
 set foldlevel=100
 set foldlevelstart=100
 
-" Vundle
-filetype off
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#rc()
-
-Bundle 'gmarik/Vundle.vim'
-
-Bundle 'wellle/targets.vim'
-
-Bundle 'dhruvasagar/vim-table-mode'
-
-Bundle 'junegunn/fzf'
-Bundle 'icholy/fzf.vim'
-
-map <Leader>ff :GitFiles<CR>
-map <Leader>gg :GitGrep 
-
-
-Bundle 'kassio/neoterm'
-
-nnoremap <silent> <f5> :call neoterm#repl#line()<cr>
-vnoremap <silent> <f5> :call neoterm#repl#selection()<cr>
-tnoremap <C-h> <C-\><C-n><C-w>h
-tnoremap <C-j> <C-\><C-n><C-w>j
-tnoremap <C-k> <C-\><C-n><C-w>k
-tnoremap <C-l> <C-\><C-n><C-w>l
-tnoremap jk <C-\><C-n>
-
-set wildcharm=<Tab>
-
-Bundle 'sheerun/vim-polyglot'
-
+" The javascript plugin makes vim hang
 let g:polyglot_disabled = ['javascript']
 
-Bundle 'jason0x43/vim-js-indent'
-Bundle 'tpope/vim-fugitive'
-
-map <Leader>gs :Gstatus<CR>
-map <Leader>gd :Gdiff<CR>
-map <Leader>gc :Gcommit<CR>
-map <Leader>ge :Gedit<CR>
-map <Leader>gr :Gread<CR>
-map <Leader>gw :Gwrite<CR>
-map <Leader>gp :Git push<CR>
-
-Bundle 'tpope/vim-surround'
-Bundle 'tComment'
-Bundle "MarcWeber/vim-addon-mw-utils"
-Bundle "tomtom/tlib_vim"
-Bundle 'chriskempson/tomorrow-theme', { 'rtp': 'vim/' }
-Bundle 'hylang/vim-hy'
-Bundle 'gorkunov/smartpairs.vim'
-Bundle 'scrooloose/nerdtree'
-
+" NerdTree
 function! ToggleNerdTree()
   if !exists("b:NERDTreeType")
     execute "NERDTree"
@@ -95,12 +69,6 @@ endfunction
 let NERDTreeMapHelp='<f1>'
 map <Leader>n :NERDTreeToggle<CR>
 
-Bundle 'Shougo/unite.vim'
-Bundle 'Shougo/vimproc.vim'
-Bundle 't9md/vim-unite-ack'
-Bundle 'osyo-manga/unite-quickfix'
-Bundle 'rking/ag.vim'
-
 " Unite
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 call unite#filters#sorter_default#use(['sorter_rank'])
@@ -108,20 +76,12 @@ let g:unite_source_history_yank_enable = 1
 map <expr> <C-@> ':Unite -start-insert -toggle buffer<CR>'
 inoremap <expr> <C-@> '<ESC>:Unite -start-insert -toggle buffer<CR>'
 
-Bundle 'Raimondi/delimitMate'
-Bundle 'tmhedberg/matchit'
-Bundle 'junegunn/vim-easy-align'
-
+" Easy Align
 map <Leader>t :EasyAlign<CR>
-
-
-Bundle 'fatih/vim-go'
 
 " GoDef
 let g:godef_split=0
 let g:godef_same_file_in_same_window=1
-
-Bundle 'bling/vim-airline'
 
 " Airline
 let g:airline#extensions#tabline#enabled = 1
@@ -142,11 +102,28 @@ let g:airline_symbols.linenr = ''
 let g:airline_section_b = '%{strftime("%c")}'
 let g:airline_section_y = 'BN: %{bufnr("%")}'
 
+" YouCompleteMe
+autocmd FileType typescript map gd :YcmCompleter GoToDefinition<CR>
+autocmd FileType typescript map gt :YcmCompleter GoToType<CR>
+autocmd FileType typescript map gr :YcmCompleter GoToReferences<CR>
+autocmd FileType typescript map K :YcmCompleter GetDoc<CR>
+
+nnoremap <C-LeftMouse> <LeftMouse>:YcmCompleter GoToDefinition<CR>
 
 " Other
+set mouse=a
+set shortmess+=I
 filetype plugin indent on
 set backspace=indent,eol,start
 set listchars=tab:↪\ ,extends:❯,precedes:❮,nbsp:␣,eol:$
+set colorcolumn=+1
+set timeoutlen=300
+set hidden
+set wildmenu
+set wildmode=list:longest
+set laststatus=2
+set wildcharm=<Tab>
+set completeopt-=preview
 
 " Font
 set t_Co=256
@@ -157,28 +134,6 @@ set autoindent
 set expandtab
 set tabstop=2
 set shiftwidth=2
-
-" Stuff
-set colorcolumn=+1
-set timeoutlen=300
-set hidden
-set wildmenu
-set wildmode=list:longest
-set laststatus=2
-
-command! W :w
-noremap <leader>w :w !sudo tee %<CR>
-nnoremap Q <nop>
-
-inoremap kj <Esc>
-inoremap jk <Esc>
-inoremap <C-C> <Nop>
-
-" select pasted
-nnoremap gp `[v`]
-
-" faster replace
-nnoremap <Leader>s :%s/<C-r><C-w>/
 
 " Backups
 set backup
@@ -204,6 +159,12 @@ set complete-=i
 set nowrap
 autocmd BufReadPost quickfix set wrap
 
+" Key Mappings
+
+" leader
+let mapleader = "\<Space>"
+nnoremap <Space> <Nop>
+
 " disable arrow keys
 map <up> <nop>
 map <down> <nop>
@@ -218,15 +179,11 @@ imap <right> <nop>
 set relativenumber
 set number
 
-" faster quickfix naviation
+" faster switching
 map ]q :cnext<CR>
 map [q :cprevious<CR>
-
-" faster buffer naviation
 map ]b :bnext<CR>
 map [b :bprevious<CR>
-
-" faster tab naviation
 map ]t :tabnext<CR>
 map [t :tabprevious<CR>
 
@@ -240,31 +197,27 @@ nnoremap <C-l> <C-w>l
 vnoremap <C-j> :m '>+1<CR>gv=gv
 vnoremap <C-k> :m '<-2<CR>gv=gv
 
-Bundle 'schickling/vim-bufonly'
-
+" Misc
+noremap <leader>w :w !sudo tee %<CR>
+nnoremap Q <nop>
+inoremap kj <Esc>
+inoremap jk <Esc>
+inoremap <C-C> <Nop>
+nnoremap gp `[v`]
+nnoremap <Leader>s :%s/<C-r><C-w>/
 map <Leader>o :BufOnly<CR>
 
-" Bundle 'Quramy/tsuquyomi'
-" let g:tsuquyomi_definition_split = 0
+" Git
+map <Leader>ff :GitFiles<CR>
+map <Leader>gg :GitGrep 
+map <Leader>gs :Gstatus<CR>
+map <Leader>gd :Gdiff<CR>
+map <Leader>gc :Gcommit<CR>
+map <Leader>ge :Gedit<CR>
+map <Leader>gr :Gread<CR>
+map <Leader>gw :Gwrite<CR>
+map <Leader>gp :Git push<CR>
 
-Bundle 'Valloric/YouCompleteMe'
-
-if !exists("g:ycm_semantic_triggers")
-   let g:ycm_semantic_triggers = {}
-endif
-let g:ycm_key_invoke_completion = ''
-let g:ycm_semantic_triggers['javascript'] = ['.']
-let g:ycm_semantic_triggers['haskell'] = ['.']
-let g:ycm_semantic_triggers['rust'] = ['.', '::']
-set completeopt-=preview
-
-autocmd FileType typescript map gd :YcmCompleter GoToDefinition<CR>
-autocmd FileType typescript map K :YcmCompleter GetDoc<CR>
-
-nnoremap <C-LeftMouse> <LeftMouse>:YcmCompleter GoToDefinition<CR>
-
+" Commands
+command! W :w
 command! CopyLocationToClipboard execute "let @+=expand(\"%:p\").\":\".line(\".\")"
-
-Bundle 'eagletmt/neco-ghc'
-
-autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc

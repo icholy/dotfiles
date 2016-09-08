@@ -25,6 +25,7 @@ Plug 'fatih/vim-go', { 'for': 'go' }
 Plug 'bling/vim-airline'
 Plug 'schickling/vim-bufonly'
 Plug 'Valloric/YouCompleteMe'
+Plug 'alunny/pegjs-vim'
 
 call plug#end()
 

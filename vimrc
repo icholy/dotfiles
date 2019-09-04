@@ -2,30 +2,46 @@
 
 set shell=zsh
 set nocompatible
+set nofixendofline
 
 " Plugins
 call plug#begin('~/.vim/plugged')
 
-Plug 'wellle/targets.vim'
-Plug 'sheerun/vim-polyglot'
-Plug 'jason0x43/vim-js-indent', { 'for': 'js' }
 Plug 'tpope/vim-fugitive'
+
+" Editing
+
+Plug 'Raimondi/delimitMate'
+Plug 'wellle/targets.vim'
 Plug 'tpope/vim-surround'
-Plug 'tComment'
+Plug 'junegunn/vim-easy-align'
+Plug 'tomtom/tcomment_vim'
+Plug 'tmhedberg/matchit'
+Plug 'tpope/vim-sleuth'
+
+" Navigation
+
+Plug 'schickling/vim-bufonly'
 Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'tomtom/tlib_vim'
-Plug 'chriskempson/tomorrow-theme', { 'rtp': 'vim/' }
 Plug 'scrooloose/nerdtree'
 Plug 'Shougo/unite.vim'
 Plug 'Shougo/vimproc.vim'
-Plug 'Raimondi/delimitMate'
-Plug 'tmhedberg/matchit'
-Plug 'junegunn/vim-easy-align'
-Plug 'fatih/vim-go', { 'for': 'go' }
+
+" Pretty
+
 Plug 'bling/vim-airline'
-Plug 'schickling/vim-bufonly'
+Plug 'chriskempson/tomorrow-theme', { 'rtp': 'vim/' }
+
+" Language Support
+
 Plug 'Valloric/YouCompleteMe'
+Plug 'sheerun/vim-polyglot'
+Plug 'jason0x43/vim-js-indent', { 'for': 'js' }
+Plug 'fatih/vim-go'
 Plug 'alunny/pegjs-vim'
+Plug 'itegulov/vim-epl-syntax'
+Plug 'b4b4r07/vim-hcl'
 
 call plug#end()
 
@@ -47,7 +63,7 @@ set foldlevel=100
 set foldlevelstart=100
 
 " The javascript plugin makes vim hang
-let g:polyglot_disabled = ['javascript']
+let g:polyglot_disabled = ['javascript', 'graphql']
 
 " NerdTree
 function! ToggleNerdTree()
@@ -68,6 +84,7 @@ let g:unite_source_history_yank_enable = 1
 " GoDef
 let g:godef_split=0
 let g:godef_same_file_in_same_window=1
+let g:go_autodetect_gopath=0
 
 " Airline
 let g:airline#extensions#tabline#enabled = 1
@@ -140,17 +157,30 @@ let mapleader = "\<Space>"
 nnoremap <Space> <Nop>
 
 " YouCompleteMe
+autocmd FileType java map gd :YcmCompleter GoTo<CR>
+autocmd FileType java map gt :YcmCompleter GoToType<CR>
+autocmd FileType java map gr :YcmCompleter GoToReferences<CR>
+autocmd FileType java map gn :YcmCompleter RefactorRename
+autocmd FileType java map K :YcmCompleter GetDoc<CR>
+
 autocmd FileType typescript map gd :YcmCompleter GoToDefinition<CR>
 autocmd FileType typescript map gt :YcmCompleter GoToType<CR>
 autocmd FileType typescript map gr :YcmCompleter GoToReferences<CR>
+autocmd FileType typescript map gn :YcmCompleter RefactorRename
 autocmd FileType typescript map K :YcmCompleter GetDoc<CR>
-nnoremap <C-LeftMouse> <LeftMouse>:YcmCompleter GoToDefinition<CR>
+let g:ycm_key_invoke_completion = ''
+
+autocmd FileType go map gd :GoDef<CR>
+autocmd FileType go map gr :GoReferrers<CR>
+autocmd FileType go map gn :GoRename 
+autocmd FileType go map K :GoDoc<CR>
 
 " Easy Align
-map <Leader>t :EasyAlign<CR>
+map <Leader>t :EasyAlign 
 
 " NerdTree
 map <Leader>n :NERDTreeToggle<CR>
+map <Leader>m :NERDTreeFind<CR>
 
 " Unite
 map <expr> <C-@> ':Unite -start-insert -toggle buffer<CR>'
@@ -200,12 +230,15 @@ map <Leader>o :BufOnly<CR>
 
 " Git
 map <Leader>gs :Gstatus<CR>
-map <Leader>gd :Gdiff<CR>
+map <Leader>gd :Gvdiff<CR>
 map <Leader>gc :Gcommit<CR>
 map <Leader>ge :Gedit<CR>
 map <Leader>gr :Gread<CR>
 map <Leader>gw :Gwrite<CR>
 map <Leader>gp :Git push<CR>
+
+" Slime
+let g:slime_target = "tmux"
 
 " Commands
 command! W :w

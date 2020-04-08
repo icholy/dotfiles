@@ -11,6 +11,7 @@ Plug 'tpope/vim-fugitive'
 
 " Editing
 
+Plug 'junegunn/goyo.vim'
 Plug 'Raimondi/delimitMate'
 Plug 'wellle/targets.vim'
 Plug 'tpope/vim-surround'
@@ -31,12 +32,11 @@ Plug 'Shougo/vimproc.vim'
 " Pretty
 
 Plug 'bling/vim-airline'
-Plug 'chriskempson/tomorrow-theme', { 'rtp': 'vim/' }
+Plug 'chriskempson/base16-vim'
 
 " Language Support
 
 Plug 'Valloric/YouCompleteMe'
-Plug 'sheerun/vim-polyglot'
 Plug 'jason0x43/vim-js-indent', { 'for': 'js' }
 Plug 'fatih/vim-go'
 Plug 'alunny/pegjs-vim'
@@ -54,6 +54,9 @@ augroup filetype_detect_on_rename
   autocmd BufFilePost * filetype detect
 augroup END
 
+" TypeScript uses json with comments
+autocmd BufNewFile,BufRead tsconfig.*json set syntax=javascript
+
 " Dictionary
 set dictionary+=/usr/share/dict/words
 
@@ -63,7 +66,7 @@ set foldlevel=100
 set foldlevelstart=100
 
 " The javascript plugin makes vim hang
-let g:polyglot_disabled = ['javascript', 'graphql']
+let g:polyglot_disabled = ['javascript', 'graphql', 'typescript', 'ts']
 
 " NerdTree
 function! ToggleNerdTree()
@@ -106,7 +109,7 @@ let g:airline_section_b = '%{strftime("%c")}'
 let g:airline_section_y = 'BN: %{bufnr("%")}'
 
 " Other
-set mouse=a
+set mouse=r
 set shortmess+=I
 filetype plugin indent on
 set backspace=indent,eol,start
@@ -122,7 +125,13 @@ set completeopt-=preview
 
 " Font
 set t_Co=256
-colorscheme Tomorrow
+
+if filereadable(expand("~/.vimrc_background"))
+  let base16colorspace=256
+  source ~/.vimrc_background
+endif
+
+highlight Pmenu ctermfg=15 ctermbg=Grey guifg=#ffffff guibg=Grey
 
 " Spacing
 set autoindent
@@ -168,12 +177,16 @@ autocmd FileType typescript map gt :YcmCompleter GoToType<CR>
 autocmd FileType typescript map gr :YcmCompleter GoToReferences<CR>
 autocmd FileType typescript map gn :YcmCompleter RefactorRename
 autocmd FileType typescript map K :YcmCompleter GetDoc<CR>
-let g:ycm_key_invoke_completion = ''
 
-autocmd FileType go map gd :GoDef<CR>
-autocmd FileType go map gr :GoReferrers<CR>
-autocmd FileType go map gn :GoRename 
-autocmd FileType go map K :GoDoc<CR>
+autocmd FileType go map gd :YcmCompleter GoToDefinition<CR>
+autocmd FileType go map gt :YcmCompleter GoToType<CR>
+autocmd FileType go map gr :YcmCompleter GoToReferences<CR>
+autocmd FileType go map gn :YcmCompleter RefactorRename
+autocmd FileType go map K :YcmCompleter GetDoc<CR>
+
+let g:ycm_key_invoke_completion = ''
+let g:go_def_mode='gopls'
+let g:go_info_mode='gopls'
 
 " Easy Align
 map <Leader>t :EasyAlign 
@@ -181,6 +194,22 @@ map <Leader>t :EasyAlign
 " NerdTree
 map <Leader>n :NERDTreeToggle<CR>
 map <Leader>m :NERDTreeFind<CR>
+
+" Goyp
+map <Leader>g :Goyo<CR>
+
+function! s:goyo_enter()
+  set wrap
+  set linebreak
+endfunction
+
+function! s:goyo_leave()
+  set nowrap
+  set nolinebreak
+endfunction
+
+autocmd! User GoyoEnter nested call <SID>goyo_enter()
+autocmd! User GoyoLeave nested call <SID>goyo_leave()
 
 " Unite
 map <expr> <C-@> ':Unite -start-insert -toggle buffer<CR>'

@@ -109,7 +109,7 @@ let g:airline_section_b = '%{strftime("%c")}'
 let g:airline_section_y = 'BN: %{bufnr("%")}'
 
 " Other
-set mouse=r
+set mouse=a
 set shortmess+=I
 filetype plugin indent on
 set backspace=indent,eol,start

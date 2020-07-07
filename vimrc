@@ -23,11 +23,9 @@ Plug 'tpope/vim-sleuth'
 " Navigation
 
 Plug 'schickling/vim-bufonly'
-Plug 'MarcWeber/vim-addon-mw-utils'
-Plug 'tomtom/tlib_vim'
-Plug 'scrooloose/nerdtree'
-Plug 'Shougo/unite.vim'
-Plug 'Shougo/vimproc.vim'
+Plug 'preservevim/nerdtree'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 
 " Pretty
 
@@ -42,6 +40,7 @@ Plug 'fatih/vim-go'
 Plug 'alunny/pegjs-vim'
 Plug 'itegulov/vim-epl-syntax'
 Plug 'b4b4r07/vim-hcl'
+Plug 'leafgarland/typescript-vim'
 
 call plug#end()
 
@@ -67,22 +66,6 @@ set foldlevelstart=100
 
 " The javascript plugin makes vim hang
 let g:polyglot_disabled = ['javascript', 'graphql', 'typescript', 'ts']
-
-" NerdTree
-function! ToggleNerdTree()
-  if !exists("b:NERDTreeType")
-    execute "NERDTree"
-  else
-    execute "NERDTreeToggle"
-  endif
-endfunction
-
-let NERDTreeMapHelp='<f1>'
-
-" Unite
-call unite#filters#matcher_default#use(['matcher_fuzzy'])
-call unite#filters#sorter_default#use(['sorter_rank'])
-let g:unite_source_history_yank_enable = 1
 
 " GoDef
 let g:godef_split=0
@@ -122,6 +105,7 @@ set wildmode=list:longest
 set laststatus=2
 set wildcharm=<Tab>
 set completeopt-=preview
+set fillchars=vert:│
 
 " Font
 set t_Co=256
@@ -132,6 +116,8 @@ if filereadable(expand("~/.vimrc_background"))
 endif
 
 highlight Pmenu ctermfg=15 ctermbg=Grey guifg=#ffffff guibg=Grey
+highlight Visual ctermfg=15 ctermbg=Grey guifg=#ffffff guibg=Grey
+highlight VertSplit cterm=None
 
 " Spacing
 set autoindent
@@ -178,7 +164,7 @@ autocmd FileType typescript map gr :YcmCompleter GoToReferences<CR>
 autocmd FileType typescript map gn :YcmCompleter RefactorRename
 autocmd FileType typescript map K :YcmCompleter GetDoc<CR>
 
-autocmd FileType go map gd :YcmCompleter GoToDefinition<CR>
+autocmd FileType go map gd :YcmCompleter GoTo<CR>
 autocmd FileType go map gt :YcmCompleter GoToType<CR>
 autocmd FileType go map gr :YcmCompleter GoToReferences<CR>
 autocmd FileType go map gn :YcmCompleter RefactorRename
@@ -192,6 +178,7 @@ let g:go_info_mode='gopls'
 map <Leader>t :EasyAlign 
 
 " NerdTree
+let NERDTreeMapHelp='<f1>'
 map <Leader>n :NERDTreeToggle<CR>
 map <Leader>m :NERDTreeFind<CR>
 
@@ -211,9 +198,9 @@ endfunction
 autocmd! User GoyoEnter nested call <SID>goyo_enter()
 autocmd! User GoyoLeave nested call <SID>goyo_leave()
 
-" Unite
-map <expr> <C-@> ':Unite -start-insert -toggle buffer<CR>'
-inoremap <expr> <C-@> '<ESC>:Unite -start-insert -toggle buffer<CR>'
+" FZF
+map <expr> <C-@> '<ESC>:Buffers<CR>'
+inoremap <expr> <C-@> '<ESC>:Buffers<CR>'
 
 " disable arrow keys
 map <up> <nop>
@@ -265,9 +252,6 @@ map <Leader>ge :Gedit<CR>
 map <Leader>gr :Gread<CR>
 map <Leader>gw :Gwrite<CR>
 map <Leader>gp :Git push<CR>
-
-" Slime
-let g:slime_target = "tmux"
 
 " Commands
 command! W :w

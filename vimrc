@@ -12,7 +12,7 @@ Plug 'tpope/vim-fugitive'
 " Editing
 
 Plug 'junegunn/goyo.vim'
-Plug 'Raimondi/delimitMate'
+" Plug 'Raimondi/delimitMate'
 Plug 'wellle/targets.vim'
 Plug 'tpope/vim-surround'
 Plug 'junegunn/vim-easy-align'
@@ -23,7 +23,7 @@ Plug 'tpope/vim-sleuth'
 " Navigation
 
 Plug 'schickling/vim-bufonly'
-Plug 'preservevim/nerdtree'
+Plug 'preservim/nerdtree'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
@@ -200,7 +200,9 @@ autocmd! User GoyoLeave nested call <SID>goyo_leave()
 
 " FZF
 map <expr> <C-@> '<ESC>:Buffers<CR>'
+map <expr> <C-F> '<ESC>:Files<CR>'
 inoremap <expr> <C-@> '<ESC>:Buffers<CR>'
+inoremap <expr> <C-F> '<ESC>:Files<CR>'
 
 " disable arrow keys
 map <up> <nop>

@@ -1,0 +1,55 @@
+general {
+	colors = true
+	color_good = "#586e75"
+	color_bad = "#dc322f"
+	color_degraded = "#b58900"
+	interval = 5
+}
+
+order += "memory"
+order += "cpu_usage"
+order += "disk /"
+order += "wireless _first_"
+order += "ethernet _first_"
+order += "volume master"
+order += "tztime local"
+
+memory {
+    format = "Mem: %available"
+    threshold_degraded = "1000M"
+    format_degraded = "Mem: %available"
+}
+
+ethernet _first_ {
+	format_up = "E: %ip"
+	format_down = "E: down"
+}
+
+wireless _first_ {
+	format_up = "W:%quality at %essid"
+	format_down = "W: down"
+}
+
+run_watch DHCP {
+	pidfile = "/var/run/dhclient*.pid"
+}
+
+tztime local {
+	format = "%b-%d-%Y %I:%M:%S"
+}
+
+cpu_usage {
+	format = "CPU: %usage"
+}
+
+disk "/" {
+	format = "Disk: %avail"
+}
+
+volume master {
+	format = "Vol: %volume"
+	format_muted = "Vol: (muted) %volume"
+	device = "default"
+	mixer = "Master"
+	mixer_idx = 0
+}

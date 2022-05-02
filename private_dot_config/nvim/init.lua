@@ -67,7 +67,7 @@ require("packer").startup(function(use)
         },
         on_attach = function(client)
           -- I use prettier for formatting
-          client.resolved_capabilities.document_formatting = false
+          client.server_capabilities.document_formatting = false
         end
       })
       lspconfig.gopls.setup({ capabilities = capabilities })

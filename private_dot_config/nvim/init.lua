@@ -290,6 +290,15 @@ require("packer").startup(function(use)
       }
     end
   })
+  use({
+    "terrortylor/nvim-comment",
+    config = function()
+      local comment = require("nvim_comment")
+      comment.setup({ create_mappings = false })
+      vim.keymap.set("n", "<C-c>", "<Cmd>set operatorfunc=CommentOperator<CR>g@l")
+      vim.keymap.set("x", "<C-c>", ":<C-u>call CommentOperator(visualmode())<CR>")
+    end
+  })
 end)
 
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
@@ -348,8 +357,6 @@ vim.keymap.set("n", "<Leader>d", ":TroubleToggle<CR>")
 vim.keymap.set("n", "<C-Space><C-Space>", ":Telescope buffers<CR>")
 vim.keymap.set("n", "<C-Space><C-g>", ":Telescope live_grep<CR>")
 vim.keymap.set("n", "<C-Space><C-f>", ":Telescope find_files<CR>")
-vim.keymap.set("n", "<C-c>", "ic")
-vim.keymap.set("i", "<C-c>", "c")
 vim.keymap.set("n", "<Leader>l", ":set list!<CR>")
 
 local dap = require("dap")

@@ -340,7 +340,7 @@ vim.keymap.set("n", "<Leader>m", ":NvimTreeFindFile<CR>")
 vim.keymap.set("n", "gd", ":Telescope lsp_definitions<CR>")
 vim.keymap.set("n", "gt", ":Telescope lsp_type_definitions<CR>")
 vim.keymap.set("n", "gr", ":Telescope lsp_references<CR>")
-vim.keymap.set("n", "<Leader>f", vim.lsp.buf.formatting)
+vim.keymap.set("n", "<Leader>f", function () vim.lsp.buf.format({ async = true }) end)
 vim.keymap.set("", "K", vim.lsp.buf.hover)
 vim.keymap.set("", "KK", function() vim.diagnostic.open_float(nil, {focus=false}) end)
 vim.keymap.set("n", "<Leader>.", vim.lsp.buf.code_action)
@@ -378,4 +378,3 @@ vim.keymap.set("n", "<Leader>t", function()
     port = 9229
   })
 end)
-

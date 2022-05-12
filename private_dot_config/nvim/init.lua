@@ -318,6 +318,8 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 vim.keymap.set("n", "<Space>", "<Nop>")
 vim.keymap.set("i", "jk", "<Esc>")
 vim.keymap.set("i", "kj", "<Esc>")
+vim.keymap.set("t", "kj", "<C-\\><C-n>")
+vim.keymap.set("t", "jk", "<C-\\><C-n>")
 vim.keymap.set("n", "Q", "<Nop>")
 vim.keymap.set("n", "gp", "`[v`]")
 vim.keymap.set("n", "<C-h>", "<C-w>h")

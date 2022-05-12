@@ -1,6 +1,8 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
+export DISABLE_AUTO_UPDATE=true
+
 # Path to your oh-my-zsh installation.
 export ZSH="/home/icholy/.oh-my-zsh"
 
@@ -29,15 +31,11 @@ export PATH=$PATH:/usr/local/lua-language-server/bin
 
 # Node Version Manager
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+export PATH=$PATH:"$NVM_DIR/versions/node/$(cat $NVM_DIR/alias/default)/bin"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" --no-use
 
 # Disable Husky Hooks
 export HUSKY=0
-
-# Serverless
-sls () {
-  (nvm use 12; npx sls $@)
-}
 
 alias clip="xclip -i -selection clipboard"
 alias cz='cd $(find ~/src -maxdepth 4 -type d -name ".git" | xargs dirname | fzf)'

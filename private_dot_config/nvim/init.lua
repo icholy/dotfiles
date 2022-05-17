@@ -198,7 +198,12 @@ require("packer").startup(function(use)
             "json",
             "lua",
             "bash"
-          }
+          },
+          disable = function(lang, bufnr)
+            local name = vim.api.nvim_buf_get_name(bufnr)
+            local size = vim.fn.getfsize(size)
+            return size > bit.lshift(1, 20)
+          end
         })
     end
   })

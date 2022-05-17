@@ -185,7 +185,11 @@ require("packer").startup(function(use)
         require("nvim-treesitter.configs").setup({
           highlight = {
             enable = true,
-            disable = {}
+            disable = function(lang, bufnr)
+              local name = vim.api.nvim_buf_get_name(bufnr)
+              local size = vim.fn.getfsize(name)
+              return size > bit.lshift(1, 20)
+            end,
           },
           indent = {
             enable = true,
@@ -199,11 +203,6 @@ require("packer").startup(function(use)
             "lua",
             "bash"
           },
-          disable = function(lang, bufnr)
-            local name = vim.api.nvim_buf_get_name(bufnr)
-            local size = vim.fn.getfsize(size)
-            return size > bit.lshift(1, 20)
-          end
         })
     end
   })

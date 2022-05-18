@@ -297,10 +297,9 @@ require("packer").startup(function(use)
   use({
     "terrortylor/nvim-comment",
     config = function()
-      local comment = require("nvim_comment")
-      comment.setup({ create_mappings = false })
-      vim.keymap.set("n", "<C-k>", "<Cmd>set operatorfunc=CommentOperator<CR>g@l")
-      vim.keymap.set("x", "<C-k>", ":<C-u>call CommentOperator(visualmode())<CR>")
+      require("nvim_comment").setup({ create_mappings = false })
+      vim.keymap.set("n", "<C-k>", ":CommentToggle<CR>")
+      vim.keymap.set("x", "<C-k>", ":CommentToggle<CR>gv")
     end
   })
 end)

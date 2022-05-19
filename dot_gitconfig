@@ -1,6 +1,10 @@
 [user]
 	name = Ilia Choly
 	email = ilia.choly@gmail.com
+
+[includeIf "gitdir:~/src/github.com/compassdigital/"]
+	path = .gitconfig-compassdigital
+
 [push]
 	default = current
 [core]

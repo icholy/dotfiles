@@ -298,8 +298,8 @@ require("packer").startup(function(use)
     "terrortylor/nvim-comment",
     config = function()
       require("nvim_comment").setup({ create_mappings = false })
-      vim.keymap.set("n", "<C-k>", ":CommentToggle<CR>")
-      vim.keymap.set("x", "<C-k>", ":CommentToggle<CR>gv")
+      vim.keymap.set("n", "<Leader>k", ":CommentToggle<CR>")
+      vim.keymap.set("x", "<Leader>k", ":CommentToggle<CR>gv")
     end
   })
 end)

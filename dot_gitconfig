@@ -1,0 +1,17 @@
+[user]
+	name = Ilia Choly
+	email = ilia.choly@gmail.com
+[push]
+	default = current
+[core]
+	hooksPath = /dev/null
+[alias]
+	s = status
+[remote "origin"]
+	prune = true
+[merge]
+	tool = smerge
+[clean]
+	requireForce = false
+[http]
+	cookiefile = /home/icholy/.gitcookies

@@ -43,5 +43,6 @@ alias czz='cd $(cd /home/icholy/src/github.com/compassdigital/cdl && git ls-file
 alias n='nautilus'
 alias sagi='sudo apt install'
 alias t='talos -p ilia.choly -e default -b open -q -F'
+alias fd='fdfind'
 
 source /home/icholy/.secrets

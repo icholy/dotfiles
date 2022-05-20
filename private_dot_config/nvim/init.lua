@@ -37,11 +37,18 @@ vim.opt.listchars:append("eol:¬")
 vim.cmd("packadd packer.nvim")
 
 -- automatically recompile when config is changed
-local packer_group = vim.api.nvim_create_augroup('Packer', { clear = true })
-vim.api.nvim_create_autocmd('BufWritePost', {
-  command = 'source <afile> | PackerCompile',
+local packer_group = vim.api.nvim_create_augroup("Packer", { clear = true })
+vim.api.nvim_create_autocmd("BufWritePost", {
+  command = "source <afile> | PackerCompile",
   group = packer_group,
-  pattern = 'init.lua',
+  pattern = "init.lua",
+})
+
+-- format go files on save
+vim.api.nvim_create_autocmd("BufWritePre", {
+  callback = function () vim.lsp.buf.format({ async = true }) end,
+  group = packer_group,
+  pattern = "*.go",
 })
 
 require("packer").startup(function(use)
@@ -57,9 +64,9 @@ require("packer").startup(function(use)
     config = function()
       local capabilities = vim.lsp.protocol.make_client_capabilities()
 
-      require('cmp_nvim_lsp').update_capabilities(capabilities)
+      require("cmp_nvim_lsp").update_capabilities(capabilities)
 
-      local lspconfig = require('lspconfig')
+      local lspconfig = require("lspconfig")
       lspconfig.tsserver.setup({
         capabilities = capabilities,
         init_options = {
@@ -73,7 +80,7 @@ require("packer").startup(function(use)
       lspconfig.gopls.setup({ capabilities = capabilities })
       lspconfig.jedi_language_server.setup({ capabilities = capabilities })
 
-      local runtime_path = vim.split(package.path, ';')
+      local runtime_path = vim.split(package.path, ";")
       table.insert(runtime_path, "lua/?.lua")
       table.insert(runtime_path, "lua/?/init.lua")
       lspconfig.sumneko_lua.setup({
@@ -81,13 +88,13 @@ require("packer").startup(function(use)
           Lua = {
             runtime = {
               -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-              version = 'LuaJIT',
+              version = "LuaJIT",
               -- Setup your lua path
               path = runtime_path,
             },
             diagnostics = {
               -- Get the language server to recognize the `vim` global
-              globals = {'vim'},
+              globals = {"vim"},
             },
             workspace = {
               -- Make the server aware of Neovim runtime files
@@ -123,34 +130,34 @@ require("packer").startup(function(use)
             end,
           },
           mapping = {
-            ['<C-n>'] = cmp.mapping(cmp.mapping.select_next_item(), {'i','c'}),
-            ['<C-p>'] = cmp.mapping(cmp.mapping.select_prev_item(), {'i','c'}),
-            ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
-            ['<Tab>'] = cmp.mapping(cmp.mapping.confirm({ select = true }), { 'i', 'c' }),
-            ['<CR>'] = cmp.mapping(cmp.mapping.confirm(), { 'i', 'c' }),
-            ['<Esc>'] = cmp.mapping(cmp.mapping.abort(), { 'i', 'c' }),
+            ["<C-n>"] = cmp.mapping(cmp.mapping.select_next_item(), {"i","c"}),
+            ["<C-p>"] = cmp.mapping(cmp.mapping.select_prev_item(), {"i","c"}),
+            ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
+            ["<Tab>"] = cmp.mapping(cmp.mapping.confirm({ select = true }), { "i", "c" }),
+            ["<CR>"] = cmp.mapping(cmp.mapping.confirm(), { "i", "c" }),
+            ["<Esc>"] = cmp.mapping(cmp.mapping.abort(), { "i", "c" }),
           },
           sources = cmp.config.sources({
-            { name = 'nvim_lsp' },
-            { name = 'vsnip' },
+            { name = "nvim_lsp" },
+            { name = "vsnip" },
           }, {
-            { name = 'buffer' },
+            { name = "buffer" },
           })
         })
 
         -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
-        cmp.setup.cmdline('/', {
+        cmp.setup.cmdline("/", {
           sources = {
-            { name = 'buffer' }
+            { name = "buffer" }
           }
         })
 
         -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-        cmp.setup.cmdline(':', {
+        cmp.setup.cmdline(":", {
           sources = cmp.config.sources({
-            { name = 'path' }
+            { name = "path" }
           }, {
-            { name = 'cmdline' }
+            { name = "cmdline" }
           })
         })
       end
@@ -209,12 +216,12 @@ require("packer").startup(function(use)
   use({
     "RRethy/nvim-treesitter-textsubjects",
     config = function()
-      require('nvim-treesitter.configs').setup({
+      require("nvim-treesitter.configs").setup({
           textsubjects = {
               enable = true,
-              prev_selection = ',',
+              prev_selection = ",",
               keymaps = {
-                  ['.'] = 'textsubjects-smart',
+                  ["."] = "textsubjects-smart",
               },
           },
       })
@@ -286,10 +293,10 @@ require("packer").startup(function(use)
           port = 9229
         },
         {
-          name = 'Attach',
-          type = 'node2',
-          request = 'attach',
-          processId = require('dap.utils').pick_process,
+          name = "Attach",
+          type = "node2",
+          request = "attach",
+          processId = require("dap.utils").pick_process,
         }
       }
     end
@@ -304,9 +311,9 @@ require("packer").startup(function(use)
   })
 end)
 
-vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
+vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
 
 vim.cmd("source ~/.config/nvim/idtool.vim")
 
@@ -390,3 +397,4 @@ vim.keymap.set("n", "<Leader>t", function()
     port = 9229
   })
 end)
+

@@ -36,19 +36,26 @@ vim.opt.listchars:append("eol:¬")
 
 vim.cmd("packadd packer.nvim")
 
+local group = vim.api.nvim_create_augroup("MyGroup", { clear = true })
+
 -- automatically recompile when config is changed
-local packer_group = vim.api.nvim_create_augroup("Packer", { clear = true })
 vim.api.nvim_create_autocmd("BufWritePost", {
   command = "source <afile> | PackerCompile",
-  group = packer_group,
+  group = group,
   pattern = "init.lua",
 })
 
 -- format go files on save
 vim.api.nvim_create_autocmd("BufWritePre", {
   callback = function () vim.lsp.buf.format({ async = true }) end,
-  group = packer_group,
+  group = group,
   pattern = "*.go",
+})
+
+-- automatically enter insert mode 
+vim.api.nvim_create_autocmd({"BufWinEnter", "WinEnter", "TermOpen"}, {
+    command = "startinsert",
+    pattern = "term://*",
 })
 
 require("packer").startup(function(use)
@@ -339,6 +346,10 @@ vim.keymap.set("n", "<C-h>", "<C-w>h")
 vim.keymap.set("n", "<C-j>", "<C-w>j")
 vim.keymap.set("n", "<C-k>", "<C-w>k")
 vim.keymap.set("n", "<C-l>", "<C-w>l")
+vim.keymap.set("t", "<C-h>", "<C-\\><C-n><C-w>h")
+vim.keymap.set("t", "<C-j>", "<C-\\><C-n><C-w>j")
+vim.keymap.set("t", "<C-k>", "<C-\\><C-n><C-w>k")
+vim.keymap.set("t", "<C-l>", "<C-\\><C-n><C-w>l")
 vim.keymap.set("v", "<C-j>", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "<C-k>", ":m '<-2<CR>gv=gv")
 vim.keymap.set("n", "<Leader>s", ":%s/<C-r><C-w>/")

@@ -264,6 +264,12 @@ require("packer").startup(function(use)
     requires = "kyazdani42/nvim-web-devicons",
     config = function()
       require("trouble").setup()
+
+      -- update the default diagnostic signs to match trouble
+      vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticError" })
+      vim.fn.sign_define("DiagnosticSignWarning", { text = "", texthl = "DiagnosticWarning" })
+      vim.fn.sign_define("DiagnosticSignHint", { text = "", numhl = "DiagnosticHint" })
+      vim.fn.sign_define("DiagnosticSignInformation", { text = "", texthl = "DiagnosticInformation" })
     end
   })
   use({

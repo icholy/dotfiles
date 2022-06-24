@@ -268,7 +268,7 @@ require("packer").startup(function(use)
       -- update the default diagnostic signs to match trouble
       vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticError" })
       vim.fn.sign_define("DiagnosticSignWarning", { text = "", texthl = "DiagnosticWarning" })
-      vim.fn.sign_define("DiagnosticSignHint", { text = "", numhl = "DiagnosticHint" })
+      vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticHint" })
       vim.fn.sign_define("DiagnosticSignInformation", { text = "", texthl = "DiagnosticInformation" })
     end
   })

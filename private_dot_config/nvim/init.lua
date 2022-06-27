@@ -375,8 +375,20 @@ vim.keymap.set("n", "]b", ":bnext<CR>")
 vim.keymap.set("n", "[b", ":bprev<CR>")
 vim.keymap.set("n", "]t", ":tabnext<CR>")
 vim.keymap.set("n", "[t", ":tabprev<CR>")
-vim.keymap.set("n", "]d", function () vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR }) end)
-vim.keymap.set("n", "[d", function () vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR }) end)
+vim.keymap.set("n", "]d", function ()
+    if #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR }) > 0 then
+      vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })
+    else
+      vim.diagnostic.goto_next()
+    end
+end)
+vim.keymap.set("n", "[d", function ()
+    if #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR }) > 0 then
+      vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })
+    else
+      vim.diagnostic.goto_prev()
+    end
+end)
 vim.keymap.set("n", "<Leader>n", ":NvimTreeToggle<CR>")
 vim.keymap.set("n", "<Leader>m", ":NvimTreeFindFile<CR>")
 vim.keymap.set("n", "gd", ":Telescope lsp_definitions<CR>")

@@ -29,6 +29,9 @@ export PATH=$PATH:/usr/local/swift/swift-5.5.2-RELEASE-ubuntu20.04/usr/bin
 # Add lua-language-server
 export PATH=$PATH:/usr/local/lua-language-server/bin
 
+# Add pyenv to PATH
+export PATH=$PATH:$HOME/.pyenv/bin
+
 # Node Version Manager
 export NVM_DIR="$HOME/.nvm"
 export PATH=$PATH:"$NVM_DIR/versions/node/$(cat $NVM_DIR/alias/default)/bin"

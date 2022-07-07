@@ -142,7 +142,13 @@ require("packer").startup(function(use)
             ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
             ["<Tab>"] = cmp.mapping(cmp.mapping.confirm({ select = true }), { "i", "c" }),
             ["<CR>"] = cmp.mapping(cmp.mapping.confirm(), { "i", "c" }),
-            ["<Esc>"] = cmp.mapping(cmp.mapping.abort(), { "i", "c" }),
+            ["<Esc>"] = cmp.mapping({
+              i = cmp.mapping.abort(),
+              c = function()
+                -- https://github.com/hrsh7th/nvim-cmp/issues/1033
+                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-c>', true, true, true), 'n', true)
+              end
+            }),
           },
           sources = cmp.config.sources({
             { name = "nvim_lsp" },
@@ -394,6 +400,9 @@ vim.keymap.set("n", "<C-Space><C-Space>", ":Telescope buffers<CR>")
 vim.keymap.set("n", "<C-Space><C-g>", ":Telescope live_grep<CR>")
 vim.keymap.set("n", "<C-Space><C-f>", ":Telescope find_files<CR>")
 vim.keymap.set("n", "<Leader>l", ":set list!<CR>")
+
+-- https://github.com/nvim-lualine/lualine.nvim/issues/122
+vim.keymap.set("", "<C-c>", "<Esc>")
 
 local dap = require("dap")
 

@@ -186,11 +186,9 @@ require("packer").startup(function(use)
           mappings = {
             n = {
               ["<C-Space>"] = actions.close,
-              ["<C-c>"] = actions.close
             },
             i = {
               ["<C-Space>"] = actions.close,
-              ["<C-c>"] = actions.close
             }
           }
         }
@@ -212,7 +210,7 @@ require("packer").startup(function(use)
             end,
           },
           indent = {
-            enable = true,
+            enable = false,
             disable = {}
           },
           ensure_installed = {
@@ -348,6 +346,10 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   }
 )
 
+-- https://github.com/nvim-lualine/lualine.nvim/issues/122
+vim.keymap.set("n", "<C-c>", "<Nop>")
+vim.keymap.set("c", "<C-c>", "<Nop>")
+vim.keymap.set("i", "<C-c>", "<Nop>")
 vim.keymap.set("n", "<Space>", "<Nop>")
 vim.keymap.set("i", "jk", "<Esc>")
 vim.keymap.set("i", "kj", "<Esc>")
@@ -400,9 +402,6 @@ vim.keymap.set("n", "<C-Space><C-Space>", ":Telescope buffers<CR>")
 vim.keymap.set("n", "<C-Space><C-g>", ":Telescope live_grep<CR>")
 vim.keymap.set("n", "<C-Space><C-f>", ":Telescope find_files<CR>")
 vim.keymap.set("n", "<Leader>l", ":set list!<CR>")
-
--- https://github.com/nvim-lualine/lualine.nvim/issues/122
-vim.keymap.set("", "<C-c>", "<Esc>")
 
 local dap = require("dap")
 

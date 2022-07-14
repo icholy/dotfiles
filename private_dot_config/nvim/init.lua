@@ -117,14 +117,16 @@ require("packer").startup(function(use)
       lspconfig.eslint.setup({})
     end
   })
-  use("hrsh7th/cmp-nvim-lsp")
-  use("hrsh7th/cmp-buffer")
-  use("hrsh7th/cmp-path")
-  use("hrsh7th/cmp-cmdline")
-  use("hrsh7th/vim-vsnip")
   use("rafamadriz/friendly-snippets")
   use({
       "hrsh7th/nvim-cmp",
+      requires = {
+        "hrsh7th/cmp-nvim-lsp",
+        "hrsh7th/cmp-buffer",
+        "hrsh7th/cmp-path",
+        "hrsh7th/cmp-cmdline",
+        "hrsh7th/vim-vsnip",
+      },
       config = function()
         -- Setup nvim-cmp.
         local cmp = require("cmp")

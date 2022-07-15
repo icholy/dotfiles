@@ -177,6 +177,18 @@ require("packer").startup(function(use)
         })
       end
   })
+  use({
+    "ray-x/lsp_signature.nvim",
+    config = function()
+        require("lsp_signature").setup({
+            hint_enable = false,
+            handler_opts = {
+                -- keep it similar looking to vim.lsp.buf.hover
+                border = "none"
+            }
+        })
+    end
+  })
   use("nvim-telescope/telescope-ui-select.nvim")
   use({
     "nvim-telescope/telescope.nvim",

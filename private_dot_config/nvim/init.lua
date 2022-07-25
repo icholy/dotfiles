@@ -34,7 +34,7 @@ vim.o.fixendofline = false
 vim.opt.listchars:append("tab:» ")
 vim.opt.listchars:append("eol:¬")
 
-vim.cmd("packadd packer.nvim")
+vim.cmd.packadd("packer.nvim")
 
 local group = vim.api.nvim_create_augroup("MyGroup", { clear = true })
 
@@ -255,7 +255,7 @@ require("packer").startup(function(use)
   use({
     "ishan9299/nvim-solarized-lua",
     config = function()
-      vim.cmd("colorscheme solarized")
+      vim.cmd.colorscheme("solarized")
     end
   })
   use({
@@ -349,7 +349,7 @@ vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
-vim.cmd("source ~/.config/nvim/idtool.vim")
+vim.cmd.source("~/.config/nvim/idtool.vim")
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {

@@ -167,7 +167,7 @@ require("packer").startup(function(use)
               i = cmp.mapping.abort(),
               c = function()
                 -- https://github.com/hrsh7th/nvim-cmp/issues/1033
-                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-c>', true, true, true), 'n', true)
+                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-c>", true, true, true), "n", true)
               end
             }),
           },
@@ -243,7 +243,7 @@ require("packer").startup(function(use)
         require("nvim-treesitter.configs").setup({
           highlight = {
             enable = true,
-            disable = function(lang, bufnr)
+            disable = function(_, bufnr)
               local name = vim.api.nvim_buf_get_name(bufnr)
               local size = vim.fn.getfsize(name)
               return size > bit.lshift(1, 20)

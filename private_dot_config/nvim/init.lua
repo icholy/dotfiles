@@ -60,7 +60,12 @@ vim.api.nvim_create_autocmd({"BufWinEnter", "WinEnter", "TermOpen"}, {
 
 require("packer").startup(function(use)
   use("wbthomason/packer.nvim")
-  use("tpope/vim-fugitive")
+  use({
+    "tpope/vim-fugitive",
+    config = function()
+        vim.g.fugitive_legacy_commands = false
+    end
+  })
   use("tpope/vim-surround")
   use("tpope/vim-sleuth")
   use("tpope/vim-rhubarb")

@@ -307,40 +307,6 @@ require("packer").startup(function(use)
   })
   use("dstein64/vim-startuptime")
   use({
-    "mfussenegger/nvim-dap",
-    config = function()
-      local dap = require("dap")
-      dap.adapters.node2 = {
-        type = "executable",
-        command = "node",
-        args = {"/home/icholy/src/github.com/microsoft/vscode-node-debug2/out/src/nodeDebug.js"}
-      }
-      dap.configurations.javascript = {
-        {
-          name = "Launch Test",
-          type = "node2",
-          request = "launch",
-          env = { MOCHA_OPTIONS = "--inspect-brk" },
-          cwd = vim.fn.getcwd(),
-          runtimeExecutable = "npm",
-          runtimeArgs = { "test" },
-          sourceMaps = true,
-          protocol = "inspector",
-          noDebug = true,
-          skipFiles = {"<node_internals>/**/*.js"},
-          console = "integratedTerminal",
-          port = 9229
-        },
-        {
-          name = "Attach",
-          type = "node2",
-          request = "attach",
-          processId = require("dap.utils").pick_process,
-        }
-      }
-    end
-  })
-  use({
     "terrortylor/nvim-comment",
     config = function()
       require("nvim_comment").setup({ create_mappings = false })
@@ -416,7 +382,7 @@ vim.keymap.set("n", "<Leader>r", vim.lsp.buf.rename)
 vim.keymap.set("", "K", vim.lsp.buf.hover)
 vim.keymap.set("", "KK", function() vim.diagnostic.open_float(nil, {focus=false}) end)
 vim.keymap.set("n", "<Leader>.", vim.lsp.buf.code_action)
-vim.keymap.set("n", "<Leader>d", ":TroubleToggle<CR>")
+vim.keymap.set("n", "<Leader>d", ":TroubleToggle workspace_diagnostics<CR>")
 vim.keymap.set("n", "<C-Space><C-Space>", ":Telescope buffers<CR>")
 vim.keymap.set("n", "<C-Space><C-g>", ":Telescope live_grep<CR>")
 vim.keymap.set("n", "<C-Space><C-f>", ":Telescope find_files<CR>")
@@ -424,30 +390,4 @@ vim.keymap.set("n", "<C-Space><C-t>", ":Telescope diagnostics<CR>")
 vim.keymap.set("n", "<Leader>l", ":set list!<CR>")
 vim.keymap.set("n", "<Leader>o", ":BufOnly<CR>")
 
-local dap = require("dap")
-
-vim.keymap.set("n", "<Leader>b", function()
-    dap.toggle_breakpoint()
-end)
-
-vim.keymap.set("n", "<Leader>c", function()
-    dap.continue()
-end)
-
-vim.keymap.set("n", "<Leader>t", function()
-  dap.run({
-    type = "node2",
-    request = "launch",
-    env = { MOCHA_OPTIONS = "--inspect-brk=9229" },
-    cwd = vim.fn.getcwd(),
-    runtimeExecutable = "npm",
-    runtimeArgs = { "test" },
-    sourceMaps = true,
-    protocol = "inspector",
-    noDebug = true,
-    skipFiles = {"<node_internals>/**/*.js"},
-    console = "integratedTerminal",
-    port = 9229
-  })
-end)
 

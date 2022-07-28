@@ -64,12 +64,26 @@ require("packer").startup(function(use)
     "tpope/vim-fugitive",
     config = function()
         vim.g.fugitive_legacy_commands = false
+
+        vim.keymap.set("n", "<Leader>gs", ":Git status<CR>")
+        vim.keymap.set("n", "<Leader>gd", ":Git vdiff<CR>")
+        vim.keymap.set("n", "<Leader>gc", ":Git commit<CR>")
+        vim.keymap.set("n", "<Leader>ge", ":Gedit<CR>")
+        vim.keymap.set("n", "<Leader>gr", ":Gread<CR>")
+        vim.keymap.set("n", "<Leader>gw", ":Gwrite<CR>")
+        vim.keymap.set("n", "<Leader>gp", ":Git push<CR>")
     end
   })
   use("tpope/vim-surround")
   use("tpope/vim-sleuth")
   use("tpope/vim-rhubarb")
-  use({"numtostr/BufOnly.nvim", cmd = "BufOnly" })
+  use({
+    "numtostr/BufOnly.nvim",
+    cmd = "BufOnly",
+    config = function()
+      vim.keymap.set("n", "<Leader>o", ":BufOnly<CR>")
+    end
+  })
   use({
     "neovim/nvim-lspconfig",
     after = "cmp-nvim-lsp",
@@ -213,6 +227,13 @@ require("packer").startup(function(use)
         }
       })
       require("telescope").load_extension("ui-select")
+      vim.keymap.set("n", "<C-Space><C-Space>", ":Telescope buffers<CR>")
+      vim.keymap.set("n", "<C-Space><C-g>", ":Telescope live_grep<CR>")
+      vim.keymap.set("n", "<C-Space><C-f>", ":Telescope find_files<CR>")
+      vim.keymap.set("n", "<C-Space><C-t>", ":Telescope diagnostics<CR>")
+      vim.keymap.set("n", "gd", ":Telescope lsp_definitions<CR>")
+      vim.keymap.set("n", "gt", ":Telescope lsp_type_definitions<CR>")
+      vim.keymap.set("n", "gr", ":Telescope lsp_references<CR>")
     end
   })
   use({
@@ -293,6 +314,8 @@ require("packer").startup(function(use)
       vim.fn.sign_define("DiagnosticSignWarning", { text = "", texthl = "DiagnosticWarning" })
       vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticHint" })
       vim.fn.sign_define("DiagnosticSignInformation", { text = "", texthl = "DiagnosticInformation" })
+
+      vim.keymap.set("n", "<Leader>d", ":TroubleToggle workspace_diagnostics<CR>")
     end
   })
   use({
@@ -303,6 +326,8 @@ require("packer").startup(function(use)
           -- I keep accidentally hitting 's' and opening libreoffice ...
           system_open = { cmd = "echo" }
         })
+        vim.keymap.set("n", "<Leader>n", ":NvimTreeToggle<CR>")
+        vim.keymap.set("n", "<Leader>m", ":NvimTreeFindFile<CR>")
       end
   })
   use("dstein64/vim-startuptime")
@@ -353,13 +378,6 @@ vim.keymap.set("t", "<C-l>", "<C-\\><C-n><C-w>l")
 vim.keymap.set("v", "<C-j>", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "<C-k>", ":m '<-2<CR>gv=gv")
 vim.keymap.set("n", "<Leader>s", ":%s/<C-r><C-w>/")
-vim.keymap.set("n", "<Leader>gs", ":Git status<CR>")
-vim.keymap.set("n", "<Leader>gd", ":Git vdiff<CR>")
-vim.keymap.set("n", "<Leader>gc", ":Git commit<CR>")
-vim.keymap.set("n", "<Leader>ge", ":Gedit<CR>")
-vim.keymap.set("n", "<Leader>gr", ":Gread<CR>")
-vim.keymap.set("n", "<Leader>gw", ":Gwrite<CR>")
-vim.keymap.set("n", "<Leader>gp", ":Git push<CR>")
 vim.keymap.set("n", "<C-e>", "3<C-e>")
 vim.keymap.set("n", "<C-y>", "3<C-y>")
 vim.keymap.set("n", "]q", ":cnext<CR>")
@@ -372,22 +390,11 @@ vim.keymap.set("n", "]e", function () vim.diagnostic.goto_next({ severity = vim.
 vim.keymap.set("n", "[e", function () vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR }) end)
 vim.keymap.set("n", "]d", function () vim.diagnostic.goto_next() end)
 vim.keymap.set("n", "[d", function () vim.diagnostic.goto_prev() end)
-vim.keymap.set("n", "<Leader>n", ":NvimTreeToggle<CR>")
-vim.keymap.set("n", "<Leader>m", ":NvimTreeFindFile<CR>")
-vim.keymap.set("n", "gd", ":Telescope lsp_definitions<CR>")
-vim.keymap.set("n", "gt", ":Telescope lsp_type_definitions<CR>")
-vim.keymap.set("n", "gr", ":Telescope lsp_references<CR>")
 vim.keymap.set("n", "<Leader>f", function () vim.lsp.buf.format({ async = true }) end)
 vim.keymap.set("n", "<Leader>r", vim.lsp.buf.rename)
 vim.keymap.set("", "K", vim.lsp.buf.hover)
 vim.keymap.set("", "KK", function() vim.diagnostic.open_float(nil, {focus=false}) end)
 vim.keymap.set("n", "<Leader>.", vim.lsp.buf.code_action)
-vim.keymap.set("n", "<Leader>d", ":TroubleToggle workspace_diagnostics<CR>")
-vim.keymap.set("n", "<C-Space><C-Space>", ":Telescope buffers<CR>")
-vim.keymap.set("n", "<C-Space><C-g>", ":Telescope live_grep<CR>")
-vim.keymap.set("n", "<C-Space><C-f>", ":Telescope find_files<CR>")
-vim.keymap.set("n", "<C-Space><C-t>", ":Telescope diagnostics<CR>")
 vim.keymap.set("n", "<Leader>l", ":set list!<CR>")
-vim.keymap.set("n", "<Leader>o", ":BufOnly<CR>")
 
 

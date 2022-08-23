@@ -41,11 +41,24 @@ export PATH=$PATH:"$NVM_DIR/versions/node/$(cat $NVM_DIR/alias/default)/bin"
 export HUSKY=0
 
 alias clip="xclip -i -selection clipboard"
-alias cz='cd $(find ~/src -maxdepth 4 -type d -name ".git" | xargs dirname | fzf)'
-alias czz='cd $(cd /home/icholy/src/github.com/compassdigital/cdl && git ls-files | grep "package\.json$\|go\.mod$" | xargs dirname | fzf | xargs realpath)'
 alias n='nautilus'
 alias sagi='sudo apt install'
 alias t='talos -p ilia.choly -e default -b open -q -F'
 alias fd='fdfind'
+
+function cz() {
+    local REPO_DIR=$(find ~/src -maxdepth 4 -type d -name ".git" | xargs dirname | fzf)
+    if [ -n "$REPO_DIR" ]; then
+        cd "$REPO_DIR"
+    fi
+}
+
+function czz() {
+    local REPO_DIR="/home/icholy/src/github.com/compassdigital/cdl"
+    local SUB_DIR=$(git --git-dir $REPO_DIR/.git ls-files | grep "package\.json$\|go\.mod$" | xargs dirname | fzf)
+    if [ -n "$SUB_DIR" ]; then
+        cd "$REPO_DIR/$SUB_DIR"
+    fi
+}
 
 source /home/icholy/.secrets

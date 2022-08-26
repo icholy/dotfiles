@@ -58,6 +58,16 @@ vim.api.nvim_create_autocmd({"BufWinEnter", "WinEnter", "TermOpen"}, {
     pattern = "term://*",
 })
 
+-- don't auto-indent when typing ':'
+vim.api.nvim_create_autocmd("FileType", {
+  group = group,
+  pattern = {"yml", "yaml"},
+  callback = function()
+    vim.cmd("setlocal indentkeys-=<:>")
+    vim.cmd("setlocal indentkeys-=:")
+  end
+})
+
 require("packer").startup(function(use)
   use("wbthomason/packer.nvim")
   use({

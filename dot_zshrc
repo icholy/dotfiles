@@ -21,7 +21,7 @@ export PATH=$PATH:/home/icholy/bin
 
 # Add Go bins to PATH
 export PATH=$PATH:/usr/local/go/bin
-export PATH=$PATH:/home/icholy/go/bin
+export PATH=$PATH:$(go env GOPATH)/bin
 
 # Add swift to PATH
 export PATH=$PATH:/usr/local/swift/swift-5.5.2-RELEASE-ubuntu20.04/usr/bin

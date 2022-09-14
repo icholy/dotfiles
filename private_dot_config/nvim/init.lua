@@ -38,13 +38,6 @@ vim.cmd.packadd("packer.nvim")
 
 local group = vim.api.nvim_create_augroup("MyGroup", { clear = true })
 
--- automatically recompile when config is changed
-vim.api.nvim_create_autocmd("BufWritePost", {
-  command = "source <afile> | PackerCompile",
-  group = group,
-  pattern = "init.lua",
-})
-
 -- format go files on save
 vim.api.nvim_create_autocmd("BufWritePre", {
   callback = function () vim.lsp.buf.format({ async = true }) end,
@@ -52,7 +45,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   pattern = "*.go",
 })
 
--- automatically enter insert mode 
+-- automatically enter insert mode
 vim.api.nvim_create_autocmd({"BufWinEnter", "WinEnter", "TermOpen"}, {
     command = "startinsert",
     pattern = "term://*",

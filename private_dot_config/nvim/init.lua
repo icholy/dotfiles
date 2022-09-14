@@ -399,5 +399,6 @@ vim.keymap.set("", "K", vim.lsp.buf.hover)
 vim.keymap.set("", "KK", function() vim.diagnostic.open_float(nil, {focus=false}) end)
 vim.keymap.set("n", "<Leader>.", vim.lsp.buf.code_action)
 vim.keymap.set("n", "<Leader>l", ":set list!<CR>")
+vim.keymap.set("n", "<Leader>t", ":belowright split | terminal<CR>")
 
 

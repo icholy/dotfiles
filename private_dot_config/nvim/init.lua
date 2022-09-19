@@ -342,6 +342,7 @@ require("packer").startup(function(use)
       vim.keymap.set("x", "<Leader>k", ":CommentToggle<CR>gv")
     end
   })
+  use("gennaro-tedesco/nvim-peekup")
 end)
 
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })

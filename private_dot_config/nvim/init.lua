@@ -30,6 +30,7 @@ vim.o.timeoutlen = 300
 vim.o.updatetime = 250
 vim.o.background = "light"
 vim.o.fixendofline = false
+vim.o.cmdheight = 0
 
 vim.opt.listchars:append("tab:» ")
 vim.opt.listchars:append("eol:¬")

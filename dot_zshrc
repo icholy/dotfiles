@@ -40,6 +40,9 @@ export PATH=$PATH:"$NVM_DIR/versions/node/$(cat $NVM_DIR/alias/default)/bin"
 # Disable Husky Hooks
 export HUSKY=0
 
+# Use ripgrep config
+export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
+
 alias clip="xclip -i -selection clipboard"
 alias n='nautilus'
 alias sagi='sudo apt install'

@@ -367,8 +367,6 @@ vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
-vim.cmd.source("~/.config/nvim/idtool.vim")
-
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
     virtual_text = false,
@@ -377,6 +375,27 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
     severity_sort = true,
   }
 )
+
+function idtool_data(stage)
+  local id = vim.fn.expand("<cword>")
+  vim.cmd.new()
+  local res = vim.fn.system("idtool -e " .. stage .. " " .. id)
+  vim.api.nvim_buf_set_lines(0, 0, -1, true, vim.split(res, "\n"))
+  vim.cmd.setfiletype("json")
+end
+
+function idtool_info()
+  local id = vim.fn.expand("<cword>")
+  vim.cmd.new()
+  local res = vim.fn.system("idtool -i " .. id)
+  vim.api.nvim_buf_set_lines(0, 0, -1, true, vim.split(res, "\n"))
+  vim.cmd.setfiletype("text")
+end
+
+vim.keymap.set("n", "<Leader>id", function() idtool_data("dev") end)
+vim.keymap.set("n", "<Leader>is", function() idtool_data("staging") end)
+vim.keymap.set("n", "<Leader>ip", function() idtool_data("v1") end)
+vim.keymap.set("n", "<Leader>ii", idtool_info)
 
 -- https://github.com/nvim-lualine/lualine.nvim/issues/122
 vim.keymap.set("n", "<C-c>", "<Nop>")

@@ -108,7 +108,8 @@ require("packer").startup(function(use)
         end
       })
 
-      local go_last_root = nil
+      -- keep track of the last gopls root so we can re-use it when entering $GOPATH/pkg/mod
+      local prev_gopls_root = nil
 
       lspconfig.gopls.setup({
         capabilities = capabilities,
@@ -117,11 +118,11 @@ require("packer").startup(function(use)
         root_dir = function(fname)
           local fullpath = vim.fn.expand(fname, ':p')
           local pkgmod = os.getenv("HOME")..'/go/pkg/mod'
-          if string.find(fullpath, pkgmod) and go_last_root ~= nil then
-              return go_last_root
+          if string.find(fullpath, pkgmod) and prev_gopls_root ~= nil then
+              return prev_gopls_root
           end
-          go_last_root = lspconfig.util.root_pattern("go.mod", ".git")(fname)
-          return go_last_root
+          prev_gopls_root = lspconfig.util.root_pattern("go.mod", ".git")(fname)
+          return prev_gopls_root
         end
       })
       lspconfig.jedi_language_server.setup({ capabilities = capabilities })

@@ -110,7 +110,7 @@ require("packer").startup(function(use)
 
       -- keep track of the last gopls root so we can re-use it when entering $GOPATH/pkg/mod
       local prev_gopls_root = nil
-      local go_mod_cache = string.gsub(vim.fn.system("go env GOPATH"), "%s+", "") .. '/pkg/mod'
+      local go_mod_cache = vim.trim(vim.fn.system("go env GOPATH")) .. '/pkg/mod'
 
       lspconfig.gopls.setup({
         capabilities = capabilities,

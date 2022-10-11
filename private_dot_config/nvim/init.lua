@@ -154,7 +154,27 @@ require("packer").startup(function(use)
           },
         },
       })
-      lspconfig.eslint.setup({})
+
+      -- I don't want eslint to use my project local config for
+      -- dependencies in node_modules
+      local eslint_root_pattern = lspconfig.util.root_pattern(
+        ".eslintrc",
+        ".eslintrc.js",
+        ".eslintrc.cjs",
+        ".eslintrc.yaml",
+        ".eslintrc.yml",
+        ".eslintrc.json",
+        "package.json"
+      )
+      lspconfig.eslint.setup({
+        root_dir = function(fname)
+          local fullpath = vim.fn.expand(fname, ":p")
+          if string.find(fullpath, "node_modules") then
+            return nil
+          end
+          return eslint_root_pattern(fname)
+        end
+      })
     end
   })
   use("rafamadriz/friendly-snippets")

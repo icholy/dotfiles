@@ -107,7 +107,23 @@ require("packer").startup(function(use)
           client.server_capabilities.document_formatting = false
         end
       })
-      lspconfig.gopls.setup({ capabilities = capabilities })
+
+      local go_last_root = nil
+
+      lspconfig.gopls.setup({
+        capabilities = capabilities,
+
+        -- See: https://github.com/neovim/nvim-lspconfig/issues/804
+        root_dir = function(fname)
+          local fullpath = vim.fn.expand(fname, ':p')
+          local pkgmod = os.getenv("HOME")..'/go/pkg/mod'
+          if string.find(fullpath, pkgmod) and go_last_root ~= nil then
+              return go_last_root
+          end
+          go_last_root = lspconfig.util.root_pattern("go.mod", ".git")(fname)
+          return go_last_root
+        end
+      })
       lspconfig.jedi_language_server.setup({ capabilities = capabilities })
 
       local runtime_path = vim.split(package.path, ";")

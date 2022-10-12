@@ -121,8 +121,11 @@ require("packer").startup(function(use)
           if string.find(fullpath, go_mod_cache) and prev_gopls_root ~= nil then
               return prev_gopls_root
           end
-          prev_gopls_root = lspconfig.util.root_pattern("go.mod", ".git")(fname)
-          return prev_gopls_root
+          local root = lspconfig.util.root_pattern("go.mod", ".git")(fname)
+          if root ~= nil then
+            prev_gopls_root = root
+          end
+          return root
         end
       })
       lspconfig.jedi_language_server.setup({ capabilities = capabilities })

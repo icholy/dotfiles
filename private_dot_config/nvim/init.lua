@@ -396,7 +396,7 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   }
 )
 
-function idtool_data(stage)
+local function idtool_data(stage)
   local id = vim.fn.expand("<cword>")
   vim.cmd.new()
   local res = vim.fn.system("idtool -e " .. stage .. " " .. id)
@@ -404,7 +404,7 @@ function idtool_data(stage)
   vim.cmd.setfiletype("json")
 end
 
-function idtool_info()
+local function idtool_info()
   local id = vim.fn.expand("<cword>")
   vim.cmd.new()
   local res = vim.fn.system("idtool -i " .. id)

@@ -92,10 +92,7 @@ require("packer").startup(function(use)
     "neovim/nvim-lspconfig",
     after = "cmp-nvim-lsp",
     config = function()
-      local capabilities = vim.lsp.protocol.make_client_capabilities()
-
-      require("cmp_nvim_lsp").update_capabilities(capabilities)
-
+      local capabilities = require("cmp_nvim_lsp").default_capabilities()
       local lspconfig = require("lspconfig")
       lspconfig.tsserver.setup({
         capabilities = capabilities,

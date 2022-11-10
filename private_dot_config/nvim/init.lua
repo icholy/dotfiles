@@ -381,6 +381,14 @@ require("packer").startup(function(use)
     end
   })
   use("gennaro-tedesco/nvim-peekup")
+  use({
+    "iamcco/markdown-preview.nvim",
+    run = "cd app && npm install",
+    setup = function()
+      vim.g.mkdp_filetypes = { "markdown" }
+    end,
+    ft = { "markdown" },
+  })
 end)
 
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })

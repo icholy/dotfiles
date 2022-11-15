@@ -332,14 +332,22 @@ require("packer").startup(function(use)
         "arkav/lualine-lsp-progress"
     },
     config = function()
+
+        local function recording_macro()
+            local letter = vim.fn.reg_recording()
+            if letter == "" then
+                return ""
+            end
+            return "RECORD:" .. letter
+        end
+
         require("lualine").setup({
             options = {
                 globalstatus = true,
             },
             sections = {
-                lualine_c = {
-                    "lsp_progress"
-                }
+                lualine_a = { recording_macro, "mode" },
+                lualine_c = { "lsp_progress" }
             }
         })
     end

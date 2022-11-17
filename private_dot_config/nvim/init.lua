@@ -338,7 +338,7 @@ require("packer").startup(function(use)
             if letter == "" then
                 return ""
             end
-            return "RECORD:" .. letter
+            return "RECORDING:" .. letter
         end
 
         require("lualine").setup({

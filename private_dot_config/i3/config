@@ -177,3 +177,4 @@ workspace $ws4 output HDMI-0
 workspace $ws10 output DP-0
 
 exec --no-startup-id ~/.screenlayout/dual.sh
+exec --no-startup-id flameshot

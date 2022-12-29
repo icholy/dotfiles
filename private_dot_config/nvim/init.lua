@@ -95,6 +95,9 @@ require("packer").startup(function(use)
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
       local lspconfig = require("lspconfig")
       lspconfig.tsserver.setup({
+        flags = {
+          debounce_text_changes = 500
+        },
         capabilities = capabilities,
         init_options = {
           disableAutomaticTypingAcquisitioninitializationOptions  = true,

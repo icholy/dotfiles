@@ -368,40 +368,39 @@ require("packer").startup(function(use)
       vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticHint" })
       vim.fn.sign_define("DiagnosticSignInformation", { text = "", texthl = "DiagnosticInformation" })
 
-      vim.keymap.set("n", "<Leader>d", ":TroubleToggle workspace_diagnostics<CR>")
-    end
-  })
-  use({
+        vim.keymap.set("n", "<Leader>d", ":TroubleToggle workspace_diagnostics<CR>")
+      end
+    })
+    use({
       "kyazdani42/nvim-tree.lua",
       requires = "kyazdani42/nvim-web-devicons",
       config = function()
         require("nvim-tree").setup({
           -- I keep accidentally hitting 's' and opening libreoffice ...
-          system_open = { cmd = "echo" }
+          system_open = { cmd = "echo" },
         })
         vim.keymap.set("n", "<Leader>n", ":NvimTreeToggle<CR>")
         vim.keymap.set("n", "<Leader>m", ":NvimTreeFindFile<CR>")
       end
-  })
-  use("dstein64/vim-startuptime")
-  use({
-    "terrortylor/nvim-comment",
-    config = function()
-      require("nvim_comment").setup({ create_mappings = false })
-      vim.keymap.set("n", "<Leader>k", ":CommentToggle<CR>")
-      vim.keymap.set("x", "<Leader>k", ":CommentToggle<CR>gv")
-    end
-  })
-  use("gennaro-tedesco/nvim-peekup")
-  use({
-    "iamcco/markdown-preview.nvim",
-    run = "cd app && npm install",
-    setup = function()
-      vim.g.mkdp_filetypes = { "markdown" }
-    end,
-    ft = { "markdown" },
-  })
-end)
+    })
+    use("dstein64/vim-startuptime")
+    use({
+      "terrortylor/nvim-comment",
+      config = function()
+        require("nvim_comment").setup({ create_mappings = false })
+        vim.keymap.set("n", "<Leader>k", ":CommentToggle<CR>")
+        vim.keymap.set("x", "<Leader>k", ":CommentToggle<CR>gv")
+      end
+    })
+    use({
+      "iamcco/markdown-preview.nvim",
+      run = "cd app && npm install",
+      config = function()
+        vim.g.mkdp_filetypes = { "markdown" }
+      end,
+      ft = { "markdown" },
+    })
+  end)
 
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
 vim.g.mapleader = " "
@@ -479,5 +478,4 @@ vim.keymap.set("n", "<Leader>.", vim.lsp.buf.code_action)
 vim.keymap.set("n", "<Leader>l", ":set list!<CR>")
 vim.keymap.set("n", "<Leader>t", ":belowright split | resize 20 | terminal<CR>")
 vim.keymap.set("n", "<Leader>x", ":let @+ = expand(\"%:p\")<CR>")
-
 

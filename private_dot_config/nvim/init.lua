@@ -125,7 +125,7 @@ require("packer").startup(function(use)
           return root
         end
       })
-      lspconfig.jedi_language_server.setup({ capabilities = capabilities })
+      lspconfig.pyright.setup({ capabilities = capabilities })
 
       local runtime_path = vim.split(package.path, ";")
       table.insert(runtime_path, "lua/?.lua")

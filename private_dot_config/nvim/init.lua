@@ -181,7 +181,7 @@ require("packer").startup(function(use)
       })
     end
   })
-  use("rafamadriz/friendly-snippets")
+  -- use("rafamadriz/friendly-snippets")
   use({
       "hrsh7th/nvim-cmp",
       requires = {
@@ -241,18 +241,6 @@ require("packer").startup(function(use)
         })
       end
   })
-  use({
-    "ray-x/lsp_signature.nvim",
-    config = function()
-        require("lsp_signature").setup({
-            hint_enable = false,
-            handler_opts = {
-                -- keep it similar looking to vim.lsp.buf.hover
-                border = "none"
-            }
-        })
-    end
-  })
   use("nvim-telescope/telescope-ui-select.nvim")
   use({
     "nvim-telescope/telescope.nvim",
@@ -308,20 +296,6 @@ require("packer").startup(function(use)
             "bash"
           },
         })
-    end
-  })
-  use({
-    "RRethy/nvim-treesitter-textsubjects",
-    config = function()
-      require("nvim-treesitter.configs").setup({
-          textsubjects = {
-              enable = true,
-              prev_selection = ",",
-              keymaps = {
-                  ["."] = "textsubjects-smart",
-              },
-          },
-      })
     end
   })
   use({
@@ -384,7 +358,6 @@ require("packer").startup(function(use)
         vim.keymap.set("n", "<Leader>m", ":NvimTreeFindFile<CR>")
       end
     })
-    use("dstein64/vim-startuptime")
     use({
       "terrortylor/nvim-comment",
       config = function()

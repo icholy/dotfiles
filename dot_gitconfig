@@ -5,6 +5,9 @@
 [includeIf "gitdir:~/src/github.com/compassdigital/"]
 	path = .gitconfig-compassdigital
 
+[url "ssh://git@github.com/compassdigital/"]
+	insteadOf = https://github.com/compassdigital/
+
 [push]
 	default = current
 [core]

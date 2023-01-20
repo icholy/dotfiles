@@ -96,7 +96,8 @@ require("packer").startup(function(use)
       local lspconfig = require("lspconfig")
       lspconfig.tsserver.setup({
         flags = {
-          debounce_text_changes = 500
+          debounce_text_changes = 500,
+          allow_incremental_sync = false
         },
         capabilities = capabilities,
         init_options = {

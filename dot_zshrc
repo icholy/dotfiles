@@ -15,6 +15,7 @@ plugins=(gitfast)
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
+export EDITOR=nvim
 
 # Add ~/bin to PATH
 export PATH=$PATH:/home/icholy/bin
@@ -48,6 +49,7 @@ alias n='nautilus'
 alias sagi='sudo apt install'
 alias t='talos -p ilia.choly -e default -b open -q -F'
 alias fd='fdfind'
+alias vim='nvim'
 
 function cz() {
     local REPO_DIR=$(find ~/src -maxdepth 4 -type d -name ".git" | xargs dirname | fzf)

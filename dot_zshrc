@@ -77,7 +77,6 @@ function czp() {
 function bump() {
     local INC_VERSION="${1:-patch}"
     echo "npm version --no-git-tag-version $INC_VERSION";
-    local NPM_CMD="$(npm version --no-git-tag-version $INC_VERSION)"
     local TAG_NAME="$(npm version --no-git-tag-version $INC_VERSION)"
     echo "git tag $TAG_NAME"
     git tag "$TAG_NAME";

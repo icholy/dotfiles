@@ -78,6 +78,8 @@ function bump() {
     local INC_VERSION="${1:-patch}"
     echo "npm version --no-git-tag-version $INC_VERSION";
     local TAG_NAME="$(npm version --no-git-tag-version $INC_VERSION)"
+    echo "git commit -am \"chore: version $TAG_NAME\""
+    git commit -am "chore: version $TAG_NAME"
     echo "git tag $TAG_NAME"
     git tag "$TAG_NAME";
 }

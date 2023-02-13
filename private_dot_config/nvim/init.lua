@@ -452,4 +452,6 @@ vim.keymap.set("n", "<Leader>.", vim.lsp.buf.code_action)
 vim.keymap.set("n", "<Leader>l", ":set list!<CR>")
 vim.keymap.set("n", "<Leader>t", ":belowright split | resize 20 | terminal<CR>")
 vim.keymap.set("n", "<Leader>x", ":let @+ = expand(\"%:p\")<CR>")
+vim.keymap.set("n", "<MiddleMouse>", "<Nop>")
+vim.keymap.set("i", "<MiddleMouse>", "<Nop>")
 

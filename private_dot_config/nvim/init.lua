@@ -167,8 +167,8 @@ require("packer").startup(function(use)
         ".eslintrc.cjs",
         ".eslintrc.yaml",
         ".eslintrc.yml",
-        ".eslintrc.json",
-        "package.json"
+        ".eslintrc.json"
+        -- "package.json"
       )
       lspconfig.eslint.setup({
         root_dir = function(fname)

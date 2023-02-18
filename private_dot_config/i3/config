@@ -113,16 +113,18 @@ bindsym $win+Shift+E exit
 set $resize_speed 30
 
 bindsym $win+Control+h resize grow left $resize_speed px
-bindsym $win+Control+Shift+H resize shrink right $resize_speed px
+bindsym $win+$alt+H resize shrink right $resize_speed px
 
 bindsym $win+Control+j resize grow down $resize_speed px
-bindsym $win+Control+Shift+J resize shrink up $resize_speed px
+bindsym $win+$alt+J resize shrink up $resize_speed px
 
 bindsym $win+Control+k resize grow up $resize_speed px
-bindsym $win+Control+Shift+K resize shrink down $resize_speed px
+bindsym $win+$alt+K resize shrink down $resize_speed px
 
 bindsym $win+Control+l resize grow right $resize_speed px
-bindsym $win+Control+Shift+L resize shrink left $resize_speed px
+bindsym $win+$alt+L resize shrink left $resize_speed px
+
+bindsym $win+equal resize set
 
 set $base00 #fdf6e3
 set $base01 #eee8d5

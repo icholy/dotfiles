@@ -130,6 +130,7 @@ require("packer").startup(function(use)
         end
       })
       lspconfig.pyright.setup({ capabilities = capabilities })
+      lspconfig.rust_analyzer.setup({ capabilities = capabilities })
 
       local runtime_path = vim.split(package.path, ";")
       table.insert(runtime_path, "lua/?.lua")

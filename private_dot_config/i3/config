@@ -110,8 +110,7 @@ bindsym $win+Shift+R restart
 bindsym $win+Shift+E exit
 
 # resizing
-set $resize_speed 30
-set $resize_speed_fast 50
+set $resize_speed 50
 
 bindsym $win+$alt+h resize grow left $resize_speed px
 bindsym $win+Control+H resize shrink right $resize_speed px
@@ -125,11 +124,8 @@ bindsym $win+Control+K resize shrink down $resize_speed px
 bindsym $win+$alt+l resize grow right $resize_speed px
 bindsym $win+Control+L resize shrink left $resize_speed px
 
-bindsym $win+plus resize grow width $resize_speed_fast px
-bindsym $win+minus resize shrink width $resize_speed_fast px
-
-bindsym $win+Control+plus resize grow height $resize_speed_fast px
-bindsym $win+Control+minus resize shrink height $resize_speed_fast px
+bindsym $win+Control+plus resize grow height $resize_speed px
+bindsym $win+Control+minus resize shrink height $resize_speed px
 
 set $base00 #fdf6e3
 set $base01 #eee8d5

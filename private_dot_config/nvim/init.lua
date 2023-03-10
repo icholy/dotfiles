@@ -375,6 +375,14 @@ require("packer").startup(function(use)
       end,
       ft = { "markdown" },
     })
+
+    use({
+      "dpayne/CodeGPT.nvim",
+      requires = {
+        "nvim-lua/plenary.nvim",
+        "MunifTanjim/nui.nvim",
+      },
+    })
   end)
 
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })

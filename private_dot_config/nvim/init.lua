@@ -453,7 +453,6 @@ vim.keymap.set("n", "]e", function () vim.diagnostic.goto_next({ severity = vim.
 vim.keymap.set("n", "[e", function () vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR }) end)
 vim.keymap.set("n", "]d", function () vim.diagnostic.goto_next() end)
 vim.keymap.set("n", "[d", function () vim.diagnostic.goto_prev() end)
-vim.keymap.set("n", "<Leader>f", function () vim.lsp.buf.format({ async = true }) end)
 vim.keymap.set("n", "<Leader>r", vim.lsp.buf.rename)
 vim.keymap.set("", "K", vim.lsp.buf.hover)
 vim.keymap.set("", "KK", function() vim.diagnostic.open_float(nil, {focus=false}) end)
@@ -464,3 +463,12 @@ vim.keymap.set("n", "<Leader>x", ":let @+ = expand(\"%:p\")<CR>")
 vim.keymap.set("n", "<MiddleMouse>", "<Nop>")
 vim.keymap.set("i", "<MiddleMouse>", "<Nop>")
 
+vim.keymap.set("n", "<Leader>f", function ()
+  for _, client in ipairs(vim.lsp.get_active_clients()) do
+      if client.name == "eslint" then
+        vim.cmd.EslintFixAll()
+        return
+      end
+  end
+  vim.lsp.buf.format({ async = true })
+end)

@@ -32,12 +32,6 @@ bindsym $win+j focus down
 bindsym $win+k focus up
 bindsym $win+l focus right
 
-# alternatively, you can use the cursor keys:
-bindsym $win+Left focus left
-bindsym $win+Down focus down
-bindsym $win+Up focus up
-bindsym $win+Right focus right
-
 # move focused window
 bindsym $win+Shift+H move left
 bindsym $win+Shift+J move down
@@ -112,20 +106,20 @@ bindsym $win+Shift+E exit
 # resizing
 set $resize_speed 50
 
-bindsym $win+$alt+h resize grow left $resize_speed px
-bindsym $win+Control+H resize shrink right $resize_speed px
+bindsym $win+Left resize grow left $resize_speed px
+bindsym $win+Shift+Left resize shrink right $resize_speed px
 
-bindsym $win+$alt+j resize grow down $resize_speed px
-bindsym $win+Control+J resize shrink up $resize_speed px
+bindsym $win+Down resize grow down $resize_speed px
+bindsym $win+Shift+Down resize shrink up $resize_speed px
 
-bindsym $win+$alt+k resize grow up $resize_speed px
-bindsym $win+Control+K resize shrink down $resize_speed px
+bindsym $win+Up resize grow up $resize_speed px
+bindsym $win+Shift+Up resize shrink down $resize_speed px
 
-bindsym $win+$alt+l resize grow right $resize_speed px
-bindsym $win+Control+L resize shrink left $resize_speed px
+bindsym $win+Right resize grow right $resize_speed px
+bindsym $win+Shift+Right resize shrink left $resize_speed px
 
-bindsym $win+Control+plus resize grow height $resize_speed px
-bindsym $win+Control+minus resize shrink height $resize_speed px
+bindsym $win+plus resize grow width $resize_speed px
+bindsym $win+minus resize shrink width $resize_speed px
 
 set $base00 #fdf6e3
 set $base01 #eee8d5

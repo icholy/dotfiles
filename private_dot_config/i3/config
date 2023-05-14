@@ -174,4 +174,9 @@ workspace $ws4 output HDMI-0
 workspace $ws10 output DP-0
 
 exec --no-startup-id ~/.screenlayout/dual.sh
+
+# https://flameshot.org/
 exec --no-startup-id flameshot
+
+# https://github.com/milaq/XMousePasteBlock
+exec --no-startup-id xmousepasteblock

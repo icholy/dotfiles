@@ -101,7 +101,7 @@ require("packer").startup(function(use)
         },
         capabilities = capabilities,
         init_options = {
-          disableAutomaticTypingAcquisitioninitializationOptions  = true,
+          disableAutomaticTypingAcquisitioninitializationOptions = true
         },
         on_attach = function(client)
           -- I use prettier for formatting
@@ -111,7 +111,7 @@ require("packer").startup(function(use)
 
       -- keep track of the last gopls root so we can re-use it when entering $GOPATH/pkg/mod
       local prev_gopls_root = nil
-      local go_mod_cache = vim.trim(vim.fn.system("go env GOPATH")) .. '/pkg/mod'
+      local go_mod_cache = vim.trim(vim.fn.system("go env GOMODCACHE"))
 
       lspconfig.gopls.setup({
         capabilities = capabilities,
@@ -266,6 +266,7 @@ require("packer").startup(function(use)
       vim.keymap.set("n", "<C-Space><C-f>", ":Telescope find_files<CR>")
       vim.keymap.set("n", "<C-p>", ":Telescope find_files<CR>")
       vim.keymap.set("n", "<C-Space><C-t>", ":Telescope diagnostics<CR>")
+      vim.keymap.set("n", "<C-Space><C-m>", ":Telescope marks<CR>")
       vim.keymap.set("n", "gd", ":Telescope lsp_definitions<CR>")
       vim.keymap.set("n", "gt", ":Telescope lsp_type_definitions<CR>")
       vim.keymap.set("n", "gr", ":Telescope lsp_references<CR>")
@@ -382,6 +383,52 @@ require("packer").startup(function(use)
         "nvim-lua/plenary.nvim",
         "MunifTanjim/nui.nvim",
       },
+      config = function()
+        vim.g["codegpt_commands_defaults"] = {
+            ["completion"] = {
+                model = "gpt-4",
+                max_tokens = 8000
+            },
+        }
+      end,
+    })
+
+    use({
+      "mfussenegger/nvim-dap",
+      config = function()
+        -- setup js-debug
+        require("dap").adapters["pwa-node"] = function(on_config, config, parent)
+          local target = config["__pendingTargetId"]
+          if target and parent then
+            local adapter = parent.adapter --[[@as ServerAdapter]]
+            on_config({
+              type = "server",
+              host = "localhost",
+              port = adapter.port
+            })
+          else
+            on_config({
+              type = "server",
+              host = "localhost",
+              port = "${port}",
+              executable = {
+                command = "node",
+                args = {"/opt/js-debug/src/dapDebugServer.js", "${port}"},
+              }
+            })
+          end
+        end
+        -- add launch config
+        require("dap").configurations.javascript = {
+          {
+            type = "pwa-node",
+            request = "launch",
+            name = "Launch file",
+            program = "${file}",
+            cwd = "${workspaceFolder}",
+          },
+        }
+      end,
     })
   end)
 
@@ -437,7 +484,7 @@ vim.keymap.set("n", "<C-l>", "<C-w>l")
 vim.keymap.set("t", "<C-h>", "<C-\\><C-n><C-w>h")
 vim.keymap.set("t", "<C-j>", "<C-\\><C-n><C-w>j")
 vim.keymap.set("t", "<C-k>", "<C-\\><C-n><C-w>k")
-vim.keymap.set("t", "<C-l>", "<C-\\><C-n><C-w>l")
+-- vim.keymap.set("t", "<C-l>", "<C-\\><C-n><C-w>l")
 vim.keymap.set("v", "<C-j>", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "<C-k>", ":m '<-2<CR>gv=gv")
 vim.keymap.set("n", "<Leader>s", ":%s/<C-r><C-w>/")

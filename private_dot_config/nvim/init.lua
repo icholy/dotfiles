@@ -81,6 +81,7 @@ require("packer").startup(function(use)
   use("tpope/vim-surround")
   use("tpope/vim-sleuth")
   use("tpope/vim-rhubarb")
+  use("wsdjeg/vim-fetch")
   use({
     "numtostr/BufOnly.nvim",
     cmd = "BufOnly",
@@ -495,8 +496,8 @@ vim.keymap.set("v", "<C-k>", ":m '<-2<CR>gv=gv")
 vim.keymap.set("n", "<Leader>s", ":%s/<C-r><C-w>/")
 vim.keymap.set("n", "<C-e>", "3<C-e>")
 vim.keymap.set("n", "<C-y>", "3<C-y>")
-vim.keymap.set("n", "]q", ":cnext<CR>")
-vim.keymap.set("n", "[q", ":cprev<CR>")
+vim.keymap.set("n", "]q", ":silent cnext<CR>")
+vim.keymap.set("n", "[q", ":silent cprev<CR>")
 vim.keymap.set("n", "]b", ":bnext<CR>")
 vim.keymap.set("n", "[b", ":bprev<CR>")
 vim.keymap.set("n", "]t", ":tabnext<CR>")

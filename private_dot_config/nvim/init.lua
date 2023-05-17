@@ -355,6 +355,11 @@ require("packer").startup(function(use)
         require("nvim-tree").setup({
           -- I keep accidentally hitting 's' and opening libreoffice ...
           system_open = { cmd = "echo" },
+          actions = {
+            open_file = {
+              resize_window = false,
+            },
+          },
         })
         vim.keymap.set("n", "<Leader>n", ":NvimTreeToggle<CR>")
         vim.keymap.set("n", "<Leader>m", ":NvimTreeFindFile<CR>")

@@ -110,26 +110,7 @@ require("packer").startup(function(use)
         end
       })
 
-      -- keep track of the last gopls root so we can re-use it when entering $GOPATH/pkg/mod
-      local prev_gopls_root = nil
-      local go_mod_cache = vim.trim(vim.fn.system("go env GOMODCACHE"))
-
-      lspconfig.gopls.setup({
-        capabilities = capabilities,
-
-        -- See: https://github.com/neovim/nvim-lspconfig/issues/804
-        root_dir = function(fname)
-          local fullpath = vim.fn.expand(fname, ':p')
-          if string.find(fullpath, go_mod_cache) and prev_gopls_root ~= nil then
-              return prev_gopls_root
-          end
-          local root = lspconfig.util.root_pattern("go.mod", ".git")(fname)
-          if root ~= nil then
-            prev_gopls_root = root
-          end
-          return root
-        end
-      })
+      lspconfig.gopls.setup({ capabilities = capabilities })
       lspconfig.pyright.setup({ capabilities = capabilities })
       lspconfig.rust_analyzer.setup({ capabilities = capabilities })
 

@@ -52,6 +52,11 @@ alias fd='fdfind'
 alias vim='nvim'
 alias semgrepvim="jq -r '.results[] | [ .path, .start.line, .start.col ] | join(\":\")' > /tmp/errorfile; nvim -q /tmp/errorfile"
 
+function vg() {
+    rg --vimgrep $@ > /tmp/vgfile
+    nvim -q /tmp/vgfile
+}
+
 function cz() {
     local REPO_DIR=$(find ~/src -maxdepth 4 -type d -name ".git" | xargs dirname | fzf)
     if [ -n "$REPO_DIR" ]; then

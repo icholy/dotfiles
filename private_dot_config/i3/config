@@ -173,10 +173,11 @@ workspace $ws3 output HDMI-0
 workspace $ws4 output HDMI-0
 workspace $ws10 output DP-0
 
+# screen layout
 exec --no-startup-id ~/.screenlayout/dual.sh
 
 # https://flameshot.org/
 exec --no-startup-id flameshot
 
-# https://github.com/milaq/XMousePasteBlock
-exec --no-startup-id xmousepasteblock
+# set background color
+exec --no-startup-id xsetroot -solid "#657b83"

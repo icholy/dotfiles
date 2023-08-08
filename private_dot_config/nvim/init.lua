@@ -254,9 +254,9 @@ require("packer").startup(function(use)
           incremental_selection = {
             enable = true,
             keymaps = {
-              init_selection = '<TAB>',
-              node_incremental = '<TAB>',
-              node_decremental = '<S-TAB>',
+              init_selection = '<CR>',
+              node_incremental = '<CR>',
+              node_decremental = '<BS>',
             },
           },
         })

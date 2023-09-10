@@ -79,7 +79,7 @@ require("packer").startup(function(use)
     end
   })
   use("tpope/vim-surround")
-  use("tpope/vim-sleuth")
+  -- use("tpope/vim-sleuth")
   use("tpope/vim-rhubarb")
   use("wsdjeg/vim-fetch")
   use({

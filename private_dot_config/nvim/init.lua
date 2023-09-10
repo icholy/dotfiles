@@ -79,7 +79,7 @@ require("packer").startup(function(use)
     end
   })
   use("tpope/vim-surround")
-  -- use("tpope/vim-sleuth")
+  use("tpope/vim-sleuth")
   use("tpope/vim-rhubarb")
   use("wsdjeg/vim-fetch")
   use({
@@ -126,6 +126,9 @@ require("packer").startup(function(use)
         -- "package.json"
       )
       lspconfig.eslint.setup({
+        flags = {
+            allow_incremental_sync = false
+        },
         root_dir = function(fname)
           local fullpath = vim.fn.expand(fname, ":p")
           if string.find(fullpath, "node_modules") then

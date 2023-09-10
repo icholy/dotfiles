@@ -92,3 +92,10 @@ function bump() {
 }
 
 source /home/icholy/.secrets
+
+# bun completions
+[ -s "/home/icholy/.bun/_bun" ] && source "/home/icholy/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"

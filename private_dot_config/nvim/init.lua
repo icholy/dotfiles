@@ -287,7 +287,7 @@ require("lazy").setup({
         "nvim-lualine/lualine.nvim",
         dependencies = {
             "kyazdani42/nvim-web-devicons",
-            "arkav/lualine-lsp-progress"
+            "WhoIsSethDaniel/lualine-lsp-progress.nvim"
         },
         config = function()
 

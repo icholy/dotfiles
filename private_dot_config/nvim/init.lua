@@ -150,6 +150,16 @@ require("lazy").setup({
                     return eslint_root_pattern(fname)
                 end
             })
+
+            vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+                vim.lsp.diagnostic.on_publish_diagnostics,
+                {
+                    virtual_text = false,
+                    signs = true,
+                    update_in_insert = false,
+                    severity_sort = true,
+                },
+            )
         end
     },
     {
@@ -359,15 +369,6 @@ require("lazy").setup({
         ft = { "markdown" },
     },
 })
-
-vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-  vim.lsp.diagnostic.on_publish_diagnostics, {
-    virtual_text = false,
-    signs = true,
-    update_in_insert = false,
-    severity_sort = true,
-  }
-)
 
 local function idtool_data(stage)
   local id = vim.fn.expand("<cword>")

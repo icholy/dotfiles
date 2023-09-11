@@ -31,11 +31,11 @@ vim.o.updatetime = 250
 vim.o.background = "light"
 vim.o.fixendofline = false
 vim.o.cmdheight = 0
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
 
 vim.opt.listchars:append("tab:» ")
 vim.opt.listchars:append("eol:¬")
-
-vim.cmd.packadd("packer.nvim")
 
 local group = vim.api.nvim_create_augroup("MyGroup", { clear = true })
 
@@ -62,349 +62,303 @@ vim.api.nvim_create_autocmd("FileType", {
   end
 })
 
-require("packer").startup(function(use)
-  use("wbthomason/packer.nvim")
-  use({
-    "tpope/vim-fugitive",
-    config = function()
-        vim.g.fugitive_legacy_commands = false
+-- setup lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
 
-        vim.keymap.set("n", "<Leader>gs", ":Git status<CR>")
-        vim.keymap.set("n", "<Leader>gd", ":Git vdiff<CR>")
-        vim.keymap.set("n", "<Leader>gc", ":Git commit<CR>")
-        vim.keymap.set("n", "<Leader>ge", ":Gedit<CR>")
-        vim.keymap.set("n", "<Leader>gr", ":Gread<CR>")
-        vim.keymap.set("n", "<Leader>gw", ":Gwrite<CR>")
-        vim.keymap.set("n", "<Leader>gp", ":Git push<CR>")
-    end
-  })
-  use("tpope/vim-surround")
-  use("tpope/vim-sleuth")
-  use("tpope/vim-rhubarb")
-  use("wsdjeg/vim-fetch")
-  use({
-    "numtostr/BufOnly.nvim",
-    cmd = "BufOnly",
-    config = function()
-      vim.keymap.set("n", "<Leader>o", ":BufOnly<CR>")
-    end
-  })
-  use({
-    "neovim/nvim-lspconfig",
-    after = "cmp-nvim-lsp",
-    config = function()
-      local capabilities = require("cmp_nvim_lsp").default_capabilities()
-      local lspconfig = require("lspconfig")
-      lspconfig.tsserver.setup({
-        flags = {
-          debounce_text_changes = 500,
-          allow_incremental_sync = false
-        },
-        capabilities = capabilities,
-        init_options = {
-          disableAutomaticTypingAcquisitioninitializationOptions = true
-        },
-        on_attach = function(client)
-          -- I use prettier for formatting
-          client.server_capabilities.document_formatting = false
+require("lazy").setup({
+    {
+        "tpope/vim-fugitive",
+        config = function()
+            vim.g.fugitive_legacy_commands = false
+
+            vim.keymap.set("n", "<Leader>gs", ":Git status<CR>")
+            vim.keymap.set("n", "<Leader>gd", ":Git vdiff<CR>")
+            vim.keymap.set("n", "<Leader>gc", ":Git commit<CR>")
+            vim.keymap.set("n", "<Leader>ge", ":Gedit<CR>")
+            vim.keymap.set("n", "<Leader>gr", ":Gread<CR>")
+            vim.keymap.set("n", "<Leader>gw", ":Gwrite<CR>")
+            vim.keymap.set("n", "<Leader>gp", ":Git push<CR>")
         end
-      })
-
-      lspconfig.gopls.setup({ capabilities = capabilities })
-      lspconfig.pyright.setup({ capabilities = capabilities })
-      lspconfig.rust_analyzer.setup({ capabilities = capabilities })
-
-      -- I don't want eslint to use my project local config for
-      -- dependencies in node_modules
-      local eslint_root_pattern = lspconfig.util.root_pattern(
-        ".eslintrc",
-        ".eslintrc.js",
-        ".eslintrc.cjs",
-        ".eslintrc.yaml",
-        ".eslintrc.yml",
-        ".eslintrc.json"
-        -- "package.json"
-      )
-      lspconfig.eslint.setup({
-        flags = {
-            allow_incremental_sync = false
-        },
-        root_dir = function(fname)
-          local fullpath = vim.fn.expand(fname, ":p")
-          if string.find(fullpath, "node_modules") then
-            return nil
-          end
-          return eslint_root_pattern(fname)
-        end
-      })
-    end
-  })
-  -- use("rafamadriz/friendly-snippets")
-  use({
-      "hrsh7th/nvim-cmp",
-      requires = {
-        "hrsh7th/cmp-nvim-lsp",
-        "hrsh7th/cmp-buffer",
-        "hrsh7th/cmp-path",
-        "hrsh7th/cmp-cmdline",
-        "hrsh7th/vim-vsnip",
-      },
-      config = function()
-        -- Setup nvim-cmp.
-        local cmp = require("cmp")
-
-        cmp.setup({
-          snippet = {
-            -- REQUIRED - you must specify a snippet engine
-            expand = function(args)
-              vim.fn["vsnip#anonymous"](args.body)
-            end,
-          },
-          mapping = {
-            ["<C-n>"] = cmp.mapping(cmp.mapping.select_next_item(), {"i","c"}),
-            ["<C-p>"] = cmp.mapping(cmp.mapping.select_prev_item(), {"i","c"}),
-            ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
-            ["<Tab>"] = cmp.mapping(cmp.mapping.confirm({ select = true }), { "i", "c" }),
-            ["<CR>"] = cmp.mapping(cmp.mapping.confirm(), { "i", "c" }),
-            ["<Esc>"] = cmp.mapping({
-              i = cmp.mapping.abort(),
-              c = function()
-                -- https://github.com/hrsh7th/nvim-cmp/issues/1033
-                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-c>", true, true, true), "n", true)
-              end
-            }),
-          },
-          sources = cmp.config.sources({
-            { name = "nvim_lsp" },
-          }, {
-            { name = "vsnip" },
-            { name = "buffer" },
-          })
-        })
-
-        -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
-        cmp.setup.cmdline("/", {
-          sources = {
-            { name = "buffer" }
-          }
-        })
-
-        -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-        cmp.setup.cmdline(":", {
-          sources = cmp.config.sources({
-            { name = "path" }
-          }, {
-            { name = "cmdline" }
-          })
-        })
-      end
-  })
-  use("nvim-telescope/telescope-ui-select.nvim")
-  use({
-    "nvim-telescope/telescope.nvim",
-    requires = "nvim-lua/plenary.nvim",
-    config = function()
-      local actions = require("telescope.actions")
-      require("telescope").setup({
-        defaults = {
-          mappings = {
-            n = {
-              ["<C-Space>"] = actions.close,
-            },
-            i = {
-              ["<C-Space>"] = actions.close,
-            }
-          }
-        }
-      })
-      require("telescope").load_extension("ui-select")
-      vim.keymap.set("n", "<C-Space><C-Space>", ":Telescope buffers<CR>")
-      vim.keymap.set("n", "<C-Space><C-g>", ":Telescope live_grep<CR>")
-      vim.keymap.set("n", "<C-Space><C-f>", ":Telescope find_files<CR>")
-      vim.keymap.set("n", "<C-p>", ":Telescope find_files<CR>")
-      vim.keymap.set("n", "<C-Space><C-t>", ":Telescope diagnostics<CR>")
-      vim.keymap.set("n", "<C-Space><C-m>", ":Telescope marks<CR>")
-      vim.keymap.set("n", "gd", ":Telescope lsp_definitions<CR>")
-      vim.keymap.set("n", "gt", ":Telescope lsp_type_definitions<CR>")
-      vim.keymap.set("n", "gr", ":Telescope lsp_references<CR>")
-    end
-  })
-  use({
-    "nvim-treesitter/nvim-treesitter",
-    run = ":TSUpdate",
-    config = function()
-        require("nvim-treesitter.configs").setup({
-          highlight = {
-            enable = true,
-            disable = function(_, bufnr)
-              local name = vim.api.nvim_buf_get_name(bufnr)
-              local size = vim.fn.getfsize(name)
-              return size > bit.lshift(1, 20)
-            end,
-          },
-          indent = {
-            enable = false,
-            disable = {}
-          },
-          ensure_installed = {
-            "go",
-            "javascript",
-            "typescript",
-            "json",
-            "lua",
-            "bash"
-          },
-          incremental_selection = {
-            enable = true,
-            keymaps = {
-              init_selection = '<CR>',
-              node_incremental = '<CR>',
-              node_decremental = '<BS>',
-            },
-          },
-        })
-    end
-  })
-  use({
-    "ishan9299/nvim-solarized-lua",
-    config = function()
-      vim.cmd.colorscheme("solarized")
-    end
-  })
-  use({
-    "nvim-lualine/lualine.nvim",
-    requires = {
-        "kyazdani42/nvim-web-devicons",
-        "arkav/lualine-lsp-progress"
     },
-    config = function()
+    "tpope/vim-surround",
+    "tpope/vim-sleuth",
+    "tpope/vim-rhubarb",
+    "wsdjeg/vim-fetch",
+    {
+        "numtostr/BufOnly.nvim",
+        cmd = "BufOnly",
+        config = function()
+            vim.keymap.set("n", "<Leader>o", ":BufOnly<CR>")
+        end
+    },
+    {
+        "neovim/nvim-lspconfig",
+        dependencies = { "cmp-nvim-lsp" },
+        config = function()
+            local capabilities = require("cmp_nvim_lsp").default_capabilities()
+            local lspconfig = require("lspconfig")
+            lspconfig.tsserver.setup({
+                flags = {
+                    debounce_text_changes = 500,
+                    allow_incremental_sync = false
+                },
+                capabilities = capabilities,
+                init_options = {
+                    disableAutomaticTypingAcquisitioninitializationOptions = true
+                },
+                on_attach = function(client)
+                    -- I use prettier for formatting
+                    client.server_capabilities.document_formatting = false
+                end
+            })
 
-        local function recording_macro()
-            local letter = vim.fn.reg_recording()
-            if letter == "" then
-                return ""
+            lspconfig.gopls.setup({ capabilities = capabilities })
+            lspconfig.pyright.setup({ capabilities = capabilities })
+            lspconfig.rust_analyzer.setup({ capabilities = capabilities })
+
+            -- I don't want eslint to use my project local config for
+            -- dependencies in node_modules
+            local eslint_root_pattern = lspconfig.util.root_pattern(
+            ".eslintrc",
+            ".eslintrc.js",
+            ".eslintrc.cjs",
+            ".eslintrc.yaml",
+            ".eslintrc.yml",
+            ".eslintrc.json"
+            -- "package.json"
+            )
+            lspconfig.eslint.setup({
+                flags = {
+                    allow_incremental_sync = false
+                },
+                root_dir = function(fname)
+                    local fullpath = vim.fn.expand(fname, ":p")
+                    if string.find(fullpath, "node_modules") then
+                        return nil
+                    end
+                    return eslint_root_pattern(fname)
+                end
+            })
+        end
+    },
+    {
+        "hrsh7th/nvim-cmp",
+        dependencies = {
+            "hrsh7th/cmp-nvim-lsp",
+            "hrsh7th/cmp-buffer",
+            "hrsh7th/cmp-path",
+            "hrsh7th/cmp-cmdline",
+            "hrsh7th/vim-vsnip",
+        },
+        config = function()
+            -- Setup nvim-cmp.
+            local cmp = require("cmp")
+
+            cmp.setup({
+                snippet = {
+                    -- REQUIRED - you must specify a snippet engine
+                    expand = function(args)
+                        vim.fn["vsnip#anonymous"](args.body)
+                    end,
+                },
+                mapping = {
+                    ["<C-n>"] = cmp.mapping(cmp.mapping.select_next_item(), {"i","c"}),
+                    ["<C-p>"] = cmp.mapping(cmp.mapping.select_prev_item(), {"i","c"}),
+                    ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
+                    ["<Tab>"] = cmp.mapping(cmp.mapping.confirm({ select = true }), { "i", "c" }),
+                    ["<CR>"] = cmp.mapping(cmp.mapping.confirm(), { "i", "c" }),
+                    ["<Esc>"] = cmp.mapping({
+                        i = cmp.mapping.abort(),
+                        c = function()
+                            -- https://github.com/hrsh7th/nvim-cmp/issues/1033
+                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-c>", true, true, true), "n", true)
+                        end
+                    }),
+                },
+                sources = cmp.config.sources({
+                    { name = "nvim_lsp" },
+                }, {
+                    { name = "vsnip" },
+                    { name = "buffer" },
+                })
+            })
+
+            -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
+            cmp.setup.cmdline("/", {
+                sources = {
+                    { name = "buffer" }
+                }
+            })
+
+            -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+            cmp.setup.cmdline(":", {
+                sources = cmp.config.sources({
+                    { name = "path" }
+                }, {
+                    { name = "cmdline" }
+                })
+            })
+        end
+    },
+    "nvim-telescope/telescope-ui-select.nvim",
+    {
+        "nvim-telescope/telescope.nvim",
+        dependencies = { "nvim-lua/plenary.nvim" },
+        config = function()
+            local actions = require("telescope.actions")
+            require("telescope").setup({
+                defaults = {
+                    mappings = {
+                        n = {
+                            ["<C-Space>"] = actions.close,
+                        },
+                        i = {
+                            ["<C-Space>"] = actions.close,
+                        }
+                    }
+                }
+            })
+            require("telescope").load_extension("ui-select")
+            vim.keymap.set("n", "<C-Space><C-Space>", ":Telescope buffers<CR>")
+            vim.keymap.set("n", "<C-Space><C-g>", ":Telescope live_grep<CR>")
+            vim.keymap.set("n", "<C-Space><C-f>", ":Telescope find_files<CR>")
+            vim.keymap.set("n", "<C-p>", ":Telescope find_files<CR>")
+            vim.keymap.set("n", "<C-Space><C-t>", ":Telescope diagnostics<CR>")
+            vim.keymap.set("n", "<C-Space><C-m>", ":Telescope marks<CR>")
+            vim.keymap.set("n", "gd", ":Telescope lsp_definitions<CR>")
+            vim.keymap.set("n", "gt", ":Telescope lsp_type_definitions<CR>")
+            vim.keymap.set("n", "gr", ":Telescope lsp_references<CR>")
+        end
+    },
+    {
+        "nvim-treesitter/nvim-treesitter",
+        build = ":TSUpdate",
+        config = function()
+            require("nvim-treesitter.configs").setup({
+                highlight = {
+                    enable = true,
+                    disable = function(_, bufnr)
+                        local name = vim.api.nvim_buf_get_name(bufnr)
+                        local size = vim.fn.getfsize(name)
+                        return size > bit.lshift(1, 20)
+                    end,
+                },
+                indent = {
+                    enable = false,
+                    disable = {}
+                },
+                ensure_installed = {
+                    "go",
+                    "javascript",
+                    "typescript",
+                    "json",
+                    "lua",
+                    "bash"
+                },
+                incremental_selection = {
+                    enable = true,
+                    keymaps = {
+                        init_selection = '<CR>',
+                        node_incremental = '<CR>',
+                        node_decremental = '<BS>',
+                    },
+                },
+            })
+        end
+    },
+    {
+        "ishan9299/nvim-solarized-lua",
+        config = function()
+            vim.cmd.colorscheme("solarized")
+        end
+    },
+    {
+        "nvim-lualine/lualine.nvim",
+        dependencies = {
+            "kyazdani42/nvim-web-devicons",
+            "arkav/lualine-lsp-progress"
+        },
+        config = function()
+
+            local function recording_macro()
+                local letter = vim.fn.reg_recording()
+                if letter == "" then
+                    return ""
+                end
+                return "RECORDING:" .. letter
             end
-            return "RECORDING:" .. letter
-        end
 
-        require("lualine").setup({
-            options = {
-                globalstatus = true,
-            },
-            sections = {
-                lualine_a = { recording_macro, "mode" },
-                lualine_c = { "lsp_progress" }
-            }
-        })
-    end
-  })
-  use({
-    "folke/trouble.nvim",
-    requires = "kyazdani42/nvim-web-devicons",
-    config = function()
-      require("trouble").setup()
-
-      -- update the default diagnostic signs to match trouble
-      vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticError" })
-      vim.fn.sign_define("DiagnosticSignWarning", { text = "", texthl = "DiagnosticWarning" })
-      vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticHint" })
-      vim.fn.sign_define("DiagnosticSignInformation", { text = "", texthl = "DiagnosticInformation" })
-
-        vim.keymap.set("n", "<Leader>d", ":TroubleToggle workspace_diagnostics<CR>")
-      end
-    })
-    use({
-      "kyazdani42/nvim-tree.lua",
-      requires = "kyazdani42/nvim-web-devicons",
-      config = function()
-        require("nvim-tree").setup({
-          -- I keep accidentally hitting 's' and opening libreoffice ...
-          system_open = { cmd = "echo" },
-          actions = {
-            open_file = {
-              resize_window = false,
-            },
-          },
-        })
-        vim.keymap.set("n", "<Leader>n", ":NvimTreeToggle<CR>")
-        vim.keymap.set("n", "<Leader>m", ":NvimTreeFindFile<CR>")
-      end
-    })
-    use({
-      "terrortylor/nvim-comment",
-      config = function()
-        require("nvim_comment").setup({ create_mappings = false })
-        vim.keymap.set("n", "<Leader>k", ":CommentToggle<CR>")
-        vim.keymap.set("x", "<Leader>k", ":CommentToggle<CR>gv")
-      end
-    })
-    use({
-      "iamcco/markdown-preview.nvim",
-      run = "cd app && npm install",
-      config = function()
-        vim.g.mkdp_filetypes = { "markdown" }
-      end,
-      ft = { "markdown" },
-    })
-
-    use({
-      "dpayne/CodeGPT.nvim",
-      requires = {
-        "nvim-lua/plenary.nvim",
-        "MunifTanjim/nui.nvim",
-      },
-      config = function()
-        vim.g["codegpt_commands_defaults"] = {
-            ["completion"] = {
-                model = "gpt-4",
-                max_tokens = 8000
-            },
-        }
-      end,
-    })
-
-    use({
-      "mfussenegger/nvim-dap",
-      config = function()
-        -- setup js-debug
-        require("dap").adapters["pwa-node"] = function(on_config, config, parent)
-          local target = config["__pendingTargetId"]
-          if target and parent then
-            local adapter = parent.adapter --[[@as ServerAdapter]]
-            on_config({
-              type = "server",
-              host = "localhost",
-              port = adapter.port
+            require("lualine").setup({
+                options = {
+                    globalstatus = true,
+                },
+                sections = {
+                    lualine_a = { recording_macro, "mode" },
+                    lualine_c = { "lsp_progress" }
+                }
             })
-          else
-            on_config({
-              type = "server",
-              host = "localhost",
-              port = "${port}",
-              executable = {
-                command = "node",
-                args = {"/opt/js-debug/src/dapDebugServer.js", "${port}"},
-              }
-            })
-          end
         end
-        -- add launch config
-        require("dap").configurations.javascript = {
-          {
-            type = "pwa-node",
-            request = "launch",
-            name = "Launch file",
-            program = "${file}",
-            cwd = "${workspaceFolder}",
-          },
-        }
-      end,
-    })
-  end)
+    },
+    {
+        "folke/trouble.nvim",
+        dependencies = { "kyazdani42/nvim-web-devicons" },
+        config = function()
+            require("trouble").setup()
 
-vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
+            -- update the default diagnostic signs to match trouble
+            vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticError" })
+            vim.fn.sign_define("DiagnosticSignWarning", { text = "", texthl = "DiagnosticWarning" })
+            vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticHint" })
+            vim.fn.sign_define("DiagnosticSignInformation", { text = "", texthl = "DiagnosticInformation" })
+
+            vim.keymap.set("n", "<Leader>d", ":TroubleToggle workspace_diagnostics<CR>")
+        end
+    },
+    {
+        "kyazdani42/nvim-tree.lua",
+        requires = "kyazdani42/nvim-web-devicons",
+        config = function()
+            require("nvim-tree").setup({
+                -- I keep accidentally hitting 's' and opening libreoffice ...
+                system_open = { cmd = "echo" },
+                actions = {
+                    open_file = {
+                        resize_window = false,
+                    },
+                },
+            })
+            vim.keymap.set("n", "<Leader>n", ":NvimTreeToggle<CR>")
+            vim.keymap.set("n", "<Leader>m", ":NvimTreeFindFile<CR>")
+        end
+    },
+    {
+        "terrortylor/nvim-comment",
+        config = function()
+            require("nvim_comment").setup({ create_mappings = false })
+            vim.keymap.set("n", "<Leader>k", ":CommentToggle<CR>")
+            vim.keymap.set("x", "<Leader>k", ":CommentToggle<CR>gv")
+        end
+    },
+    {
+        "iamcco/markdown-preview.nvim",
+        build = "cd app && npm install",
+        config = function()
+            vim.g.mkdp_filetypes = { "markdown" }
+        end,
+        ft = { "markdown" },
+    },
+})
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
@@ -431,6 +385,7 @@ local function idtool_info()
   vim.cmd.setfiletype("text")
 end
 
+vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
 vim.keymap.set("n", "<Leader>id", function() idtool_data("dev") end)
 vim.keymap.set("n", "<Leader>is", function() idtool_data("staging") end)
 vim.keymap.set("n", "<Leader>ip", function() idtool_data("v1") end)

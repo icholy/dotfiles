@@ -181,3 +181,6 @@ exec --no-startup-id flameshot
 
 # set background color
 exec --no-startup-id xsetroot -solid "#657b83"
+
+bindsym Print exec flameshot gui
+

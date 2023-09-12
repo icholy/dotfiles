@@ -11,7 +11,6 @@ vim.o.breakindent = true
 vim.cmd("set complete-=i")
 vim.o.completeopt = "menu,menuone,noselect"
 vim.o.autoindent = true
-vim.o.expandtab = true
 vim.o.tabstop = 4
 vim.o.shiftwidth = 4
 vim.o.wrap = false
@@ -92,7 +91,6 @@ require("lazy").setup({
 		end
 	},
 	"tpope/vim-surround",
-	"tpope/vim-sleuth",
 	"tpope/vim-rhubarb",
 	"wsdjeg/vim-fetch",
 	{
@@ -109,10 +107,6 @@ require("lazy").setup({
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 			local lspconfig = require("lspconfig")
 			lspconfig.tsserver.setup({
-				flags = {
-					debounce_text_changes = 500,
-					allow_incremental_sync = false
-				},
 				capabilities = capabilities,
 				init_options = {
 					disableAutomaticTypingAcquisitioninitializationOptions = true
@@ -126,6 +120,7 @@ require("lazy").setup({
 			lspconfig.gopls.setup({ capabilities = capabilities })
 			lspconfig.pyright.setup({ capabilities = capabilities })
 			lspconfig.rust_analyzer.setup({ capabilities = capabilities })
+			lspconfig.clangd.setup({ capabilities = capabilities })
 
 			-- I don't want eslint to use my project local config for
 			-- dependencies in node_modules
@@ -139,9 +134,6 @@ require("lazy").setup({
 			-- "package.json"
 			)
 			lspconfig.eslint.setup({
-				flags = {
-					allow_incremental_sync = false
-				},
 				root_dir = function(fname)
 					local fullpath = vim.fn.expand(fname, ":p")
 					if string.find(fullpath, "node_modules") then

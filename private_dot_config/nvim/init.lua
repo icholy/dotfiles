@@ -92,6 +92,7 @@ require("lazy").setup({
 	},
 	"tpope/vim-surround",
 	"tpope/vim-rhubarb",
+	"tpope/vim-sleuth",
 	"wsdjeg/vim-fetch",
 	{
 		"numtostr/BufOnly.nvim",

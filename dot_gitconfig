@@ -22,3 +22,5 @@
 	requireForce = false
 [http]
 	cookiefile = /home/icholy/.gitcookies
+[rebase]
+	autostash = true

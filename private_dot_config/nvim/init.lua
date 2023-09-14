@@ -30,6 +30,7 @@ vim.o.updatetime = 250
 vim.o.background = "light"
 vim.o.fixendofline = false
 vim.o.cmdheight = 0
+vim.o.clipboard=unnamedplus
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 

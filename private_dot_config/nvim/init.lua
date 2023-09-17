@@ -337,7 +337,7 @@ require("lazy").setup({
 	},
 	{
 		"kyazdani42/nvim-tree.lua",
-		requires = "kyazdani42/nvim-web-devicons",
+		dependencies = { "kyazdani42/nvim-web-devicons" },
 		config = function()
 			require("nvim-tree").setup({
 				-- I keep accidentally hitting 's' and opening libreoffice ...
@@ -401,6 +401,13 @@ require("lazy").setup({
 				dapui.close()
 			end
 		end,
+	},
+	{
+		"theHamsta/nvim-dap-virtual-text",
+		dependencies = { "mfussenegger/nvim-dap" },
+		config = function()
+			require("nvim-dap-virtual-text").setup()
+		end
 	},
 	{
 		"leoluz/nvim-dap-go",

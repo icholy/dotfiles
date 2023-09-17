@@ -428,7 +428,7 @@ require("lazy").setup({
 		},
 		config = function ()
 			require("dap-vscode-js").setup({
-				debugger_path = "/home/icholy/.local/share/nvim/lazy/vscode-js-debug", -- Path to vscode-js-debug installation.
+				debugger_path = vim.fn.stdpath("data") .. "/lazy/vscode-js-debug",
 				adapters = { 'pwa-node' },
 			})
 			for _, lang in ipairs({ "typescript", "javascript" }) do

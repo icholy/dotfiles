@@ -327,9 +327,9 @@ require("lazy").setup({
 			require("trouble").setup()
 
 			-- update the default diagnostic signs to match trouble
-			vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticError" })
-			vim.fn.sign_define("DiagnosticSignWarning", { text = "", texthl = "DiagnosticWarning" })
-			vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticHint" })
+			vim.fn.sign_define("DiagnosticSignError", { text = "⚠", texthl = "DiagnosticError" })
+			vim.fn.sign_define("DiagnosticSignWarning", { text = "⚠", texthl = "DiagnosticWarning" })
+			vim.fn.sign_define("DiagnosticSignHint", { text = "⚠", texthl = "DiagnosticHint" })
 			vim.fn.sign_define("DiagnosticSignInformation", { text = "", texthl = "DiagnosticInformation" })
 
 			vim.keymap.set("n", "<Leader>d", ":TroubleToggle workspace_diagnostics<CR>")

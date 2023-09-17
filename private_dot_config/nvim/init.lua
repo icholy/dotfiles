@@ -361,6 +361,82 @@ require("lazy").setup({
 		end,
 		ft = { "markdown" },
 	},
+	{
+		"mfussenegger/nvim-dap",
+		config = function()
+			local dap = require("dap")
+			vim.keymap.set("n", "<Leader>b", dap.toggle_breakpoint)
+			vim.keymap.set("n", "<F5>", dap.continue)
+
+			-- nicer icons for breakpoints
+			vim.fn.sign_define('DapBreakpoint',{ text ='○', texthl ='', linehl ='', numhl =''})
+			vim.fn.sign_define('DapStopped',{ text ='▶️', texthl ='', linehl ='', numhl =''})
+		end
+	},
+	{
+		"rcarriga/nvim-dap-ui",
+		dependencies = { "mfussenegger/nvim-dap" },
+		config = function ()
+			local dap = require("dap")
+			local dapui = require("dapui")
+
+			vim.keymap.set({"v", "n"}, "<Leader>e", dapui.eval)
+
+			dapui.setup()
+			-- automatically open dapui
+			dap.listeners.after.event_initialized["dapui_config"] = function()
+				dapui.open()
+			end
+			dap.listeners.before.event_terminated["dapui_config"] = function()
+				dapui.close()
+			end
+			dap.listeners.before.event_exited["dapui_config"] = function()
+				dapui.close()
+			end
+		end,
+	},
+	{
+		"leoluz/nvim-dap-go",
+		dependencies = { "mfussenegger/nvim-dap" },
+		config = function()
+			require("dap-go").setup()
+		end
+	},
+	{
+		"microsoft/vscode-js-debug",
+		build = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out",
+	},
+	{
+		"mxsdev/nvim-dap-vscode-js",
+		dependencies = {
+			"mfussenegger/nvim-dap",
+			"microsoft/vscode-js-debug",
+		},
+		config = function ()
+			require("dap-vscode-js").setup({
+				debugger_path = "/home/icholy/.local/share/nvim/lazy/vscode-js-debug", -- Path to vscode-js-debug installation.
+				adapters = { 'pwa-node' },
+			})
+			for _, lang in ipairs({ "typescript", "javascript" }) do
+				require("dap").configurations[lang] = {
+					{
+						type = "pwa-node",
+						request = "attach",
+						name = "Attach",
+						cwd = "${workspaceFolder}",
+						continueOnAttach = true,
+					},
+					{
+						type = "pwa-node",
+						request = "launch",
+						name = "Launch Current File",
+						program = "${file}",
+						cwd = "${workspaceFolder}",
+					},
+				}
+			end
+		end
+	},
 })
 
 local function idtool_data(stage)

@@ -91,6 +91,13 @@ require("lazy").setup({
 			vim.keymap.set("n", "<Leader>gp", ":Git push<CR>")
 		end
 	},
+	{
+		"nyngwang/NeoZoom.lua",
+		config = function()
+			require("neo-zoom").setup()
+			vim.keymap.set("n", "<C-w><C-w>", ":NeoZoomToggle<CR>")
+		end
+	},
 	"tpope/vim-surround",
 	"tpope/vim-rhubarb",
 	"tpope/vim-sleuth",
@@ -370,7 +377,7 @@ require("lazy").setup({
 
 			-- nicer icons for breakpoints
 			vim.fn.sign_define('DapBreakpoint',{ text ='○', texthl ='', linehl ='', numhl =''})
-			vim.fn.sign_define('DapStopped',{ text ='▶️', texthl ='', linehl ='', numhl =''})
+			vim.fn.sign_define('DapStopped',{ text ='➔', texthl ='', linehl ='', numhl =''})
 		end
 	},
 	{

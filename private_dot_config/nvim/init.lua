@@ -266,16 +266,7 @@ require("lazy").setup({
 					end,
 				},
 				indent = {
-					enable = false,
-					disable = {}
-				},
-				ensure_installed = {
-					"go",
-					"javascript",
-					"typescript",
-					"json",
-					"lua",
-					"bash"
+					enable = true,
 				},
 				incremental_selection = {
 					enable = true,

@@ -259,6 +259,7 @@ require("lazy").setup({
 			require("nvim-treesitter.configs").setup({
 				highlight = {
 					enable = true,
+					additional_vim_regex_highlighting = false,
 					disable = function(_, bufnr)
 						local name = vim.api.nvim_buf_get_name(bufnr)
 						local size = vim.fn.getfsize(name)

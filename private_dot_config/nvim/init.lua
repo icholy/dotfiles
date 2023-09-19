@@ -335,6 +335,7 @@ require("lazy").setup({
 			require("nvim-tree").setup({
 				-- I keep accidentally hitting 's' and opening libreoffice ...
 				system_open = { cmd = "echo" },
+				sync_root_with_cwd = true,
 				actions = {
 					open_file = {
 						resize_window = false,
@@ -343,6 +344,7 @@ require("lazy").setup({
 			})
 			vim.keymap.set("n", "<Leader>n", ":NvimTreeToggle<CR>")
 			vim.keymap.set("n", "<Leader>m", ":NvimTreeFindFile<CR>")
+			vim.keymap.set("n", "<Leader>c", ":cd %:p:h<CR>")
 		end
 	},
 	{

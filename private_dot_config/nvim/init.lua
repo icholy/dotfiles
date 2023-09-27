@@ -382,19 +382,10 @@ require("lazy").setup({
 			local dap = require("dap")
 			local dapui = require("dapui")
 
-			vim.keymap.set({"v", "n"}, "<Leader>e", dapui.eval)
-
 			dapui.setup()
-			-- automatically open dapui
-			dap.listeners.after.event_initialized["dapui_config"] = function()
-				dapui.open()
-			end
-			dap.listeners.before.event_terminated["dapui_config"] = function()
-				dapui.close()
-			end
-			dap.listeners.before.event_exited["dapui_config"] = function()
-				dapui.close()
-			end
+
+			vim.keymap.set({"v", "n"}, "<Leader>e", dapui.eval)
+			vim.keymap.set("n", "<F4>", dapui.toggle)
 		end,
 	},
 	{

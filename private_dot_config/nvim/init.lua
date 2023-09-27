@@ -404,7 +404,7 @@ require("lazy").setup({
 	},
 	{
 		"microsoft/vscode-js-debug",
-		build = "npm ci --loglevel=error && npx gulp vsDebugServerBundle && mv dist out",
+		build = "npm ci --loglevel=error && npx gulp vsDebugServerBundle && rm -rf ./out && mv dist out",
 	},
 	{
 		"mxsdev/nvim-dap-vscode-js",

@@ -426,13 +426,6 @@ require("lazy").setup({
 						cwd = "${workspaceFolder}",
 						continueOnAttach = true,
 					},
-					{
-						type = "pwa-node",
-						request = "launch",
-						name = "Launch Current File",
-						program = "${file}",
-						cwd = "${workspaceFolder}",
-					},
 				}
 			end
 		end

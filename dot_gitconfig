@@ -14,6 +14,7 @@
 	hooksPath = /dev/null
 [alias]
 	s = status
+	undo = reset HEAD@{1}
 [remote "origin"]
 	prune = true
 [merge]

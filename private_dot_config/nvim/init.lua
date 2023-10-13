@@ -425,6 +425,7 @@ require("lazy").setup({
 						name = "Attach",
 						cwd = "${workspaceFolder}",
 						continueOnAttach = true,
+						skipFiles = { "<node_internals>/**" },
 					},
 				}
 			end

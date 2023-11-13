@@ -230,6 +230,16 @@ require("lazy").setup({
 			local actions = require("telescope.actions")
 			require("telescope").setup({
 				defaults = {
+					vimgrep_arguments = {
+						"rg",
+						"--color=never",
+						"--no-heading",
+						"--with-filename",
+						"--line-number",
+						"--column",
+						"--smart-case",
+						"--fixed-strings"
+					},
 					mappings = {
 						n = {
 							["<C-Space>"] = actions.close,

@@ -25,3 +25,7 @@
 	cookiefile = /home/icholy/.gitcookies
 [rebase]
 	autostash = true
+[pull]
+	rebase = true
+[init]
+	defaultBranch = master

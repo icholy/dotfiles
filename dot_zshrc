@@ -91,6 +91,11 @@ function bump() {
     git tag "$TAG_NAME";
 }
 
+function scratch() {
+    cd $(mktemp -p /tmp -d scratch.XXXXXX)
+    git init
+}
+
 source /home/icholy/.secrets
 
 # bun completions

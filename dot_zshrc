@@ -99,6 +99,11 @@ function scratch() {
     elif [[ "$1" == "node" ]]; then
         npm init -y
         echo "node_modules" > .gitignore
+    elif [[ "$1" == "sdk" ]]; then
+        npm init -y
+        npm i -D typescript
+        npm i --save @compassdigital/sdk.typescript
+        echo "node_modules" > .gitignore
     fi
     git init
     git add --all .

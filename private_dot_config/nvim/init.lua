@@ -412,13 +412,13 @@ require("lazy").setup({
 			vim.keymap.set("n", "<F4>", dapui.toggle)
 		end,
 	},
-	{
-		"theHamsta/nvim-dap-virtual-text",
-		dependencies = { "mfussenegger/nvim-dap" },
-		config = function()
-			require("nvim-dap-virtual-text").setup()
-		end
-	},
+	-- {
+	-- 	"theHamsta/nvim-dap-virtual-text",
+	-- 	dependencies = { "mfussenegger/nvim-dap" },
+	-- 	config = function()
+	-- 		require("nvim-dap-virtual-text").setup()
+	-- 	end
+	-- },
 	{
 		"leoluz/nvim-dap-go",
 		dependencies = { "mfussenegger/nvim-dap" },

@@ -47,9 +47,16 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 })
 
 vim.api.nvim_create_autocmd('ColorScheme', {
-  pattern = 'solarized*',
-  command = 'highlight! link NormalFloat Pmenu',
-  group = group,
+	group = group,
+	pattern = 'solarized*',
+	callback = function()
+		-- fix the lazy nvim bar
+		-- See: https://github.com/ishan9299/nvim-solarized-lua/pull/61
+		vim.cmd('highlight! link NormalFloat Pmenu')
+		-- fix the nvim-dap-ui bar
+		-- See: https://github.com/rcarriga/nvim-dap-ui/issues/315
+		vim.cmd('highlight! link StatusLineNC Normal')
+	end,
 })
 
 -- automatically enter insert mode

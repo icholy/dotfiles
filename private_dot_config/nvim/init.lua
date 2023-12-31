@@ -55,7 +55,8 @@ vim.api.nvim_create_autocmd('ColorScheme', {
 		vim.cmd('highlight! link NormalFloat Pmenu')
 		-- fix the nvim-dap-ui bar
 		-- See: https://github.com/rcarriga/nvim-dap-ui/issues/315
-		vim.cmd('highlight! link StatusLineNC Normal')
+		vim.cmd('highlight! link StatusLineNC NormalNC')
+		vim.cmd('highlight! link StatusLine Normal')
 	end,
 })
 

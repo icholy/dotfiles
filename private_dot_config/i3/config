@@ -184,5 +184,6 @@ exec --no-startup-id xsetroot -solid "#657b83"
 bindsym Print exec flameshot gui
 
 # sound
+exec --no-startup-id amixer -c 1 set PCM 40
 bindsym XF86AudioRaiseVolume exec amixer -c 1 set PCM 2dB+
 bindsym XF86AudioLowerVolume exec amixer -c 1 set PCM 2dB-

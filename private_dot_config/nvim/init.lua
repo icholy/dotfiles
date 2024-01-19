@@ -76,6 +76,13 @@ vim.api.nvim_create_autocmd("FileType", {
 	end
 })
 
+-- make for typescript
+vim.api.nvim_create_autocmd("FileType", {
+	group = group,
+	pattern = {"typescript", "typescriptreact"},
+	command = "compiler tsc | setlocal makeprg=npx\\ tsc",
+})
+
 -- setup lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then

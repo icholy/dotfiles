@@ -103,6 +103,7 @@ function scratch() {
         npm init -y
         npm i -D typescript
         npm i --save @compassdigital/sdk.typescript
+        npx tsc --init
         echo "node_modules" > .gitignore
     fi
     git init

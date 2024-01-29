@@ -195,6 +195,7 @@ require("lazy").setup({
 			"hrsh7th/cmp-path",
 			"hrsh7th/cmp-cmdline",
 			"hrsh7th/vim-vsnip",
+			"rcarriga/cmp-dap",
 		},
 		config = function()
 			-- Setup nvim-cmp.
@@ -226,7 +227,10 @@ require("lazy").setup({
 				}, {
 					{ name = "vsnip" },
 					{ name = "buffer" },
-				})
+				}),
+				enabled = function()
+					return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt" or require("cmp_dap").is_dap_buffer()
+				end,
 			})
 
 			-- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
@@ -244,12 +248,22 @@ require("lazy").setup({
 					{ name = "cmdline" }
 				})
 			})
+
+			-- Use dap source for dap-repl
+			require("cmp").setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
+				sources = {
+					{ name = "dap" },
+				},
+			})
 		end
 	},
-	"nvim-telescope/telescope-ui-select.nvim",
 	{
 		"nvim-telescope/telescope.nvim",
-		dependencies = { "nvim-lua/plenary.nvim" },
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-telescope/telescope-ui-select.nvim",
+			"nvim-telescope/telescope-dap.nvim",
+		},
 		config = function()
 			local actions = require("telescope.actions")
 			require("telescope").setup({
@@ -275,6 +289,7 @@ require("lazy").setup({
 				}
 			})
 			require("telescope").load_extension("ui-select")
+			require('telescope').load_extension('dap')
 			vim.keymap.set("n", "<C-Space><C-Space>", ":Telescope buffers<CR>")
 			vim.keymap.set("n", "<C-Space><C-g>", ":Telescope live_grep<CR>")
 			vim.keymap.set("n", "<C-Space><C-f>", ":Telescope find_files<CR>")
@@ -416,7 +431,15 @@ require("lazy").setup({
 			local dap = require("dap")
 			local dapui = require("dapui")
 
-			dapui.setup()
+			dapui.setup({
+				layouts = {
+					{
+						elements = { { id = "repl", size = 1 } },
+						position = "bottom",
+						size = 16
+					}
+				}
+			})
 
 			vim.keymap.set({"v", "n"}, "<Leader>e", dapui.eval)
 			vim.keymap.set("n", "<F4>", dapui.toggle)

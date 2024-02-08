@@ -153,6 +153,7 @@ require("lazy").setup({
 			lspconfig.clangd.setup({ capabilities = capabilities })
 			lspconfig.yamlls.setup({ capabilities = capabilities })
 			lspconfig.jsonls.setup({ capabilities = capabilities })
+			lspconfig.terraformls.setup({ capabilities = capabilities })
 
 			-- I don't want eslint to use my project local config for
 			-- dependencies in node_modules

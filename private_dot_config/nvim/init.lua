@@ -144,8 +144,6 @@ require("lazy").setup({
 				on_attach = function(client)
 					-- I use prettier for formatting
 					client.server_capabilities.document_formatting = false
-					-- See https://github.com/neovim/neovim/issues/24517
-					client.server_capabilities.semanticTokensProvider = nil
 				end
 			})
 

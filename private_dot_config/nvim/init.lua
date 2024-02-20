@@ -39,6 +39,8 @@ vim.opt.listchars:append("eol:¬")
 
 local group = vim.api.nvim_create_augroup("MyGroup", { clear = true })
 
+vim.keymap.set("n", "gl", require("gotolink"))
+
 -- format go files on save
 vim.api.nvim_create_autocmd("BufWritePre", {
 	group = group,

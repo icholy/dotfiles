@@ -47,7 +47,6 @@ export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
 alias clip="xclip -i -selection clipboard"
 alias n='nautilus'
 alias sagi='sudo apt install'
-alias t='talos -p ilia.choly -e default -b open -q -F'
 alias fd='fdfind'
 alias vim='nvim'
 alias semgrepvim="jq -r '.results[] | [ .path, .start.line, .start.col ] | join(\":\")' > /tmp/errorfile; nvim -q /tmp/errorfile"

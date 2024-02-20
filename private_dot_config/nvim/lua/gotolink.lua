@@ -17,7 +17,7 @@ end
 function is_cursor_in_range(range)
   local cursor = vim.api.nvim_win_get_cursor(0)
   cursor[1] = cursor[1] - 1 -- Adjust line number for 0-indexing
-  cursor[2] = utf16_offset(cursor[1] + 1, cursor[2]) -- Convert the byte index to a UTF-16 character index
+  cursor[2] = vim.lsp.util.character_offset(0, cursor[1], cursor[2])
   -- check if cursor line is in range
   if (cursor[1] > range.start.line and cursor[1] < range['end'].line) then
     return true
@@ -31,13 +31,6 @@ function is_cursor_in_range(range)
   else
     return false
   end
-end
-
--- Count the number of UTF-16 code units between the start of the line and the byte_idx
-function utf16_offset(line, byte_idx)
-  local line_str = vim.api.nvim_buf_get_lines(0, line-1, line, false)[1]
-  local _, utf16_count = vim.str_utfindex(line_str, byte_idx)
-  return utf16_count
 end
 
 function goto_link_target(target)

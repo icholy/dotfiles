@@ -39,8 +39,6 @@ vim.opt.listchars:append("eol:¬")
 
 local group = vim.api.nvim_create_augroup("MyGroup", { clear = true })
 
-vim.keymap.set("n", "gl", require("gotolink"))
-
 -- format go files on save
 vim.api.nvim_create_autocmd("BufWritePre", {
 	group = group,
@@ -297,7 +295,16 @@ require("lazy").setup({
 			vim.keymap.set("n", "<C-p>", ":Telescope find_files<CR>")
 			vim.keymap.set("n", "<C-Space><C-t>", ":Telescope diagnostics<CR>")
 			vim.keymap.set("n", "<C-Space><C-m>", ":Telescope marks<CR>")
-			vim.keymap.set("n", "gd", ":Telescope lsp_definitions<CR>")
+
+			vim.keymap.set("n", "gd", function()
+				local lsplinks = require("lsplinks")
+				if not lsplinks.lsp_has_capability("definitionProvider") and lsplinks.lsp_has_capability("documentLinkProvider") then
+					lsplinks.jump()
+				else
+					vim.cmd.Telescope("lsp_definitions")
+				end
+			end)
+
 			vim.keymap.set("n", "gt", ":Telescope lsp_type_definitions<CR>")
 			vim.keymap.set("n", "gr", ":Telescope lsp_references<CR>")
 		end

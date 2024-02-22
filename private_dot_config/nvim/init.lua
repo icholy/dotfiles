@@ -299,7 +299,7 @@ require("lazy").setup({
 
 			vim.keymap.set("n", "gd", function()
 				local lsplinks = require("lsplinks")
-				if not lsplinks.lsp_has_capability("definitionProvider") and lsplinks.lsp_has_capability("documentLinkProvider") then
+				if has_lsp("jsonls") or has_lsp("yamlls") then
 					lsplinks.jump()
 				else
 					vim.cmd.Telescope("lsp_definitions")
@@ -569,11 +569,18 @@ vim.keymap.set("n", "<MiddleMouse>", "<Nop>")
 vim.keymap.set("i", "<MiddleMouse>", "<Nop>")
 
 vim.keymap.set("n", "<Leader>f", function ()
-	for _, client in ipairs(vim.lsp.get_active_clients()) do
-		if client.name == "eslint" then
-			vim.cmd.EslintFixAll()
-			return
+	if has_lsp("eslint") then
+		vim.cmd.EslintFixAll()
+	else
+		vim.lsp.buf.format({ async = true })
+	end
+end)
+
+function has_lsp(name)
+	for _, client in ipairs(vim.lsp.buf_get_clients()) do
+		if client.name == name then
+			return true
 		end
 	end
-	vim.lsp.buf.format({ async = true })
-end)
+	return false
+end

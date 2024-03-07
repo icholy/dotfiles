@@ -263,6 +263,7 @@ require("lazy").setup({
 			"icholy/nvim-lsplinks",
 			"nvim-telescope/telescope-ui-select.nvim",
 			"nvim-telescope/telescope-dap.nvim",
+			"nvim-telescope/telescope-frecency.nvim",
 		},
 		config = function()
 			local actions = require("telescope.actions")
@@ -290,22 +291,15 @@ require("lazy").setup({
 			})
 			require("telescope").load_extension("ui-select")
 			require('telescope').load_extension('dap')
-			vim.keymap.set("n", "<C-Space><C-Space>", ":Telescope buffers<CR>")
+			require('telescope').load_extension('frecency')
+			vim.keymap.set("n", "<Leader><Leader>", ":Telescope frecency<CR>")
+			vim.keymap.set("n", "<C-Space><C-b>", ":Telescope buffers<CR>")
 			vim.keymap.set("n", "<C-Space><C-g>", ":Telescope live_grep<CR>")
 			vim.keymap.set("n", "<C-Space><C-f>", ":Telescope find_files<CR>")
 			vim.keymap.set("n", "<C-p>", ":Telescope find_files<CR>")
 			vim.keymap.set("n", "<C-Space><C-t>", ":Telescope diagnostics<CR>")
 			vim.keymap.set("n", "<C-Space><C-m>", ":Telescope marks<CR>")
-
-			vim.keymap.set("n", "gd", function()
-				local lsplinks = require("lsplinks")
-				if has_lsp("jsonls") or has_lsp("yamlls") then
-					lsplinks.jump()
-				else
-					vim.cmd.Telescope("lsp_definitions")
-				end
-			end)
-
+			vim.keymap.set("n", "gd", ":Telescope lsp_definitions<CR>")
 			vim.keymap.set("n", "gt", ":Telescope lsp_type_definitions<CR>")
 			vim.keymap.set("n", "gr", ":Telescope lsp_references<CR>")
 		end

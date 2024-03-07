@@ -51,6 +51,7 @@ alias fd='fdfind'
 alias vim='nvim'
 alias semgrepvim="jq -r '.results[] | [ .path, .start.line, .start.col ] | join(\":\")' > /tmp/errorfile; nvim -q /tmp/errorfile"
 alias cal='ncal -b'
+alias cwatch='watch -c unbuffer'
 
 function vg() {
     rg --vimgrep $@ > /tmp/vgfile

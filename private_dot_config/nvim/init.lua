@@ -257,6 +257,14 @@ require("lazy").setup({
 		end
 	},
 	{
+		"icholy/lsplinks.nvim",
+		config = function()
+			local lsplinks = require("lsplinks")
+			lsplinks.setup()
+			vim.keymap.set("n", "gx", lsplinks.gx)
+		end
+	},
+	{
 		"nvim-telescope/telescope.nvim",
 		dependencies = {
 			"nvim-lua/plenary.nvim",

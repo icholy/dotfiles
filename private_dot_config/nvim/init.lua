@@ -30,7 +30,7 @@ vim.o.updatetime = 250
 vim.o.background = "light"
 vim.o.fixendofline = false
 vim.o.cmdheight = 0
-vim.o.clipboard=unnamedplus
+vim.o.clipboard = unnamedplus
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
@@ -43,25 +43,24 @@ local group = vim.api.nvim_create_augroup("MyGroup", { clear = true })
 vim.api.nvim_create_autocmd("BufWritePre", {
 	group = group,
 	pattern = "*.go",
-	callback = function () vim.lsp.buf.format() end,
+	callback = function() vim.lsp.buf.format() end,
 })
 
 vim.api.nvim_create_autocmd('ColorScheme', {
 	group = group,
 	pattern = 'solarized*',
 	callback = function()
-		-- fix the lazy nvim bar
-		-- See: https://github.com/ishan9299/nvim-solarized-lua/pull/61
-		vim.cmd('highlight! link NormalFloat Pmenu')
 		-- fix the nvim-dap-ui bar
 		-- See: https://github.com/rcarriga/nvim-dap-ui/issues/315
 		vim.cmd('highlight! link StatusLineNC NormalNC')
 		vim.cmd('highlight! link StatusLine Normal')
+		-- used to darken the line background when hitting a breakpoint
+		vim.cmd('highlight DapStoppedLine guibg=#eee8d5')
 	end,
 })
 
 -- automatically enter insert mode
-vim.api.nvim_create_autocmd({"BufWinEnter", "WinEnter", "TermOpen"}, {
+vim.api.nvim_create_autocmd({ "BufWinEnter", "WinEnter", "TermOpen" }, {
 	command = "startinsert",
 	pattern = "term://*",
 })
@@ -69,7 +68,7 @@ vim.api.nvim_create_autocmd({"BufWinEnter", "WinEnter", "TermOpen"}, {
 -- don't auto-indent when typing ':'
 vim.api.nvim_create_autocmd("FileType", {
 	group = group,
-	pattern = {"yml", "yaml"},
+	pattern = { "yml", "yaml" },
 	callback = function()
 		vim.cmd("setlocal indentkeys-=<:>")
 		vim.cmd("setlocal indentkeys-=:")
@@ -79,7 +78,7 @@ vim.api.nvim_create_autocmd("FileType", {
 -- make for typescript
 vim.api.nvim_create_autocmd("FileType", {
 	group = group,
-	pattern = {"typescript", "typescriptreact"},
+	pattern = { "typescript", "typescriptreact" },
 	command = "compiler tsc | setlocal makeprg=npx\\ tsc",
 })
 
@@ -131,11 +130,22 @@ require("lazy").setup({
 		end
 	},
 	{
+	  "OlegGulevskyy/better-ts-errors.nvim",
+	  dependencies = { "MunifTanjim/nui.nvim" },
+	  config = {
+		keymaps = {
+		  toggle = '<leader>d', -- default '<leader>dd'
+		  go_to_definition = '<leader>dx' -- default '<leader>dx'
+		}
+	  }
+	},
+	{
 		"neovim/nvim-lspconfig",
 		dependencies = { "cmp-nvim-lsp" },
 		config = function()
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 			local lspconfig = require("lspconfig")
+
 			lspconfig.tsserver.setup({
 				capabilities = capabilities,
 				init_options = {
@@ -154,16 +164,17 @@ require("lazy").setup({
 			lspconfig.yamlls.setup({ capabilities = capabilities })
 			lspconfig.jsonls.setup({ capabilities = capabilities })
 			lspconfig.terraformls.setup({ capabilities = capabilities })
+			lspconfig.lua_ls.setup({ capabilities = capabilities })
 
 			-- I don't want eslint to use my project local config for
 			-- dependencies in node_modules
 			local eslint_root_pattern = lspconfig.util.root_pattern(
-			".eslintrc",
-			".eslintrc.js",
-			".eslintrc.cjs",
-			".eslintrc.yaml",
-			".eslintrc.yml",
-			".eslintrc.json"
+				".eslintrc",
+				".eslintrc.js",
+				".eslintrc.cjs",
+				".eslintrc.yaml",
+				".eslintrc.yml",
+				".eslintrc.json"
 			-- "package.json"
 			)
 			lspconfig.eslint.setup({
@@ -177,13 +188,13 @@ require("lazy").setup({
 			})
 
 			vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-			vim.lsp.diagnostic.on_publish_diagnostics,
-			{
-				virtual_text = false,
-				signs = true,
-				update_in_insert = false,
-				severity_sort = true,
-			})
+				vim.lsp.diagnostic.on_publish_diagnostics,
+				{
+					virtual_text = false,
+					signs = true,
+					update_in_insert = false,
+					severity_sort = true,
+				})
 		end
 	},
 	{
@@ -208,8 +219,8 @@ require("lazy").setup({
 					end,
 				},
 				mapping = {
-					["<C-n>"] = cmp.mapping(cmp.mapping.select_next_item(), {"i","c"}),
-					["<C-p>"] = cmp.mapping(cmp.mapping.select_prev_item(), {"i","c"}),
+					["<C-n>"] = cmp.mapping(cmp.mapping.select_next_item(), { "i", "c" }),
+					["<C-p>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "c" }),
 					["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
 					["<Tab>"] = cmp.mapping(cmp.mapping.confirm({ select = true }), { "i", "c" }),
 					["<CR>"] = cmp.mapping(cmp.mapping.confirm(), { "i", "c" }),
@@ -227,6 +238,16 @@ require("lazy").setup({
 					{ name = "vsnip" },
 					{ name = "buffer" },
 				}),
+				preselect = cmp.PreselectMode.None,
+				sorting = {
+					comparators = {
+						cmp.config.compare.offset,
+						cmp.config.compare.exact,
+						cmp.config.compare.score,
+						cmp.config.compare.recently_used,
+						cmp.config.compare.kind,
+					},
+				},
 				enabled = function()
 					return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt" or require("cmp_dap").is_dap_buffer()
 				end,
@@ -268,15 +289,16 @@ require("lazy").setup({
 		"nvim-telescope/telescope.nvim",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
-			"icholy/nvim-lsplinks",
 			"nvim-telescope/telescope-ui-select.nvim",
 			"nvim-telescope/telescope-dap.nvim",
-			"nvim-telescope/telescope-frecency.nvim",
+			"Marskey/telescope-sg",
 		},
 		config = function()
 			local actions = require("telescope.actions")
 			require("telescope").setup({
 				defaults = {
+					shorten_path = true,
+					layout_strategy = "vertical",
 					vimgrep_arguments = {
 						"rg",
 						"--color=never",
@@ -295,15 +317,24 @@ require("lazy").setup({
 							["<C-Space>"] = actions.close,
 						}
 					}
+				},
+				extensions = {
+					ast_grep = {
+						command = {
+							"sg",
+							"--json=stream",
+						},           -- must have --json=stream
+						grep_open_files = false, -- search in opened files
+						lang = nil,  -- string value, specify language for ast-grep `nil` for default
+					}
 				}
 			})
 			require("telescope").load_extension("ui-select")
 			require('telescope').load_extension('dap')
-			require('telescope').load_extension('frecency')
-			vim.keymap.set("n", "<Leader><Leader>", ":Telescope frecency<CR>")
 			vim.keymap.set("n", "<C-Space><C-b>", ":Telescope buffers<CR>")
 			vim.keymap.set("n", "<C-Space><C-g>", ":Telescope live_grep<CR>")
 			vim.keymap.set("n", "<C-Space><C-f>", ":Telescope find_files<CR>")
+			vim.keymap.set("n", "<C-Space><C-a>", ":Telescope ast_grep<CR>")
 			vim.keymap.set("n", "<C-p>", ":Telescope find_files<CR>")
 			vim.keymap.set("n", "<C-Space><C-t>", ":Telescope diagnostics<CR>")
 			vim.keymap.set("n", "<C-Space><C-m>", ":Telescope marks<CR>")
@@ -353,7 +384,6 @@ require("lazy").setup({
 			"WhoIsSethDaniel/lualine-lsp-progress.nvim"
 		},
 		config = function()
-
 			local function recording_macro()
 				local letter = vim.fn.reg_recording()
 				if letter == "" then
@@ -373,21 +403,21 @@ require("lazy").setup({
 			})
 		end
 	},
-	{
-		"folke/trouble.nvim",
-		dependencies = { "kyazdani42/nvim-web-devicons" },
-		config = function()
-			require("trouble").setup()
-
-			-- update the default diagnostic signs to match trouble
-			vim.fn.sign_define("DiagnosticSignError", { text = "⚠", texthl = "DiagnosticError" })
-			vim.fn.sign_define("DiagnosticSignWarning", { text = "⚠", texthl = "DiagnosticWarning" })
-			vim.fn.sign_define("DiagnosticSignHint", { text = "⚠", texthl = "DiagnosticHint" })
-			vim.fn.sign_define("DiagnosticSignInformation", { text = "", texthl = "DiagnosticInformation" })
-
-			vim.keymap.set("n", "<Leader>d", ":TroubleToggle workspace_diagnostics<CR>")
-		end
-	},
+	-- {
+	-- 	"folke/trouble.nvim",
+	-- 	dependencies = { "kyazdani42/nvim-web-devicons" },
+	-- 	config = function()
+	-- 		require("trouble").setup()
+	--
+	-- 		-- update the default diagnostic signs to match trouble
+	-- 		vim.fn.sign_define("DiagnosticSignError", { text = "⚠", texthl = "DiagnosticError" })
+	-- 		vim.fn.sign_define("DiagnosticSignWarning", { text = "⚠", texthl = "DiagnosticWarning" })
+	-- 		vim.fn.sign_define("DiagnosticSignHint", { text = "⚠", texthl = "DiagnosticHint" })
+	-- 		vim.fn.sign_define("DiagnosticSignInformation", { text = "", texthl = "DiagnosticInformation" })
+	--
+	-- 		vim.keymap.set("n", "<Leader>d", ":TroubleToggle workspace_diagnostics<CR>")
+	-- 	end
+	-- },
 	{
 		"kyazdani42/nvim-tree.lua",
 		dependencies = { "kyazdani42/nvim-web-devicons" },
@@ -427,19 +457,27 @@ require("lazy").setup({
 		"mfussenegger/nvim-dap",
 		config = function()
 			local dap = require("dap")
+
+			-- filter out source map errors
+			dap.defaults.fallback.on_output = function(session, event)
+				local repl = require("dap.repl")
+				if event.category == "stdout" and not string.find(event.output, "Could not read source map for file") then
+					repl.append(event.output, "$", { newline = false })
+				end
+			end
+
 			vim.keymap.set("n", "<Leader>b", dap.toggle_breakpoint)
 			vim.keymap.set("n", "<F5>", dap.continue)
 
 			-- nicer icons for breakpoints
-			vim.fn.sign_define('DapBreakpoint',{ text ='○', texthl ='', linehl ='', numhl =''})
-			vim.fn.sign_define('DapStopped',{ text ='➔', texthl ='', linehl ='', numhl =''})
+			vim.fn.sign_define('DapBreakpoint', { text = '○', texthl = '', linehl = '', numhl = '' })
+			vim.fn.sign_define('DapStopped', { text = '➔', texthl = '', linehl = 'DapStoppedLine', numhl = '' })
 		end
 	},
 	{
 		"rcarriga/nvim-dap-ui",
 		dependencies = { "mfussenegger/nvim-dap" },
-		config = function ()
-			local dap = require("dap")
+		config = function()
 			local dapui = require("dapui")
 
 			dapui.setup({
@@ -452,7 +490,7 @@ require("lazy").setup({
 				}
 			})
 
-			vim.keymap.set({"v", "n"}, "<Leader>e", dapui.eval)
+			vim.keymap.set({ "v", "n" }, "<Leader>e", dapui.eval)
 			vim.keymap.set("n", "<F4>", dapui.toggle)
 		end,
 	},
@@ -480,13 +518,14 @@ require("lazy").setup({
 			"mfussenegger/nvim-dap",
 			"microsoft/vscode-js-debug",
 		},
-		config = function ()
+		config = function()
 			require("dap-vscode-js").setup({
 				debugger_path = vim.fn.stdpath("data") .. "/lazy/vscode-js-debug",
 				adapters = { 'pwa-node' },
 			})
+			local dap = require("dap")
 			for _, lang in ipairs({ "typescript", "javascript" }) do
-				require("dap").configurations[lang] = {
+				dap.configurations[lang] = {
 					{
 						type = "pwa-node",
 						request = "attach",
@@ -499,6 +538,9 @@ require("lazy").setup({
 						},
 					},
 				}
+
+				-- dap.defaults.fallback.on_output = function(session, output_event)
+				-- end
 			end
 		end
 	},
@@ -556,13 +598,13 @@ vim.keymap.set("n", "]b", ":bnext<CR>")
 vim.keymap.set("n", "[b", ":bprev<CR>")
 vim.keymap.set("n", "]t", ":tabnext<CR>")
 vim.keymap.set("n", "[t", ":tabprev<CR>")
-vim.keymap.set("n", "]e", function () vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR }) end)
-vim.keymap.set("n", "[e", function () vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR }) end)
-vim.keymap.set("n", "]d", function () vim.diagnostic.goto_next() end)
-vim.keymap.set("n", "[d", function () vim.diagnostic.goto_prev() end)
+vim.keymap.set("n", "]e", function() vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR }) end)
+vim.keymap.set("n", "[e", function() vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR }) end)
+vim.keymap.set("n", "]d", function() vim.diagnostic.goto_next() end)
+vim.keymap.set("n", "[d", function() vim.diagnostic.goto_prev() end)
 vim.keymap.set("n", "<Leader>r", vim.lsp.buf.rename)
 -- vim.keymap.set("n", "K", vim.lsp.buf.hover)
-vim.keymap.set("n", "KK", function() vim.diagnostic.open_float(nil, {focus=false}) end)
+vim.keymap.set("n", "KK", function() vim.diagnostic.open_float(nil, { focus = false }) end)
 vim.keymap.set("n", "<Leader>.", vim.lsp.buf.code_action)
 vim.keymap.set("n", "<Leader>l", ":set list!<CR>")
 vim.keymap.set("n", "<Leader>t", ":belowright split | resize 20 | terminal<CR>")
@@ -570,7 +612,7 @@ vim.keymap.set("n", "<Leader>x", ":let @+ = expand(\"%:p\")<CR>")
 vim.keymap.set("n", "<MiddleMouse>", "<Nop>")
 vim.keymap.set("i", "<MiddleMouse>", "<Nop>")
 
-vim.keymap.set("n", "<Leader>f", function ()
+vim.keymap.set("n", "<Leader>f", function()
 	if has_lsp("eslint") then
 		vim.cmd.EslintFixAll()
 	else

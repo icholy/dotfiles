@@ -33,6 +33,9 @@ export PATH=$PATH:/usr/local/lua-language-server/bin
 # Add pyenv to PATH
 export PATH=$PATH:$HOME/.pyenv/bin
 
+# Add tfenv
+export PATH=$PATH:$HOME/.tfenv/bin
+
 # Node Version Manager
 export NVM_DIR="$HOME/.nvm"
 export PATH=$PATH:"$NVM_DIR/versions/node/$(cat $NVM_DIR/alias/default)/bin"

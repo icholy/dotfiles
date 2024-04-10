@@ -206,6 +206,7 @@ require("lazy").setup({
 			"hrsh7th/cmp-cmdline",
 			"hrsh7th/vim-vsnip",
 			"rcarriga/cmp-dap",
+			"sourcegraph/sg.nvim"
 		},
 		config = function()
 			-- Setup nvim-cmp.
@@ -231,6 +232,16 @@ require("lazy").setup({
 							vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-c>", true, true, true), "n", true)
 						end
 					}),
+					["<C-a>"] = cmp.mapping(
+						cmp.mapping.complete({
+							config = {
+								sources = {
+									{ name = "cody" }
+								}
+							}
+						}),
+						{ "i", "c" }
+					),
 				},
 				sources = cmp.config.sources({
 					{ name = "nvim_lsp" },
@@ -275,6 +286,13 @@ require("lazy").setup({
 					{ name = "dap" },
 				},
 			})
+		end
+	},
+	{
+		"sourcegraph/sg.nvim",
+		dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope.nvim" },
+		config = function ()
+			require("sg").setup()
 		end
 	},
 	{
@@ -323,9 +341,9 @@ require("lazy").setup({
 						command = {
 							"sg",
 							"--json=stream",
-						},           -- must have --json=stream
+						},     -- must have --json=stream
 						grep_open_files = false, -- search in opened files
-						lang = nil,  -- string value, specify language for ast-grep `nil` for default
+						lang = nil, -- string value, specify language for ast-grep `nil` for default
 					}
 				}
 			})
@@ -458,6 +476,51 @@ require("lazy").setup({
 		config = function()
 			local dap = require("dap")
 
+
+			dap.adapters["local-lua"] = {
+				type = "executable",
+				command = "node",
+				args = {
+					"/home/icholy/src/github.com/tomblind/local-lua-debugger-vscode/extension/debugAdapter.js"
+				},
+				enrich_config = function(config, on_config)
+					if not config["extensionPath"] then
+						local c = vim.deepcopy(config)
+						-- 💀 If this is missing or wrong you'll see 
+						-- "module 'lldebugger' not found" errors in the dap-repl when trying to launch a debug session
+						c.extensionPath = "/home/icholy/src/github.com/tomblind/local-lua-debugger-vscode/"
+						on_config(c)
+					else
+						on_config(config)
+					end
+				end,
+			}
+
+			-- setup nlua debugger
+			dap.configurations.lua = {
+			  {
+				name = 'Current file (local-lua-dbg, nlua)',
+				type = 'local-lua',
+				request = 'launch',
+				cwd = '${workspaceFolder}',
+				program = {
+				  lua = 'nlua',
+				  file = '${file}',
+				},
+				verbose = true,
+				args = {},
+			  },
+			}
+
+			dap.adapters.python = {
+				type = "executable",
+				command = "python3",
+				args = { "-m", "debugpy.adapter" },
+				options = {
+					source_filetype = "python",
+				},
+			}
+
 			-- filter out source map errors
 			dap.defaults.fallback.on_output = function(session, event)
 				local repl = require("dap.repl")
@@ -469,6 +532,11 @@ require("lazy").setup({
 			vim.keymap.set("n", "<Leader>b", dap.toggle_breakpoint)
 			vim.keymap.set("n", "<F5>", dap.continue)
 
+			vim.keymap.set("n", "<Left>", dap.toggle_breakpoint)
+			vim.keymap.set("n", "<Right>", dap.step_over)
+			vim.keymap.set("n", "<Down>", dap.step_into)
+			vim.keymap.set("n", "<Up>", dap.step_out)
+
 			-- nicer icons for breakpoints
 			vim.fn.sign_define('DapBreakpoint', { text = '○', texthl = '', linehl = '', numhl = '' })
 			vim.fn.sign_define('DapStopped', { text = '➔', texthl = '', linehl = 'DapStoppedLine', numhl = '' })
@@ -476,7 +544,10 @@ require("lazy").setup({
 	},
 	{
 		"rcarriga/nvim-dap-ui",
-		dependencies = { "mfussenegger/nvim-dap" },
+		dependencies = {
+			"mfussenegger/nvim-dap",
+			"nvim-neotest/nvim-nio",
+		},
 		config = function()
 			local dapui = require("dapui")
 

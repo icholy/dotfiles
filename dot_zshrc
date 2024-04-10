@@ -36,6 +36,9 @@ export PATH=$PATH:$HOME/.pyenv/bin
 # Add tfenv
 export PATH=$PATH:$HOME/.tfenv/bin
 
+# Add luarocks
+export PATH=$PATH:$HOME/.luarocks/bin
+
 # Node Version Manager
 export NVM_DIR="$HOME/.nvm"
 export PATH=$PATH:"$NVM_DIR/versions/node/$(cat $NVM_DIR/alias/default)/bin"
@@ -55,6 +58,7 @@ alias vim='nvim'
 alias semgrepvim="jq -r '.results[] | [ .path, .start.line, .start.col ] | join(\":\")' > /tmp/errorfile; nvim -q /tmp/errorfile"
 alias cal='ncal -b'
 alias cwatch='watch -c unbuffer'
+alias npmd='NODE_OPTIONS="--inspect-brk" npm'
 
 function vg() {
     rg --vimgrep $@ > /tmp/vgfile
@@ -123,3 +127,7 @@ source /home/icholy/.secrets
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+# grit
+export GRIT_INSTALL="$HOME/.grit"
+export PATH="$GRIT_INSTALL/bin:$PATH"

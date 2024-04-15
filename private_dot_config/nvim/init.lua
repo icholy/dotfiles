@@ -212,6 +212,12 @@ require("lazy").setup({
 			-- Setup nvim-cmp.
 			local cmp = require("cmp")
 
+			local abort_esc = function ()
+				-- https://github.com/hrsh7th/nvim-cmp/issues/1033
+				cmp.confirm()
+				vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-c>", true, true, true), "n", true)
+			end
+
 			cmp.setup({
 				snippet = {
 					-- REQUIRED - you must specify a snippet engine
@@ -225,13 +231,7 @@ require("lazy").setup({
 					["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
 					["<Tab>"] = cmp.mapping(cmp.mapping.confirm({ select = true }), { "i", "c" }),
 					["<CR>"] = cmp.mapping(cmp.mapping.confirm(), { "i", "c" }),
-					["<Esc>"] = cmp.mapping({
-						i = cmp.mapping.abort(),
-						c = function()
-							-- https://github.com/hrsh7th/nvim-cmp/issues/1033
-							vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-c>", true, true, true), "n", true)
-						end
-					}),
+					["<Esc>"] = cmp.mapping(abort_esc, { "i", "c" }),
 					["<C-a>"] = cmp.mapping(
 						cmp.mapping.complete({
 							config = {
@@ -637,19 +637,17 @@ vim.keymap.set("n", "<C-c>", "<Nop>")
 vim.keymap.set("c", "<C-c>", "<Nop>")
 vim.keymap.set("i", "<C-c>", "<Nop>")
 vim.keymap.set("n", "<Space>", "<Nop>")
-vim.keymap.set("i", "jk", "<Esc>")
-vim.keymap.set("i", "kj", "<Esc>")
-vim.keymap.set("t", "kj", "<C-\\><C-n>")
-vim.keymap.set("t", "jk", "<C-\\><C-n>")
+vim.keymap.set("t", "<C-[>", "<C-\\><C-n>")
+vim.keymap.set("t", "<C-[>", "<C-\\><C-n>")
 vim.keymap.set("n", "Q", "<Nop>")
 vim.keymap.set("n", "gp", "`[v`]")
 vim.keymap.set("n", "<C-h>", "<C-w>h")
 vim.keymap.set("n", "<C-j>", "<C-w>j")
 vim.keymap.set("n", "<C-k>", "<C-w>k")
 vim.keymap.set("n", "<C-l>", "<C-w>l")
-vim.keymap.set("t", "<C-h>", "<C-\\><C-n><C-w>h")
-vim.keymap.set("t", "<C-j>", "<C-\\><C-n><C-w>j")
-vim.keymap.set("t", "<C-k>", "<C-\\><C-n><C-w>k")
+-- vim.keymap.set("t", "<C-h>", "<C-\\><C-n><C-w>h")
+-- vim.keymap.set("t", "<C-j>", "<C-\\><C-n><C-w>j")
+-- vim.keymap.set("t", "<C-k>", "<C-\\><C-n><C-w>k")
 -- vim.keymap.set("t", "<C-l>", "<C-\\><C-n><C-w>l")
 vim.keymap.set("v", "<C-j>", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "<C-k>", ":m '<-2<CR>gv=gv")

@@ -353,6 +353,7 @@ require("lazy").setup({
 			vim.keymap.set("n", "<C-Space><C-g>", ":Telescope live_grep<CR>")
 			vim.keymap.set("n", "<C-Space><C-f>", ":Telescope find_files<CR>")
 			vim.keymap.set("n", "<C-Space><C-a>", ":Telescope ast_grep<CR>")
+			vim.keymap.set("n", "<C-Space><C-h>", ":Telescope help_tags<CR>")
 			vim.keymap.set("n", "<C-p>", ":Telescope find_files<CR>")
 			vim.keymap.set("n", "<C-Space><C-t>", ":Telescope diagnostics<CR>")
 			vim.keymap.set("n", "<C-Space><C-m>", ":Telescope marks<CR>")

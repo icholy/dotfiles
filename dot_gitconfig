@@ -15,7 +15,7 @@
 [alias]
 	s = status
 	undo = reset HEAD@{1}
-	amend = commit --amend --no-edit --all
+	fix = commit --amend --no-edit --all
 [remote "origin"]
 	prune = true
 [merge]

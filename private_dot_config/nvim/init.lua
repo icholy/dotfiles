@@ -457,14 +457,6 @@ require("lazy").setup({
 		end
 	},
 	{
-		"terrortylor/nvim-comment",
-		config = function()
-			require("nvim_comment").setup({ create_mappings = false })
-			vim.keymap.set("n", "<Leader>k", ":CommentToggle<CR>")
-			vim.keymap.set("x", "<Leader>k", ":CommentToggle<CR>gv")
-		end
-	},
-	{
 		"iamcco/markdown-preview.nvim",
 		build = "cd app && yarn install",
 		config = function()

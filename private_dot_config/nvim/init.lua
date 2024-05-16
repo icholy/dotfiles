@@ -394,10 +394,27 @@ require("lazy").setup({
 		end
 	},
 	{
+		"linrongbin16/lsp-progress.nvim",
+		config = function ()
+			vim.api.nvim_create_autocmd("User", {
+			  group = group,
+			  pattern = "LspProgressStatusUpdated",
+			  callback = require("lualine").refresh,
+			})
+		end
+
+	},
+	{
+		"linrongbin16/lsp-progress.nvim",
+		config = function ()
+			require("lsp-progress").setup({})
+		end
+	},
+	{
 		"nvim-lualine/lualine.nvim",
 		dependencies = {
 			"kyazdani42/nvim-web-devicons",
-			"WhoIsSethDaniel/lualine-lsp-progress.nvim"
+			"linrongbin16/lsp-progress.nvim"
 		},
 		config = function()
 			local function recording_macro()
@@ -408,14 +425,26 @@ require("lazy").setup({
 				return "RECORDING:" .. letter
 			end
 
-			require("lualine").setup({
+			local lualine = require("lualine")
+
+			lualine.setup({
 				options = {
 					globalstatus = true,
 				},
 				sections = {
 					lualine_a = { recording_macro, "mode" },
-					lualine_c = { "lsp_progress" }
+					lualine_c = {
+						function()
+							return require('lsp-progress').progress()
+						end
+					}
 				}
+			})
+
+			vim.api.nvim_create_autocmd("User", {
+			  group = group,
+			  pattern = "LspProgressStatusUpdated",
+			  callback = lualine.refresh,
 			})
 		end
 	},

@@ -201,7 +201,6 @@ require("lazy").setup({
 			"hrsh7th/cmp-cmdline",
 			"hrsh7th/vim-vsnip",
 			"rcarriga/cmp-dap",
-			"sourcegraph/sg.nvim"
 		},
 		config = function()
 			-- Setup nvim-cmp.
@@ -231,7 +230,7 @@ require("lazy").setup({
 						cmp.mapping.complete({
 							config = {
 								sources = {
-									{ name = "cody" }
+									{ name = "codeium" }
 								}
 							}
 						}),
@@ -284,10 +283,13 @@ require("lazy").setup({
 		end
 	},
 	{
-		"sourcegraph/sg.nvim",
-		dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope.nvim" },
-		config = function ()
-			require("sg").setup()
+		"Exafunction/codeium.nvim",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"hrsh7th/nvim-cmp",
+		},
+		config = function()
+			require("codeium").setup({})
 		end
 	},
 	{

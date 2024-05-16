@@ -541,27 +541,12 @@ require("lazy").setup({
 		config = function()
 			local dapui = require("dapui")
 
-			dapui.setup({
-				layouts = {
-					{
-						elements = { { id = "repl", size = 1 } },
-						position = "bottom",
-						size = 16
-					}
-				}
-			})
+			dapui.setup({})
 
 			vim.keymap.set({ "v", "n" }, "<Leader>e", dapui.eval)
 			vim.keymap.set("n", "<F4>", dapui.toggle)
 		end,
 	},
-	-- {
-	-- 	"theHamsta/nvim-dap-virtual-text",
-	-- 	dependencies = { "mfussenegger/nvim-dap" },
-	-- 	config = function()
-	-- 		require("nvim-dap-virtual-text").setup()
-	-- 	end
-	-- },
 	{
 		"leoluz/nvim-dap-go",
 		dependencies = { "mfussenegger/nvim-dap" },

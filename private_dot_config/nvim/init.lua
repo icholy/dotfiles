@@ -419,21 +419,6 @@ require("lazy").setup({
 			})
 		end
 	},
-	-- {
-	-- 	"folke/trouble.nvim",
-	-- 	dependencies = { "kyazdani42/nvim-web-devicons" },
-	-- 	config = function()
-	-- 		require("trouble").setup()
-	--
-	-- 		-- update the default diagnostic signs to match trouble
-	-- 		vim.fn.sign_define("DiagnosticSignError", { text = "⚠", texthl = "DiagnosticError" })
-	-- 		vim.fn.sign_define("DiagnosticSignWarning", { text = "⚠", texthl = "DiagnosticWarning" })
-	-- 		vim.fn.sign_define("DiagnosticSignHint", { text = "⚠", texthl = "DiagnosticHint" })
-	-- 		vim.fn.sign_define("DiagnosticSignInformation", { text = "", texthl = "DiagnosticInformation" })
-	--
-	-- 		vim.keymap.set("n", "<Leader>d", ":TroubleToggle workspace_diagnostics<CR>")
-	-- 	end
-	-- },
 	{
 		"kyazdani42/nvim-tree.lua",
 		dependencies = { "kyazdani42/nvim-web-devicons" },
@@ -582,7 +567,7 @@ require("lazy").setup({
 							"<node_internals>/**",
 							"**/cls-hooked/**",
 						},
-					},
+					}
 				}
 
 				-- dap.defaults.fallback.on_output = function(session, output_event)

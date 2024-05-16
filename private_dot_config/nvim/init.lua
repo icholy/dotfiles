@@ -123,6 +123,11 @@ require("lazy").setup({
 	"tpope/vim-sleuth",
 	"wsdjeg/vim-fetch",
 	{
+		'windwp/nvim-autopairs',
+		event = "InsertEnter",
+		config = true
+	},
+	{
 		"numtostr/BufOnly.nvim",
 		cmd = "BufOnly",
 		config = function()

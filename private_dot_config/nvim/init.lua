@@ -128,13 +128,6 @@ require("lazy").setup({
 		config = true
 	},
 	{
-		"numtostr/BufOnly.nvim",
-		cmd = "BufOnly",
-		config = function()
-			vim.keymap.set("n", "<Leader>o", ":BufOnly<CR>")
-		end
-	},
-	{
 		"neovim/nvim-lspconfig",
 		dependencies = { "cmp-nvim-lsp" },
 		config = function()

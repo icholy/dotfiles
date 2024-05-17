@@ -396,18 +396,12 @@ require("lazy").setup({
 	{
 		"linrongbin16/lsp-progress.nvim",
 		config = function ()
+			require("lsp-progress").setup({})
 			vim.api.nvim_create_autocmd("User", {
 			  group = group,
 			  pattern = "LspProgressStatusUpdated",
 			  callback = require("lualine").refresh,
 			})
-		end
-
-	},
-	{
-		"linrongbin16/lsp-progress.nvim",
-		config = function ()
-			require("lsp-progress").setup({})
 		end
 	},
 	{

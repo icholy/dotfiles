@@ -168,9 +168,9 @@ client.background       $base07
 
 # monitor layout
 
-workspace $ws1 output DP-2
+workspace $ws1 output HDMI-0
 workspace $ws2 output DP-4
-workspace $ws3 output HDMI-0
+workspace $ws3 output DP-2
 
 # screen layout
 exec --no-startup-id ~/.screenlayout/tripple.sh

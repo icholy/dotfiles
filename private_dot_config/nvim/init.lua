@@ -8,21 +8,20 @@ vim.o.hlsearch = false
 vim.o.ignorecase = true
 vim.o.smartcase = true
 vim.o.breakindent = true
-vim.cmd("set complete-=i")
-vim.o.completeopt = "menu,menuone,noselect"
+vim.opt.complete:remove({ "i" })
+vim.opt.completeopt = { "menu", "menuone", "noselect" }
 vim.o.autoindent = true
 vim.o.tabstop = 4
 vim.o.shiftwidth = 4
 vim.o.wrap = false
 vim.o.backup = true
 vim.opt.undofile = true
-vim.cmd("set backupdir-=.")
-vim.cmd("set backupdir^=~/tmp,/tmp")
+vim.opt.backupdir:remove({ "." })
+vim.opt.backupdir:prepend({ "~/tmp", "/tmp" })
 vim.o.swapfile = false
 vim.o.writebackup = false
 vim.o.autoread = true
 vim.o.mouse = "a"
--- vim.o.t_Co = 256
 vim.o.termguicolors = true
 vim.o.tgc = true
 vim.o.timeoutlen = 300

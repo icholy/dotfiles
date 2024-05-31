@@ -14,8 +14,7 @@
 	hooksPath = /dev/null
 [alias]
 	s = status
-	undo = reset HEAD@{1}
-	fix = commit --amend --no-edit --all
+	fixup = commit --fixup=HEAD
 [remote "origin"]
 	prune = true
 [merge]
@@ -26,6 +25,7 @@
 	cookiefile = /home/icholy/.gitcookies
 [rebase]
 	autostash = true
+	autosquash = true
 [pull]
 	rebase = true
 [init]

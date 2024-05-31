@@ -92,8 +92,7 @@ vim.api.nvim_create_autocmd("FileType", {
 	group = group,
 	pattern = { "yml", "yaml" },
 	callback = function()
-		vim.cmd("setlocal indentkeys-=<:>")
-		vim.cmd("setlocal indentkeys-=:")
+		vim.opt_local.indentkeys:remove({ "<:>", ":" })
 	end
 })
 
@@ -145,6 +144,12 @@ require("lazy").setup({
 	"tpope/vim-sleuth",
 	"wsdjeg/vim-fetch",
 	{
+		"FabijanZulj/blame.nvim",
+		config = function()
+			require("blame").setup()
+		end
+	},
+	{
 		'windwp/nvim-autopairs',
 		event = "InsertEnter",
 		config = true
@@ -175,6 +180,7 @@ require("lazy").setup({
 			lspconfig.jsonls.setup({ capabilities = capabilities })
 			lspconfig.terraformls.setup({ capabilities = capabilities })
 			lspconfig.lua_ls.setup({ capabilities = capabilities })
+			lspconfig.marksman.setup({ capabilities = capabilities })
 
 			-- I don't want eslint to use my project local config for
 			-- dependencies in node_modules
@@ -184,8 +190,8 @@ require("lazy").setup({
 				".eslintrc.cjs",
 				".eslintrc.yaml",
 				".eslintrc.yml",
-				".eslintrc.json"
-			-- "package.json"
+				".eslintrc.json",
+				"eslint.config.js"
 			)
 			lspconfig.eslint.setup({
 				root_dir = function(fname)
@@ -221,7 +227,7 @@ require("lazy").setup({
 			-- Setup nvim-cmp.
 			local cmp = require("cmp")
 
-			local abort_esc = function ()
+			local abort_esc = function()
 				-- https://github.com/hrsh7th/nvim-cmp/issues/1033
 				cmp.confirm()
 				vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-c>", true, true, true), "n", true)
@@ -309,6 +315,7 @@ require("lazy").setup({
 	},
 	{
 		"icholy/lsplinks.nvim",
+		branch = "upstream",
 		config = function()
 			local lsplinks = require("lsplinks")
 			lsplinks.setup()
@@ -410,12 +417,12 @@ require("lazy").setup({
 	},
 	{
 		"linrongbin16/lsp-progress.nvim",
-		config = function ()
+		config = function()
 			require("lsp-progress").setup({})
 			vim.api.nvim_create_autocmd("User", {
-			  group = group,
-			  pattern = "LspProgressStatusUpdated",
-			  callback = require("lualine").refresh,
+				group = group,
+				pattern = "LspProgressStatusUpdated",
+				callback = require("lualine").refresh,
 			})
 		end
 	},
@@ -451,9 +458,9 @@ require("lazy").setup({
 			})
 
 			vim.api.nvim_create_autocmd("User", {
-			  group = group,
-			  pattern = "LspProgressStatusUpdated",
-			  callback = lualine.refresh,
+				group = group,
+				pattern = "LspProgressStatusUpdated",
+				callback = lualine.refresh,
 			})
 		end
 	},
@@ -499,7 +506,7 @@ require("lazy").setup({
 				enrich_config = function(config, on_config)
 					if not config["extensionPath"] then
 						local c = vim.deepcopy(config)
-						-- 💀 If this is missing or wrong you'll see 
+						-- 💀 If this is missing or wrong you'll see
 						-- "module 'lldebugger' not found" errors in the dap-repl when trying to launch a debug session
 						c.extensionPath = "/home/icholy/src/github.com/tomblind/local-lua-debugger-vscode/"
 						on_config(c)
@@ -511,18 +518,18 @@ require("lazy").setup({
 
 			-- setup nlua debugger
 			dap.configurations.lua = {
-			  {
-				name = 'Current file (local-lua-dbg, nlua)',
-				type = 'local-lua',
-				request = 'launch',
-				cwd = '${workspaceFolder}',
-				program = {
-				  lua = 'nlua',
-				  file = '${file}',
+				{
+					name = 'Current file (local-lua-dbg, nlua)',
+					type = 'local-lua',
+					request = 'launch',
+					cwd = '${workspaceFolder}',
+					program = {
+						lua = 'nlua',
+						file = '${file}',
+					},
+					verbose = true,
+					args = {},
 				},
-				verbose = true,
-				args = {},
-			  },
 			}
 
 			dap.adapters.python = {
@@ -673,18 +680,11 @@ vim.keymap.set("n", "<MiddleMouse>", "<Nop>")
 vim.keymap.set("i", "<MiddleMouse>", "<Nop>")
 
 vim.keymap.set("n", "<Leader>f", function()
-	if has_lsp("eslint") then
+	local bufnr = vim.api.nvim_get_current_buf()
+	if #vim.lsp.get_clients({ bufnr = bufnr, name = "eslint" }) > 0 then
 		vim.cmd.EslintFixAll()
 	else
 		vim.lsp.buf.format({ async = true })
 	end
 end)
 
-function has_lsp(name)
-	for _, client in ipairs(vim.lsp.buf_get_clients()) do
-		if client.name == name then
-			return true
-		end
-	end
-	return false
-end

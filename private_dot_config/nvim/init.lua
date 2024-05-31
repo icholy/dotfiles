@@ -58,6 +58,29 @@ vim.api.nvim_create_autocmd('ColorScheme', {
 	end,
 })
 
+vim.api.nvim_create_user_command("LLM", function(opts)
+	local system = [[
+	You are a neovim expert.
+	You help users write commands.
+	When a user asks a question, your output will be copied directly into the neovim command prompt.
+	Do not add any explanation.
+	Since the output is being copied in the command line, it should all be on a single line.
+	]]
+	local output = vim.system(
+		{ "llm", "prompt", "--system", system, opts.args },
+		{ text = true }
+	):wait()
+	if output.code ~= 0 then
+		vim.notify(output.stderr, vim.log.levels.ERROR)
+	end
+	local command = output.stdout
+	if string.sub(command, 1, 1) ~= ":" then
+		command = ":" .. command
+	end
+	command = string.gsub(command, "\n*$", "")
+	vim.api.nvim_feedkeys(command, "n", {})
+end, { nargs = '?'})
+
 -- automatically enter insert mode
 vim.api.nvim_create_autocmd({ "BufWinEnter", "WinEnter", "TermOpen" }, {
 	command = "startinsert",

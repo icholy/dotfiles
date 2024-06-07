@@ -230,7 +230,7 @@ require("lazy").setup({
 			local abort_esc = function()
 				-- https://github.com/hrsh7th/nvim-cmp/issues/1033
 				cmp.confirm()
-				vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-c>", true, true, true), "n", true)
+				vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<ESC>", true, true, true), "n", true)
 			end
 
 			cmp.setup({

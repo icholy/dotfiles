@@ -79,7 +79,7 @@ vim.api.nvim_create_user_command("LLM", function(opts)
 	end
 	command = string.gsub(command, "\n*$", "")
 	vim.api.nvim_feedkeys(command, "n", {})
-end, { nargs = '?'})
+end, { nargs = '?' })
 
 -- automatically enter insert mode
 vim.api.nvim_create_autocmd({ "BufWinEnter", "WinEnter", "TermOpen" }, {
@@ -146,7 +146,9 @@ require("lazy").setup({
 	{
 		"FabijanZulj/blame.nvim",
 		config = function()
-			require("blame").setup()
+			local blame = require("blame")
+			blame.setup()
+			vim.keymap.set("n", "<Leader>b", ":BlameToggle<CR>")
 		end
 	},
 	{
@@ -549,7 +551,6 @@ require("lazy").setup({
 				end
 			end
 
-			vim.keymap.set("n", "<Leader>b", dap.toggle_breakpoint)
 			vim.keymap.set("n", "<F5>", dap.continue)
 
 			vim.keymap.set("n", "<Left>", dap.toggle_breakpoint)
@@ -571,10 +572,35 @@ require("lazy").setup({
 		config = function()
 			local dapui = require("dapui")
 
-			dapui.setup({})
+			dapui.setup({
+				layouts = {
+					{
+						elements = {
+							{ id = "repl", size = 1 },
+						},
+						size = 0.3,
+						position = "bottom",
+					},
+					{
+						elements = {
+							{ id = "scopes",      size = 0.25 },
+							{ id = "breakpoints", size = 0.25 },
+							{ id = "stacks",      size = 0.25 },
+							{ id = "watches",     size = 0.25 },
+						},
+						size = 40,
+						position = "left",
+					},
+				},
+			})
 
 			vim.keymap.set({ "v", "n" }, "<Leader>e", dapui.eval)
-			vim.keymap.set("n", "<F4>", dapui.toggle)
+			vim.keymap.set("n", "<F3>", function()
+				dapui.toggle({ layout = 2 })
+			end)
+			vim.keymap.set("n", "<F4>", function()
+				dapui.toggle({ layout = 1 })
+			end)
 		end,
 	},
 	{
@@ -687,4 +713,3 @@ vim.keymap.set("n", "<Leader>f", function()
 		vim.lsp.buf.format({ async = true })
 	end
 end)
-

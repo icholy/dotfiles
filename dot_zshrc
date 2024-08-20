@@ -39,6 +39,9 @@ export PATH=$PATH:$HOME/.tfenv/bin
 # Add luarocks
 export PATH=$PATH:$HOME/.luarocks/bin
 
+# Add bob
+export PATH=$PATH:$HOME/.local/share/bob/nvim-bin
+
 # Node Version Manager
 export NVM_DIR="$HOME/.nvm"
 export PATH=$PATH:"$NVM_DIR/versions/node/$(cat $NVM_DIR/alias/default)/bin"

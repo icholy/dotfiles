@@ -77,7 +77,15 @@ function cz() {
 
 function czz() {
     local REPO_DIR="/home/icholy/src/github.com/compassdigital/cdl"
-    local SUB_DIR=$(git --git-dir $REPO_DIR/.git ls-files | grep "package\.json$\|go\.mod$" | xargs dirname | fzf)
+    local SUB_DIR=$(git --git-dir $REPO_DIR/.git ls-files | grep "cdk\.json$" | xargs dirname | fzf)
+    if [ -n "$SUB_DIR" ]; then
+        cd "$REPO_DIR/$SUB_DIR"
+    fi
+}
+
+function czz() {
+    local REPO_DIR="/home/icholy/src/github.com/compassdigital/cdl"
+    local SUB_DIR=$(git --git-dir $REPO_DIR/.git ls-files | grep "package\.json$\|go\.mod$\|cdktf\.json" | xargs dirname | fzf)
     if [ -n "$SUB_DIR" ]; then
         cd "$REPO_DIR/$SUB_DIR"
     fi
@@ -134,3 +142,4 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 # grit
 export GRIT_INSTALL="$HOME/.grit"
 export PATH="$GRIT_INSTALL/bin:$PATH"
+. "/home/icholy/.deno/env"

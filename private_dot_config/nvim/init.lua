@@ -249,7 +249,7 @@ require("lazy").setup({
 					["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
 					["<Tab>"] = cmp.mapping(cmp.mapping.confirm({ select = true }), { "i", "c" }),
 					["<CR>"] = cmp.mapping(cmp.mapping.confirm(), { "i", "c" }),
-					["<Esc>"] = cmp.mapping(abort_esc, { "i", "c" }),
+					-- ["<Esc>"] = cmp.mapping(abort_esc, { "i", "c" }),
 					["<C-a>"] = cmp.mapping(
 						cmp.mapping.complete({
 							config = {
@@ -264,8 +264,8 @@ require("lazy").setup({
 				sources = cmp.config.sources({
 					{ name = "nvim_lsp" },
 				}, {
-					{ name = "vsnip" },
-					{ name = "buffer" },
+					-- { name = "vsnip" },
+					-- { name = "buffer" },
 				}),
 				preselect = cmp.PreselectMode.None,
 				sorting = {

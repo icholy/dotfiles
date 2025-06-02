@@ -46,23 +46,23 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 })
 
 -- automatically switch sublime merge projects
-vim.api.nvim_create_autocmd({"BufEnter", "FocusGained"}, {
-    group = group,
-    callback = function()
-        -- Check if in git directory
-        local dir = vim.fn.expand("%:p:h")
-        local is_git = vim.fn.system({"git", "-C", dir, "rev-parse", "--is-inside-work-tree"}):match("true")
-        if not is_git then
-            return
-        end
-        -- Check if sublime merge is running
-        local has_smerge = vim.fn.system("pgrep -x sublime_merge"):match("%d+")
-        if not has_smerge then
-            return
-        end
-        -- Open sublime merge
-        vim.fn.system({"smerge", dir})
-    end
+vim.api.nvim_create_autocmd({ "BufEnter", "FocusGained" }, {
+	group = group,
+	callback = function()
+		-- Check if in git directory
+		local dir = vim.fn.expand("%:p:h")
+		local is_git = vim.fn.system({ "git", "-C", dir, "rev-parse", "--is-inside-work-tree" }):match("true")
+		if not is_git then
+			return
+		end
+		-- Check if sublime merge is running
+		local has_smerge = vim.fn.system("pgrep -x sublime_merge"):match("%d+")
+		if not has_smerge then
+			return
+		end
+		-- Open sublime merge
+		vim.fn.system({ "smerge", dir })
+	end
 })
 
 vim.api.nvim_create_autocmd('ColorScheme', {
@@ -139,6 +139,12 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
 	{
+		"williamboman/mason.nvim",
+		config = function()
+			require("mason").setup()
+		end
+	},
+	{
 		"tpope/vim-fugitive",
 		config = function()
 			vim.g.fugitive_legacy_commands = false
@@ -186,7 +192,8 @@ require("lazy").setup({
 			lspconfig.ts_ls.setup({
 				capabilities = capabilities,
 				init_options = {
-					disableAutomaticTypingAcquisitioninitializationOptions = true
+					disableAutomaticTypingAcquisitioninitializationOptions = true,
+					importModuleSpecifierPreference = "relative",
 				},
 				on_attach = function(client)
 					-- I use prettier for formatting
@@ -253,7 +260,8 @@ require("lazy").setup({
 			local abort_esc = function()
 				-- https://github.com/hrsh7th/nvim-cmp/issues/1033
 				cmp.confirm()
-				vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<ESC>", true, true, true), "n", true)
+				vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<ESC>", true, true, true), "n",
+					true)
 			end
 
 			cmp.setup({
@@ -270,16 +278,16 @@ require("lazy").setup({
 					["<Tab>"] = cmp.mapping(cmp.mapping.confirm({ select = true }), { "i", "c" }),
 					["<CR>"] = cmp.mapping(cmp.mapping.confirm(), { "i", "c" }),
 					-- ["<Esc>"] = cmp.mapping(abort_esc, { "i", "c" }),
-					["<C-a>"] = cmp.mapping(
-						cmp.mapping.complete({
-							config = {
-								sources = {
-									{ name = "codeium" }
-								}
-							}
-						}),
-						{ "i", "c" }
-					),
+					-- ["<C-a>"] = cmp.mapping(
+					-- 	cmp.mapping.complete({
+					-- 		config = {
+					-- 			sources = {
+					-- 				{ name = "codeium" }
+					-- 			}
+					-- 		}
+					-- 	}),
+					-- 	{ "i", "c" }
+					-- ),
 				},
 				sources = cmp.config.sources({
 					{ name = "nvim_lsp" },
@@ -298,7 +306,8 @@ require("lazy").setup({
 					},
 				},
 				enabled = function()
-					return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt" or require("cmp_dap").is_dap_buffer()
+					return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt" or
+						require("cmp_dap").is_dap_buffer()
 				end,
 			})
 
@@ -326,16 +335,16 @@ require("lazy").setup({
 			})
 		end
 	},
-	{
-		"Exafunction/codeium.nvim",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"hrsh7th/nvim-cmp",
-		},
-		config = function()
-			require("codeium").setup({})
-		end
-	},
+	-- {
+	-- 	"Exafunction/codeium.nvim",
+	-- 	dependencies = {
+	-- 		"nvim-lua/plenary.nvim",
+	-- 		"hrsh7th/nvim-cmp",
+	-- 	},
+	-- 	config = function()
+	-- 		require("codeium").setup({})
+	-- 	end
+	-- },
 	{
 		"icholy/lsplinks.nvim",
 		branch = "upstream",
@@ -531,7 +540,8 @@ require("lazy").setup({
 						local c = vim.deepcopy(config)
 						-- 💀 If this is missing or wrong you'll see
 						-- "module 'lldebugger' not found" errors in the dap-repl when trying to launch a debug session
-						c.extensionPath = "/home/icholy/src/github.com/tomblind/local-lua-debugger-vscode/"
+						c.extensionPath =
+						"/home/icholy/src/github.com/tomblind/local-lua-debugger-vscode/"
 						on_config(c)
 					else
 						on_config(config)
@@ -555,6 +565,18 @@ require("lazy").setup({
 				},
 			}
 
+			dap.configurations.python = {
+				{
+					name = 'Current file (python)',
+					type = 'python',
+					request = 'launch',
+					cwd = '${workspaceFolder}',
+					program = 'python3',
+					verbose = true,
+					args = { '${file}' },
+				},
+			}
+
 			dap.adapters.python = {
 				type = "executable",
 				command = "python3",
@@ -563,6 +585,37 @@ require("lazy").setup({
 					source_filetype = "python",
 				},
 			}
+
+			dap.adapters.lldb = {
+				type = "executable",
+				command = "/usr/lib/llvm-14/bin/lldb-vscode",
+			}
+
+			dap.adapters["pwa-node"] = {
+				type = "server",
+				port = "${port}",
+				host = "localhost",
+				executable = {
+					command = "js-debug-adapter",
+					args = { "${port}" },
+				}
+			}
+
+			for _, lang in ipairs({ "typescript", "javascript" }) do
+				dap.configurations[lang] = {
+					{
+						type = "pwa-node",
+						request = "attach",
+						name = "Attach",
+						cwd = "${workspaceFolder}",
+						continueOnAttach = true,
+						skipFiles = {
+							"<node_internals>/**",
+							"**/cls-hooked/**",
+						},
+					},
+				}
+			end
 
 			-- filter out source map errors
 			dap.defaults.fallback.on_output = function(session, event)
@@ -581,7 +634,8 @@ require("lazy").setup({
 
 			-- nicer icons for breakpoints
 			vim.fn.sign_define('DapBreakpoint', { text = '○', texthl = '', linehl = '', numhl = '' })
-			vim.fn.sign_define('DapStopped', { text = '➔', texthl = '', linehl = 'DapStoppedLine', numhl = '' })
+			vim.fn.sign_define('DapStopped',
+				{ text = '➔', texthl = '', linehl = 'DapStoppedLine', numhl = '' })
 		end
 	},
 	{
@@ -632,42 +686,6 @@ require("lazy").setup({
 		end
 	},
 	{
-		"microsoft/vscode-js-debug",
-		build = "npm ci --loglevel=error && npx gulp vsDebugServerBundle && rm -rf ./out && mv dist out",
-	},
-	{
-		"mxsdev/nvim-dap-vscode-js",
-		dependencies = {
-			"mfussenegger/nvim-dap",
-			"microsoft/vscode-js-debug",
-		},
-		config = function()
-			require("dap-vscode-js").setup({
-				debugger_path = vim.fn.stdpath("data") .. "/lazy/vscode-js-debug",
-				adapters = { 'pwa-node' },
-			})
-			local dap = require("dap")
-			for _, lang in ipairs({ "typescript", "javascript" }) do
-				dap.configurations[lang] = {
-					{
-						type = "pwa-node",
-						request = "attach",
-						name = "Attach",
-						cwd = "${workspaceFolder}",
-						continueOnAttach = true,
-						skipFiles = {
-							"<node_internals>/**",
-							"**/cls-hooked/**",
-						},
-					}
-				}
-
-				-- dap.defaults.fallback.on_output = function(session, output_event)
-				-- end
-			end
-		end
-	},
-	{
 		"yetone/avante.nvim",
 		event = "VeryLazy",
 		lazy = false,
@@ -710,6 +728,35 @@ require("lazy").setup({
 				},
 				ft = { "markdown", "Avante" },
 			},
+		},
+	},
+	{
+		"Funk66/jira.nvim",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		opts = {
+			domain = "teamideaworks.atlassian.net",
+			user = "ilia.choly@compassdigital.io",
+			token = vim.env.JIRA_API_TOKEN,
+			key = { "CDL", "SRE", "OD", "CPLAT" },
+			format = function(issue)
+				local utils = require("jira.utils")
+				local assignee = vim.tbl_get(issue.fields, { 'assignee', 'displayName' }) or 'None'
+				return {
+					issue.fields.summary,
+					"---",
+					"Status:   " .. issue.fields.status.name,
+					"Assignee: " .. assignee,
+					"---",
+					utils.adf_to_markdown(issue.fields.description),
+					"---",
+					"Created:  " .. issue.fields.created,
+					"Updated:  " .. issue.fields.updated,
+				}
+			end
+		},
+		keys = {
+			{ "<leader>jj", ":JiraView<cr>", desc = "View Jira issue",            silent = true },
+			{ "<leader>jo", ":JiraOpen<cr>", desc = "Open Jira issue in browser", silent = true },
 		},
 	}
 })
@@ -764,7 +811,17 @@ vim.keymap.set("n", "]e", function() vim.diagnostic.goto_next({ severity = vim.d
 vim.keymap.set("n", "[e", function() vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR }) end)
 vim.keymap.set("n", "<Leader>r", vim.lsp.buf.rename)
 vim.keymap.set("n", "KK", function() vim.diagnostic.open_float(nil, { focus = false }) end)
-vim.keymap.set("n", "<Leader>.", vim.lsp.buf.code_action)
+vim.keymap.set("n", "<Leader>.", function ()
+	vim.lsp.buf.code_action({
+		filter = function (action)
+			-- See: https://github.com/golang/go/issues/72742
+			if string.find(action.title, "feature documentation") then
+				return false
+			end
+			return true
+		end
+	})
+end)
 vim.keymap.set("n", "<Leader>l", ":set list!<CR>")
 vim.keymap.set("n", "<Leader>t", ":belowright split | resize 20 | terminal<CR>")
 vim.keymap.set("n", "<Leader>x", ":let @+ = expand(\"%:p\")<CR>")

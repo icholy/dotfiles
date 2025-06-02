@@ -42,6 +42,8 @@ export PATH=$PATH:$HOME/.luarocks/bin
 # Add bob
 export PATH=$PATH:$HOME/.local/share/bob/nvim-bin
 
+export PATH=$PATH:$HOME/fvm/default/bin
+
 export PATH=$PATH:/opt/zig
 
 # Node Version Manager
@@ -64,6 +66,11 @@ alias semgrepvim="jq -r '.results[] | [ .path, .start.line, .start.col ] | join(
 alias cal='ncal -b'
 alias cwatch='watch -c unbuffer'
 alias inpm='NODE_OPTIONS="--inspect-brk" npm'
+alias inpx='NODE_OPTIONS="--inspect-brk" npx'
+
+function cursor() {
+    nohup /opt/cursor/Cursor-0.50.4-x86_64.AppImage --no-sandbox $@ > /dev/null 2>&1 & disown
+}
 
 function vg() {
     rg --vimgrep $@ > /tmp/vgfile
@@ -74,14 +81,6 @@ function cz() {
     local REPO_DIR=$(find ~/src -maxdepth 4 -type d -name ".git" | xargs dirname | fzf)
     if [ -n "$REPO_DIR" ]; then
         cd "$REPO_DIR"
-    fi
-}
-
-function czz() {
-    local REPO_DIR="/home/icholy/src/github.com/compassdigital/cdl"
-    local SUB_DIR=$(git --git-dir $REPO_DIR/.git ls-files | grep "cdk\.json$" | xargs dirname | fzf)
-    if [ -n "$SUB_DIR" ]; then
-        cd "$REPO_DIR/$SUB_DIR"
     fi
 }
 
@@ -132,6 +131,46 @@ function scratch() {
     smerge .
 }
 
+function lambdaenv() {
+    if [ -z "$1" ]; then
+        echo "Usage: lambdaenv <lambda-function-name>"
+        return 1
+    fi
+    
+    aws lambda get-function-configuration \
+        --function-name "$1" \
+        --query 'Environment.Variables' \
+        | jq -r 'to_entries | .[] | "\(.key)=\(.value)"'
+}
+
+function fargateenv() {
+    if [ -z "$1" ]; then
+        echo "Usage: fargateenv <task-name>"
+        return 1
+    fi
+
+    aws ecs describe-task-definition \
+        --task-definition "$1" \
+        --query 'taskDefinition.containerDefinitions[0].environment' \
+        | jq -r '.[] | "\(.name)=\(.value)"'
+}
+
+function lambdarole() {
+    if [ -z "$1" ]; then
+        echo "Usage: lambdarole <lambda-function-name>"
+        return 1
+    fi
+    local ROLE=$(
+        aws lambda get-function-configuration \
+            --function-name "$1" \
+            --query 'Role' \
+            --output text
+    )
+    aws sts assume-role \
+        --role-arn $ROLE \
+        --role-session-name "lambdarole-$1"
+}
+
 source /home/icholy/.secrets
 
 # bun completions
@@ -145,3 +184,9 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 export GRIT_INSTALL="$HOME/.grit"
 export PATH="$GRIT_INSTALL/bin:$PATH"
 . "/home/icholy/.deno/env"
+## [Completion]
+## Completion scripts setup. Remove the following line to uninstall
+[[ -f /home/icholy/.dart-cli-completion/zsh-config.zsh ]] && . /home/icholy/.dart-cli-completion/zsh-config.zsh || true
+## [/Completion]
+
+alias claude="/home/icholy/.claude/local/claude"

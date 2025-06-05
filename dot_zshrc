@@ -20,6 +20,9 @@ export EDITOR=nvim
 # Add ~/bin to PATH
 export PATH=$PATH:/home/icholy/bin
 
+# goose theme
+export GOOSE_CLI_THEME=light
+
 # Add Go bins to PATH
 export PATH=$PATH:/usr/local/go/bin
 export PATH=$PATH:$(go env GOPATH)/bin

@@ -146,9 +146,10 @@ require("lazy").setup({
 	},
 	{
 		"tpope/vim-fugitive",
-		config = function()
+		init = function()
 			vim.g.fugitive_legacy_commands = false
-
+		end,
+		config = function()
 			vim.keymap.set("n", "<Leader>gs", ":Git status<CR>")
 			vim.keymap.set("n", "<Leader>gd", ":Git vdiff<CR>")
 			vim.keymap.set("n", "<Leader>gc", ":Git commit<CR>")
@@ -811,9 +812,9 @@ vim.keymap.set("n", "]e", function() vim.diagnostic.goto_next({ severity = vim.d
 vim.keymap.set("n", "[e", function() vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR }) end)
 vim.keymap.set("n", "<Leader>r", vim.lsp.buf.rename)
 vim.keymap.set("n", "KK", function() vim.diagnostic.open_float(nil, { focus = false }) end)
-vim.keymap.set("n", "<Leader>.", function ()
+vim.keymap.set("n", "<Leader>.", function()
 	vim.lsp.buf.code_action({
-		filter = function (action)
+		filter = function(action)
 			-- See: https://github.com/golang/go/issues/72742
 			if string.find(action.title, "feature documentation") then
 				return false

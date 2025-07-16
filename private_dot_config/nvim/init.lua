@@ -348,7 +348,6 @@ require("lazy").setup({
 	-- },
 	{
 		"icholy/lsplinks.nvim",
-		branch = "upstream",
 		config = function()
 			local lsplinks = require("lsplinks")
 			lsplinks.setup()
@@ -406,8 +405,8 @@ require("lazy").setup({
 			vim.keymap.set("n", "<C-Space><C-f>", ":Telescope find_files<CR>")
 			vim.keymap.set("n", "<C-Space><C-a>", ":Telescope ast_grep<CR>")
 			vim.keymap.set("n", "<C-Space><C-h>", ":Telescope help_tags<CR>")
+			vim.keymap.set("n", "<C-Space><C-t>", ":Telescope lsp_workspace_symbols<CR>")
 			vim.keymap.set("n", "<C-p>", ":Telescope find_files<CR>")
-			vim.keymap.set("n", "<C-Space><C-t>", ":Telescope diagnostics<CR>")
 			vim.keymap.set("n", "<C-Space><C-m>", ":Telescope marks<CR>")
 			vim.keymap.set("n", "gd", ":Telescope lsp_definitions<CR>")
 			vim.keymap.set("n", "gt", ":Telescope lsp_type_definitions<CR>")
@@ -687,51 +686,6 @@ require("lazy").setup({
 		end
 	},
 	{
-		"yetone/avante.nvim",
-		event = "VeryLazy",
-		lazy = false,
-		version = false, -- set this if you want to always pull the latest change
-		opts = {
-			-- add any opts here
-		},
-		-- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
-		build = "make",
-		-- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
-		dependencies = {
-			"stevearc/dressing.nvim",
-			"nvim-lua/plenary.nvim",
-			"MunifTanjim/nui.nvim",
-			--- The below dependencies are optional,
-			"nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
-			"zbirenbaum/copilot.lua", -- for providers='copilot'
-			{
-				-- support for image pasting
-				"HakonHarnes/img-clip.nvim",
-				event = "VeryLazy",
-				opts = {
-					-- recommended settings
-					default = {
-						embed_image_as_base64 = false,
-						prompt_for_file_name = false,
-						drag_and_drop = {
-							insert_mode = true,
-						},
-						-- required for Windows users
-						use_absolute_path = true,
-					},
-				},
-			},
-			{
-				-- Make sure to set this up properly if you have lazy=true
-				'MeanderingProgrammer/render-markdown.nvim',
-				opts = {
-					file_types = { "markdown", "Avante" },
-				},
-				ft = { "markdown", "Avante" },
-			},
-		},
-	},
-	{
 		"Funk66/jira.nvim",
 		dependencies = { "nvim-lua/plenary.nvim" },
 		opts = {
@@ -759,7 +713,24 @@ require("lazy").setup({
 			{ "<leader>jj", ":JiraView<cr>", desc = "View Jira issue",            silent = true },
 			{ "<leader>jo", ":JiraOpen<cr>", desc = "Open Jira issue in browser", silent = true },
 		},
-	}
+	},
+	{
+		"olimorris/codecompanion.nvim",
+		opts = {
+			strategies = {
+				chat = {
+					adapter = "anthropic",
+				},
+				inline = {
+					adapter = "anthropic",
+				},
+			},
+		},
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-treesitter/nvim-treesitter",
+		},
+	},
 })
 
 local function idtool_data(stage)
@@ -822,6 +793,34 @@ vim.keymap.set("n", "<Leader>.", function()
 			return true
 		end
 	})
+end)
+vim.keymap.set("n", "gs", function()
+	-- find tsserver client
+	local clients = vim.lsp.get_clients({ bufnr = 0 })
+	local tsserver = vim.iter(clients):find(function(c)
+		return c.name == "tsserver" or c.name == "typescript-tools" or c.name == "ts_ls"
+	end)
+	if not tsserver then
+		vim.notify("No TypeScript LSP client found", vim.log.levels.WARN)
+		return
+	end
+	-- go to source defintiion
+	local win = vim.api.nvim_get_current_win()
+	local params = vim.lsp.util.make_position_params(win, tsserver.offset_encoding or "utf-16")
+	tsserver.request("workspace/executeCommand", {
+		command = "_typescript.goToSourceDefinition",
+		arguments = { params.textDocument.uri, params.position },
+	}, function(err, result)
+		if err then
+			vim.notify("Go to source definition failed: " .. err.message, vim.log.levels.ERROR)
+			return
+		end
+		if not result or vim.tbl_isempty(result) then
+			vim.notify("No source definition found", vim.log.levels.INFO)
+			return
+		end
+		vim.lsp.util.jump_to_location(result[1], tsserver.offset_encoding)
+	end, 0)
 end)
 vim.keymap.set("n", "<Leader>l", ":set list!<CR>")
 vim.keymap.set("n", "<Leader>t", ":belowright split | resize 20 | terminal<CR>")

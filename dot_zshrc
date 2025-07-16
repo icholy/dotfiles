@@ -63,16 +63,17 @@ export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
 alias clip="xclip -i -selection clipboard"
 alias n='nautilus'
 alias sagi='sudo apt install'
-alias fd='fdfind'
 alias vim='nvim'
 alias semgrepvim="jq -r '.results[] | [ .path, .start.line, .start.col ] | join(\":\")' > /tmp/errorfile; nvim -q /tmp/errorfile"
 alias cal='ncal -b'
 alias cwatch='watch -c unbuffer'
 alias inpm='NODE_OPTIONS="--inspect-brk" npm'
 alias inpx='NODE_OPTIONS="--inspect-brk" npx'
+alias sc='sudo systemctl'
+alias zn='nvim $(tv text)'
 
 function cursor() {
-    nohup /opt/cursor/Cursor-0.50.4-x86_64.AppImage --no-sandbox $@ > /dev/null 2>&1 & disown
+    nohup /opt/cursor/Cursor-1.2.1-x86_64.AppImage --no-sandbox $@ > /dev/null 2>&1 & disown
 }
 
 function vg() {

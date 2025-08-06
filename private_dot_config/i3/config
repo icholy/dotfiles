@@ -25,6 +25,8 @@ bindsym $win+Shift+Q kill
 
 # start dmenu (a program launcher)
 bindsym $win+d exec dmenu_run -nf "#657b83" -nb "#fdf6e3" -sb "#657b83" -sf "#eee8d5"
+bindsym $win+o exec rofi -show drun
+bindsym $win+Tab exec rofi -show window
 
 # change focus
 bindsym $win+h focus left

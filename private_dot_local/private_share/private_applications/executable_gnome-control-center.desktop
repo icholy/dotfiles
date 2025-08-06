@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Settings
+Comment=GNOME Control Center
+Exec=env XDG_CURRENT_DESKTOP=GNOME gnome-control-center
+Icon=preferences-system
+Terminal=false
+Type=Application
+Categories=System;Settings;
+Keywords=settings;preferences;configuration;
+StartupNotify=true
+NoDisplay=false

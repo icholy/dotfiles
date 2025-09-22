@@ -166,6 +166,7 @@ require("lazy").setup({
 			vim.keymap.set("n", "<C-w><C-w>", ":NeoZoomToggle<CR>")
 		end
 	},
+	"prisma/vim-prisma",
 	"tpope/vim-surround",
 	"tpope/vim-rhubarb",
 	"tpope/vim-sleuth",
@@ -190,7 +191,7 @@ require("lazy").setup({
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 			local lspconfig = require("lspconfig")
 
-			lspconfig.ts_ls.setup({
+			vim.lsp.enable('ts_ls', {
 				capabilities = capabilities,
 				init_options = {
 					disableAutomaticTypingAcquisitioninitializationOptions = true,
@@ -202,16 +203,17 @@ require("lazy").setup({
 				end
 			})
 
-			lspconfig.gopls.setup({ capabilities = capabilities })
-			lspconfig.pyright.setup({ capabilities = capabilities })
-			lspconfig.rust_analyzer.setup({ capabilities = capabilities })
-			lspconfig.clangd.setup({ capabilities = capabilities })
-			lspconfig.yamlls.setup({ capabilities = capabilities })
-			lspconfig.jsonls.setup({ capabilities = capabilities })
-			lspconfig.terraformls.setup({ capabilities = capabilities })
-			lspconfig.lua_ls.setup({ capabilities = capabilities })
-			lspconfig.marksman.setup({ capabilities = capabilities })
-			lspconfig.zls.setup({ capabilities = capabilities })
+			vim.lsp.enable('gopls', { capabilities = capabilities })
+			vim.lsp.enable('pyright', { capabilities = capabilities })
+			vim.lsp.enable('rust_analyzer', { capabilities = capabilities })
+			vim.lsp.enable('clangd', { capabilities = capabilities })
+			vim.lsp.enable('yamlls', { capabilities = capabilities })
+			vim.lsp.enable('jsonls', { capabilities = capabilities })
+			vim.lsp.enable('terraformls', { capabilities = capabilities })
+			vim.lsp.enable('lua_ls', { capabilities = capabilities })
+			vim.lsp.enable('marksman', { capabilities = capabilities })
+			vim.lsp.enable('zls', { capabilities = capabilities })
+			vim.lsp.enable('prismals', { capabilities = capabilities })
 
 			-- I don't want eslint to use my project local config for
 			-- dependencies in node_modules
@@ -224,7 +226,7 @@ require("lazy").setup({
 				".eslintrc.json",
 				"eslint.config.js"
 			)
-			lspconfig.eslint.setup({
+			vim.lsp.enable('eslint', {
 				root_dir = function(fname)
 					local fullpath = vim.fn.expand(fname, ":p")
 					if string.find(fullpath, "node_modules") then
@@ -715,22 +717,29 @@ require("lazy").setup({
 		},
 	},
 	{
-		"olimorris/codecompanion.nvim",
-		opts = {
-			strategies = {
-				chat = {
-					adapter = "anthropic",
-				},
-				inline = {
-					adapter = "anthropic",
-				},
-			},
+		"coder/claudecode.nvim",
+		dependencies = { "folke/snacks.nvim" },
+		config = true,
+		keys = {
+			{ "<leader>a", nil, desc = "AI/Claude Code" },
+			-- { "<leader>ac", "<cmd>ClaudeCode<cr>", desc = "Toggle Claude" },
+			-- { "<leader>af", "<cmd>ClaudeCodeFocus<cr>", desc = "Focus Claude" },
+			-- { "<leader>ar", "<cmd>ClaudeCode --resume<cr>", desc = "Resume Claude" },
+			-- { "<leader>aC", "<cmd>ClaudeCode --continue<cr>", desc = "Continue Claude" },
+			-- { "<leader>am", "<cmd>ClaudeCodeSelectModel<cr>", desc = "Select Claude model" },
+			-- { "<leader>ab", "<cmd>ClaudeCodeAdd %<cr>", desc = "Add current buffer" },
+			-- { "<leader>as", "<cmd>ClaudeCodeSend<cr>", mode = "v", desc = "Send to Claude" },
+			-- {
+			-- 	"<leader>as",
+			-- 	"<cmd>ClaudeCodeTreeAdd<cr>",
+			-- 	desc = "Add file",
+			-- 	ft = { "NvimTree", "neo-tree", "oil", "minifiles" },
+			-- },
+			-- -- Diff management
+			-- { "<leader>aa", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept diff" },
+			-- { "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
 		},
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"nvim-treesitter/nvim-treesitter",
-		},
-	},
+	}
 })
 
 local function idtool_data(stage)

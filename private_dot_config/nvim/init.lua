@@ -189,7 +189,6 @@ require("lazy").setup({
 		dependencies = { "cmp-nvim-lsp" },
 		config = function()
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
-			local lspconfig = require("lspconfig")
 
 			vim.lsp.enable('ts_ls', {
 				capabilities = capabilities,
@@ -217,6 +216,7 @@ require("lazy").setup({
 
 			-- I don't want eslint to use my project local config for
 			-- dependencies in node_modules
+			local lspconfig = require("lspconfig")
 			local eslint_root_pattern = lspconfig.util.root_pattern(
 				".eslintrc",
 				".eslintrc.js",
@@ -840,7 +840,7 @@ vim.keymap.set("i", "<MiddleMouse>", "<Nop>")
 vim.keymap.set("n", "<Leader>f", function()
 	local bufnr = vim.api.nvim_get_current_buf()
 	if #vim.lsp.get_clients({ bufnr = bufnr, name = "eslint" }) > 0 then
-		vim.cmd.EslintFixAll()
+		vim.cmd.LspEslintFixAll()
 	else
 		vim.lsp.buf.format({ async = true })
 	end

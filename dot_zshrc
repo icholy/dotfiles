@@ -73,7 +73,7 @@ alias sc='sudo systemctl'
 alias zn='nvim $(tv text)'
 
 function cursor() {
-    nohup /opt/cursor/Cursor-1.2.1-x86_64.AppImage --no-sandbox $@ > /dev/null 2>&1 & disown
+    nohup /opt/cursor/Cursor-1.4.3-x86_64.AppImage --no-sandbox $@ > /dev/null 2>&1 & disown
 }
 
 function vg() {

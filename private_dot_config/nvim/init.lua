@@ -175,8 +175,54 @@ require("lazy").setup({
 		"FabijanZulj/blame.nvim",
 		config = function()
 			local blame = require("blame")
-			blame.setup()
+			blame.setup({
+				date_format = "%r",
+				relative_date_if_recent = false
+			})
 			vim.keymap.set("n", "<Leader>b", ":BlameToggle<CR>")
+			vim.keymap.set('n', '<leader>g', function()
+				if not blame.is_open() then
+					vim.notify("Blame view is not open", vim.log.levels.WARN)
+					return
+				end
+
+				local current_win = vim.api.nvim_get_current_win()
+				if current_win ~= blame.last_opened_view.blame_window then
+					vim.notify("Not in blame window", vim.log.levels.WARN)
+					return
+				end
+
+				local row, _ = unpack(vim.api.nvim_win_get_cursor(current_win))
+				local commit = blame.last_opened_view.blamed_lines[row]
+				local commit_hash = commit and commit.hash
+
+				if not commit_hash then
+					vim.notify("No commit found", vim.log.levels.WARN)
+					return
+				end
+
+				-- Get git remote URL
+				vim.fn.jobstart({ 'git', 'config', '--get', 'remote.origin.url' }, {
+					stdout_buffered = true,
+					on_stdout = function(_, data)
+						if data and data[1] then
+							local remote_url = data[1]:gsub('%.git$', '')
+							-- Convert SSH to HTTPS if needed
+							remote_url = remote_url:gsub('^git@github%.com:', 'https://github.com/')
+
+							local github_url = remote_url .. '/commit/' .. commit_hash
+							vim.schedule(function()
+								vim.ui.open(github_url)
+							end)
+						end
+					end,
+					on_exit = function(_, exit_code)
+						if exit_code ~= 0 then
+							vim.notify("Failed to get Github Remote", vim.log.levels.ERROR)
+						end
+					end,
+				})
+			end, { desc = "Open commit in GitHub" })
 		end
 	},
 	{

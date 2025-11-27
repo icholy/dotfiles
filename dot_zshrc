@@ -64,6 +64,7 @@ alias clip="xclip -i -selection clipboard"
 alias n='nautilus'
 alias sagi='sudo apt install'
 alias vim='nvim'
+alias z='zed -r'
 alias semgrepvim="jq -r '.results[] | [ .path, .start.line, .start.col ] | join(\":\")' > /tmp/errorfile; nvim -q /tmp/errorfile"
 alias cal='ncal -b'
 alias cwatch='watch -c unbuffer'
@@ -71,10 +72,6 @@ alias inpm='NODE_OPTIONS="--inspect-brk" npm'
 alias inpx='NODE_OPTIONS="--inspect-brk" npx'
 alias sc='sudo systemctl'
 alias zn='nvim $(tv text)'
-
-function cursor() {
-    nohup /opt/cursor/Cursor-1.4.3-x86_64.AppImage --no-sandbox $@ > /dev/null 2>&1 & disown
-}
 
 function vg() {
     rg --vimgrep $@ > /tmp/vgfile
@@ -175,6 +172,38 @@ function lambdarole() {
         --role-session-name "lambdarole-$1"
 }
 
+function _xagent() {
+    local agent_cmd="$1"
+    local bash_cmd
+    shift
+    
+    # Check for -w flag
+    if [[ "$1" == "-w" ]]; then
+        shift
+        bash_cmd="WORK=\$(mktemp -p /tmp -d agent.XXXXXX) && git worktree add \$WORK && cd \$WORK && $agent_cmd $@; exec bash"
+    else
+        bash_cmd="$agent_cmd $@; exec bash"
+    fi
+    
+    # Find git root, fallback to current directory if not in a git repo
+    local mount_dir=$(git rev-parse --show-toplevel 2>/dev/null || echo "$PWD")
+    
+    docker run -it \
+      --rm \
+      -v "$mount_dir:/workspace" \
+      -w /workspace \
+      -v credentials:/mnt/credentials \
+      -v /var/run/docker.sock:/var/run/docker.sock \
+      --group-add "$(getent group docker | cut -d: -f3)" \
+      --network metamcp_metamcp-network \
+      containeragent \
+      bash -c "$bash_cmd"
+}
+
+alias xclaude="_xagent 'claude --dangerously-skip-permissions'"
+alias xcopilot="_xagent 'copilot --allow-all-paths --allow-all-tools'"
+alias xcursor="_xagent 'cursor-agent -f'"
+
 source /home/icholy/.secrets
 
 # bun completions
@@ -194,3 +223,6 @@ export PATH="$GRIT_INSTALL/bin:$PATH"
 ## [/Completion]
 
 alias claude="/home/icholy/.claude/local/claude"
+
+export P4_PROJECTS_TABLE_NAME=arn:aws:dynamodb:us-east-1:428358352287:table/p4-projects
+eval "$(mise activate zsh)"

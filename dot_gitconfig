@@ -19,6 +19,7 @@
 	squash = "!f() { git reset --soft \"$(git cherry ${1:-master} | head -n 1 | cut -d' ' -f2)\" && git commit --amend --no-edit; }; f"
 	wip = commit -m "wip"
 	recent = for-each-ref --sort=committerdate --format '%(committerdate:short) %(refname:short)' refs/heads/
+	l = log --perl-regexp --author='^((?!dependabot\\[bot\\]).*)$'
 [remote "origin"]
 	prune = true
 [merge]

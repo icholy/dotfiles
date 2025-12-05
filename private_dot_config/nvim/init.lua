@@ -145,6 +145,30 @@ require("lazy").setup({
 		end
 	},
 	{
+		"williamboman/mason-lspconfig.nvim",
+		dependencies = { "williamboman/mason.nvim", "neovim/nvim-lspconfig" },
+		config = function()
+			require("mason-lspconfig").setup({
+				ensure_installed = {
+					"ts_ls",
+					"gopls",
+					"pyright",
+					"rust_analyzer",
+					"clangd",
+					"yamlls",
+					"jsonls",
+					"terraformls",
+					"lua_ls",
+					"marksman",
+					"zls",
+					"prismals",
+					"eslint",
+				},
+				automatic_installation = true,
+			})
+		end
+	},
+	{
 		"tpope/vim-fugitive",
 		init = function()
 			vim.g.fugitive_legacy_commands = false
@@ -232,7 +256,7 @@ require("lazy").setup({
 	},
 	{
 		"neovim/nvim-lspconfig",
-		dependencies = { "cmp-nvim-lsp" },
+		dependencies = { "cmp-nvim-lsp", "williamboman/mason-lspconfig.nvim" },
 		config = function()
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
@@ -384,16 +408,6 @@ require("lazy").setup({
 			})
 		end
 	},
-	-- {
-	-- 	"Exafunction/codeium.nvim",
-	-- 	dependencies = {
-	-- 		"nvim-lua/plenary.nvim",
-	-- 		"hrsh7th/nvim-cmp",
-	-- 	},
-	-- 	config = function()
-	-- 		require("codeium").setup({})
-	-- 	end
-	-- },
 	{
 		"icholy/lsplinks.nvim",
 		config = function()
@@ -687,44 +701,8 @@ require("lazy").setup({
 		end
 	},
 	{
-		"rcarriga/nvim-dap-ui",
-		dependencies = {
-			"mfussenegger/nvim-dap",
-			"nvim-neotest/nvim-nio",
-		},
-		config = function()
-			local dapui = require("dapui")
-
-			dapui.setup({
-				layouts = {
-					{
-						elements = {
-							{ id = "repl", size = 1 },
-						},
-						size = 0.3,
-						position = "bottom",
-					},
-					{
-						elements = {
-							{ id = "scopes",      size = 0.25 },
-							{ id = "breakpoints", size = 0.25 },
-							{ id = "stacks",      size = 0.25 },
-							{ id = "watches",     size = 0.25 },
-						},
-						size = 40,
-						position = "left",
-					},
-				},
-			})
-
-			vim.keymap.set({ "v", "n" }, "<Leader>e", dapui.eval)
-			vim.keymap.set("n", "<F3>", function()
-				dapui.toggle({ layout = 2 })
-			end)
-			vim.keymap.set("n", "<F4>", function()
-				dapui.toggle({ layout = 1 })
-			end)
-		end,
+		"igorlfs/nvim-dap-view",
+		opts = {},
 	},
 	{
 		"leoluz/nvim-dap-go",
@@ -763,27 +741,29 @@ require("lazy").setup({
 		},
 	},
 	{
-		"coder/claudecode.nvim",
-		dependencies = { "folke/snacks.nvim" },
-		config = true,
+		"zbirenbaum/copilot.lua",
+		cmd = "Copilot",
+		event = "InsertEnter",
+		opts = {
+			suggestion = {
+				enabled = true,
+				auto_trigger = false,
+			},
+		},
 		keys = {
-			{ "<leader>a", nil, desc = "AI/Claude Code" },
-			-- { "<leader>ac", "<cmd>ClaudeCode<cr>", desc = "Toggle Claude" },
-			-- { "<leader>af", "<cmd>ClaudeCodeFocus<cr>", desc = "Focus Claude" },
-			-- { "<leader>ar", "<cmd>ClaudeCode --resume<cr>", desc = "Resume Claude" },
-			-- { "<leader>aC", "<cmd>ClaudeCode --continue<cr>", desc = "Continue Claude" },
-			-- { "<leader>am", "<cmd>ClaudeCodeSelectModel<cr>", desc = "Select Claude model" },
-			-- { "<leader>ab", "<cmd>ClaudeCodeAdd %<cr>", desc = "Add current buffer" },
-			-- { "<leader>as", "<cmd>ClaudeCodeSend<cr>", mode = "v", desc = "Send to Claude" },
-			-- {
-			-- 	"<leader>as",
-			-- 	"<cmd>ClaudeCodeTreeAdd<cr>",
-			-- 	desc = "Add file",
-			-- 	ft = { "NvimTree", "neo-tree", "oil", "minifiles" },
-			-- },
-			-- -- Diff management
-			-- { "<leader>aa", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept diff" },
-			-- { "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
+			{
+				"<C-l>",
+				function()
+					local suggestion = require("copilot.suggestion")
+					if suggestion.is_visible() then
+						suggestion.accept()
+					else
+						suggestion.next()
+					end
+				end,
+				mode = "i",
+				desc = "Copilot trigger/accept",
+			},
 		},
 	}
 })
@@ -849,39 +829,13 @@ vim.keymap.set("n", "<Leader>.", function()
 		end
 	})
 end)
-vim.keymap.set("n", "gs", function()
-	-- find tsserver client
-	local clients = vim.lsp.get_clients({ bufnr = 0 })
-	local tsserver = vim.iter(clients):find(function(c)
-		return c.name == "tsserver" or c.name == "typescript-tools" or c.name == "ts_ls"
-	end)
-	if not tsserver then
-		vim.notify("No TypeScript LSP client found", vim.log.levels.WARN)
-		return
-	end
-	-- go to source defintiion
-	local win = vim.api.nvim_get_current_win()
-	local params = vim.lsp.util.make_position_params(win, tsserver.offset_encoding or "utf-16")
-	tsserver.request("workspace/executeCommand", {
-		command = "_typescript.goToSourceDefinition",
-		arguments = { params.textDocument.uri, params.position },
-	}, function(err, result)
-		if err then
-			vim.notify("Go to source definition failed: " .. err.message, vim.log.levels.ERROR)
-			return
-		end
-		if not result or vim.tbl_isempty(result) then
-			vim.notify("No source definition found", vim.log.levels.INFO)
-			return
-		end
-		vim.lsp.util.jump_to_location(result[1], tsserver.offset_encoding)
-	end, 0)
-end)
+vim.keymap.set("n", "gs", ":LspTypescriptGoToSourceDefinition<CR>")
 vim.keymap.set("n", "<Leader>l", ":set list!<CR>")
 vim.keymap.set("n", "<Leader>t", ":belowright split | resize 20 | terminal<CR>")
 vim.keymap.set("n", "<Leader>x", ":let @+ = expand(\"%:p\")<CR>")
 vim.keymap.set("n", "<MiddleMouse>", "<Nop>")
 vim.keymap.set("i", "<MiddleMouse>", "<Nop>")
+vim.keymap.set("n", "<F4>", ":DapViewToggle<CR>")
 
 vim.keymap.set("n", "<Leader>f", function()
 	local bufnr = vim.api.nvim_get_current_buf()

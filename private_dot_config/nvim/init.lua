@@ -45,19 +45,6 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 	callback = function() vim.lsp.buf.format() end,
 })
 
-vim.api.nvim_create_autocmd('ColorScheme', {
-	group = group,
-	pattern = 'solarized*',
-	callback = function()
-		-- fix the nvim-dap-ui bar
-		-- See: https://github.com/rcarriga/nvim-dap-ui/issues/315
-		vim.cmd('highlight! link StatusLineNC NormalNC')
-		vim.cmd('highlight! link StatusLine Normal')
-		-- used to darken the line background when hitting a breakpoint
-		vim.cmd('highlight DapStoppedLine guibg=#eee8d5')
-	end,
-})
-
 vim.api.nvim_create_user_command("LLM", function(opts)
 	local system = [[
 	You are a neovim expert.

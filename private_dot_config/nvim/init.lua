@@ -256,23 +256,19 @@ require("lazy").setup({
 	{
 		"saghen/blink.cmp",
 		version = "1.*",
-		dependencies = {
-			"saghen/blink.compat",
-			"rcarriga/cmp-dap", -- Keep cmp-dap, use via compat layer
-		},
+		dependencies = { "saghen/blink.compat", "rcarriga/cmp-dap" },
 		config = function()
 			require("blink.cmp").setup({
 				enabled = function()
 					return vim.bo.buftype ~= "prompt" or require("cmp_dap").is_dap_buffer()
 				end,
 				keymap = {
-					preset = "none", -- Start fresh like you did
+					preset = "none",
 					["<C-n>"] = { "select_next", "fallback" },
 					["<C-p>"] = { "select_prev", "fallback" },
 					["<C-Space>"] = { "show" },
 					["<Tab>"] = { "select_and_accept", "fallback" },
 					["<CR>"] = { "accept", "fallback" },
-					-- Scroll documentation (blink has this built in)
 					["<C-d>"] = { "scroll_documentation_down", "fallback" },
 					["<C-u>"] = { "scroll_documentation_up", "fallback" },
 				},
@@ -285,7 +281,6 @@ require("lazy").setup({
 						["<C-p>"] = { "select_prev", "fallback" },
 						["<C-Space>"] = { "show" },
 						["<Tab>"] = { "select_and_accept", "fallback" },
-						["<CR>"] = { "accept", "fallback" },
 					},
 					sources = function()
 						local type = vim.fn.getcmdtype()

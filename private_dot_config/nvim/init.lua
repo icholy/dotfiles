@@ -416,12 +416,9 @@ require("lazy").setup({
 				},
 				extensions = {
 					ast_grep = {
-						command = {
-							"ast-grep",
-							"--json=stream",
-						},     -- must have --json=stream
-						grep_open_files = false, -- search in opened files
-						lang = nil, -- string value, specify language for ast-grep `nil` for default
+						command = { "ast-grep", "--json=stream" },
+						grep_open_files = false,
+						lang = nil,
 					}
 				}
 			})

@@ -208,9 +208,9 @@ require("lazy").setup({
 	},
 	{
 		"neovim/nvim-lspconfig",
-		dependencies = { "cmp-nvim-lsp", "williamboman/mason-lspconfig.nvim" },
+		dependencies = { "blink.cmp", "williamboman/mason-lspconfig.nvim" },
 		config = function()
-			local capabilities = require("cmp_nvim_lsp").default_capabilities()
+			local capabilities = require('blink.cmp').get_lsp_capabilities()
 
 			vim.lsp.enable('ts_ls', {
 				capabilities = capabilities,
@@ -248,96 +248,137 @@ require("lazy").setup({
 		end
 	},
 	{
-		"hrsh7th/nvim-cmp",
+		"saghen/blink.compat",
+		version = "2.*",
+		lazy = true,
+		opts = {},
+	},
+	{
+		"saghen/blink.cmp",
+		version = "1.*",
 		dependencies = {
-			"hrsh7th/cmp-nvim-lsp",
-			"hrsh7th/cmp-buffer",
-			"hrsh7th/cmp-path",
-			"hrsh7th/cmp-cmdline",
-			"hrsh7th/vim-vsnip",
-			"rcarriga/cmp-dap",
+			"saghen/blink.compat",
+			"rcarriga/cmp-dap", -- Keep cmp-dap, use via compat layer
 		},
 		config = function()
-			-- Setup nvim-cmp.
-			local cmp = require("cmp")
-
-			local abort_esc = function()
-				-- https://github.com/hrsh7th/nvim-cmp/issues/1033
-				cmp.confirm()
-				vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<ESC>", true, true, true), "n",
-					true)
-			end
-
-			cmp.setup({
-				snippet = {
-					-- REQUIRED - you must specify a snippet engine
-					expand = function(args)
-						vim.fn["vsnip#anonymous"](args.body)
+			require("blink.cmp").setup({
+				enabled = function()
+					return vim.bo.buftype ~= "prompt" or require("cmp_dap").is_dap_buffer()
+				end,
+				keymap = {
+					preset = "none", -- Start fresh like you did
+					["<C-n>"] = { "select_next", "fallback" },
+					["<C-p>"] = { "select_prev", "fallback" },
+					["<C-Space>"] = { "show" },
+					["<Tab>"] = { "select_and_accept", "fallback" },
+					["<CR>"] = { "accept", "fallback" },
+					-- Scroll documentation (blink has this built in)
+					["<C-d>"] = { "scroll_documentation_down", "fallback" },
+					["<C-u>"] = { "scroll_documentation_up", "fallback" },
+				},
+				cmdline = {
+					enabled = true,
+					keymap = {
+						preset = "none",
+						["<C-n>"] = { "select_next", "fallback" },
+						["<C-p>"] = { "select_prev", "fallback" },
+						["<C-Space>"] = { "show" },
+						["<Tab>"] = { "select_and_accept", "fallback" },
+						["<CR>"] = { "accept", "fallback" },
+					},
+					sources = function()
+						local type = vim.fn.getcmdtype()
+						if type == "/" or type == "?" then
+							return { "buffer" }
+						end
+						if type == ":" then
+							return { "cmdline", "path" }
+						end
+						return {}
 					end,
 				},
-				mapping = {
-					["<C-n>"] = cmp.mapping(cmp.mapping.select_next_item(), { "i", "c" }),
-					["<C-p>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "c" }),
-					["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
-					["<Tab>"] = cmp.mapping(cmp.mapping.confirm({ select = true }), { "i", "c" }),
-					["<CR>"] = cmp.mapping(cmp.mapping.confirm(), { "i", "c" }),
-					-- ["<Esc>"] = cmp.mapping(abort_esc, { "i", "c" }),
-					-- ["<C-a>"] = cmp.mapping(
-					-- 	cmp.mapping.complete({
-					-- 		config = {
-					-- 			sources = {
-					-- 				{ name = "codeium" }
-					-- 			}
-					-- 		}
-					-- 	}),
-					-- 	{ "i", "c" }
-					-- ),
-				},
-				sources = cmp.config.sources({
-					{ name = "nvim_lsp" },
-				}, {
-					-- { name = "vsnip" },
-					-- { name = "buffer" },
-				}),
-				preselect = cmp.PreselectMode.None,
-				sorting = {
-					comparators = {
-						cmp.config.compare.offset,
-						cmp.config.compare.exact,
-						cmp.config.compare.score,
-						cmp.config.compare.recently_used,
-						cmp.config.compare.kind,
+
+				completion = {
+					list = {
+						selection = {
+							preselect = false,
+							auto_insert = false,
+						},
+					},
+					menu = {
+						auto_show = true,
+						draw = {
+							columns = {
+								{ "kind_icon" },
+								{ "label", "label_description", gap = 1 },
+								{ "source_name" },
+							},
+							components = {
+								source_name = {
+									width = { max = 30 },
+									text = function(ctx)
+										return "[" .. ctx.source_name .. "]"
+									end,
+									highlight = "BlinkCmpSource",
+								},
+							},
+						},
+					},
+					documentation = {
+						auto_show = true,
+						auto_show_delay_ms = 200,
 					},
 				},
-				enabled = function()
-					return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt" or
-						require("cmp_dap").is_dap_buffer()
-				end,
-			})
-
-			-- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
-			cmp.setup.cmdline("/", {
+				snippets = {
+					preset = "default",
+				},
 				sources = {
-					{ name = "buffer" }
-				}
-			})
-
-			-- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-			cmp.setup.cmdline(":", {
-				sources = cmp.config.sources({
-					{ name = "path" }
-				}, {
-					{ name = "cmdline" }
-				})
-			})
-
-			-- Use dap source for dap-repl
-			require("cmp").setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
-				sources = {
-					{ name = "dap" },
+					default = { "lsp", "path", "snippets", "buffer" },
+					-- DAP-specific sources
+					per_filetype = {
+						["dap-repl"] = { "dap", "buffer" },
+						dapui_watches = { "dap", "buffer" },
+						dapui_hover = { "dap", "buffer" },
+					},
+					providers = {
+						lsp = {
+							name = "LSP",
+							module = "blink.cmp.sources.lsp",
+							score_offset = 100,
+						},
+						path = {
+							name = "Path",
+							module = "blink.cmp.sources.path",
+						},
+						buffer = {
+							name = "Buffer",
+							module = "blink.cmp.sources.buffer",
+							score_offset = -50,
+						},
+						snippets = {
+							name = "Snippets",
+							module = "blink.cmp.sources.snippets",
+							score_offset = -50,
+						},
+						-- DAP source via compat layer
+						dap = {
+							name = "DAP",
+							module = "blink.compat.source",
+							enabled = function()
+								return require("cmp_dap").is_dap_buffer()
+							end,
+						},
+					},
+				},
+				signature = {
+					enabled = true,
+				},
+				appearance = {
+					use_nvim_cmp_as_default = true, -- Use nvim-cmp highlight groups for theme compat
+					nerd_font_variant = "mono",
 				},
 			})
-		end
+		end,
 	},
 	{
 		"icholy/lsplinks.nvim",

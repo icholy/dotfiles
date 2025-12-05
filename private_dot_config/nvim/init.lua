@@ -283,29 +283,7 @@ require("lazy").setup({
 			vim.lsp.enable('marksman', { capabilities = capabilities })
 			vim.lsp.enable('zls', { capabilities = capabilities })
 			vim.lsp.enable('prismals', { capabilities = capabilities })
-
-			-- I don't want eslint to use my project local config for
-			-- dependencies in node_modules
-			local lspconfig = require("lspconfig")
-			local eslint_root_pattern = lspconfig.util.root_pattern(
-				".eslintrc",
-				".eslintrc.js",
-				".eslintrc.cjs",
-				".eslintrc.yaml",
-				".eslintrc.yml",
-				".eslintrc.json",
-				"eslint.config.js"
-			)
-			vim.lsp.enable('eslint', {
-				root_dir = function(fname)
-					local fullpath = vim.fn.expand(fname, ":p")
-					if string.find(fullpath, "node_modules") then
-						return nil
-					end
-					return eslint_root_pattern(fname)
-				end
-			})
-
+			vim.lsp.enable('eslint', { capabilities = capabilities })
 			vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 				vim.lsp.diagnostic.on_publish_diagnostics,
 				{

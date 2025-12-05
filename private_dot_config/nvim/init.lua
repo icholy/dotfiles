@@ -278,6 +278,7 @@ require("lazy").setup({
 				},
 				cmdline = {
 					enabled = true,
+					completion = { menu = { auto_show = true } },
 					keymap = {
 						preset = "none",
 						["<C-n>"] = { "select_next", "fallback" },
@@ -297,7 +298,6 @@ require("lazy").setup({
 						return {}
 					end,
 				},
-
 				completion = {
 					list = {
 						selection = {
@@ -337,8 +337,6 @@ require("lazy").setup({
 					-- DAP-specific sources
 					per_filetype = {
 						["dap-repl"] = { "dap", "buffer" },
-						dapui_watches = { "dap", "buffer" },
-						dapui_hover = { "dap", "buffer" },
 					},
 					providers = {
 						lsp = {

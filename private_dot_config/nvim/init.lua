@@ -108,7 +108,15 @@ require("lazy").setup({
 					"prismals",
 					"eslint",
 				},
-				automatic_installation = true,
+			})
+		end
+	},
+	{
+		"jay-babu/mason-nvim-dap.nvim",
+		dependencies = { "williamboman/mason.nvim", "mfussenegger/nvim-dap" },
+		config = function()
+			require("mason-nvim-dap").setup({
+				ensure_installed = { "js-debug-adapter", "debugpy" },
 			})
 		end
 	},
@@ -228,6 +236,7 @@ require("lazy").setup({
 			vim.lsp.enable('zls', { capabilities = capabilities })
 			vim.lsp.enable('prismals', { capabilities = capabilities })
 			vim.lsp.enable('eslint', { capabilities = capabilities })
+			vim.lsp.enable('ast-grep', { capabilities = capabilities })
 			vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 				vim.lsp.diagnostic.on_publish_diagnostics,
 				{

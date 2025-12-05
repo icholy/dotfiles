@@ -417,7 +417,7 @@ require("lazy").setup({
 				extensions = {
 					ast_grep = {
 						command = {
-							"sg",
+							"ast-grep",
 							"--json=stream",
 						},     -- must have --json=stream
 						grep_open_files = false, -- search in opened files

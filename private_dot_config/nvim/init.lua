@@ -45,26 +45,6 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 	callback = function() vim.lsp.buf.format() end,
 })
 
--- automatically switch sublime merge projects
-vim.api.nvim_create_autocmd({ "BufEnter", "FocusGained" }, {
-	group = group,
-	callback = function()
-		-- Check if in git directory
-		local dir = vim.fn.expand("%:p:h")
-		local is_git = vim.fn.system({ "git", "-C", dir, "rev-parse", "--is-inside-work-tree" }):match("true")
-		if not is_git then
-			return
-		end
-		-- Check if sublime merge is running
-		local has_smerge = vim.fn.system("pgrep -x sublime_merge"):match("%d+")
-		if not has_smerge then
-			return
-		end
-		-- Open sublime merge
-		vim.fn.system({ "smerge", dir })
-	end
-})
-
 vim.api.nvim_create_autocmd('ColorScheme', {
 	group = group,
 	pattern = 'solarized*',

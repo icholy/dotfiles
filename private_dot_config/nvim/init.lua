@@ -702,32 +702,32 @@ require("lazy").setup({
 			{ "<leader>jo", ":JiraOpen<cr>", desc = "Open Jira issue in browser", silent = true },
 		},
 	},
-	{
-		"zbirenbaum/copilot.lua",
-		cmd = "Copilot",
-		event = "InsertEnter",
-		opts = {
-			suggestion = {
-				enabled = true,
-				auto_trigger = false,
-			},
-		},
-		keys = {
-			{
-				"<C-l>",
-				function()
-					local suggestion = require("copilot.suggestion")
-					if suggestion.is_visible() then
-						suggestion.accept()
-					else
-						suggestion.next()
-					end
-				end,
-				mode = "i",
-				desc = "Copilot trigger/accept",
-			},
-		},
-	}
+	-- {
+	-- 	"zbirenbaum/copilot.lua",
+	-- 	cmd = "Copilot",
+	-- 	event = "InsertEnter",
+	-- 	opts = {
+	-- 		suggestion = {
+	-- 			enabled = true,
+	-- 			auto_trigger = false,
+	-- 		},
+	-- 	},
+	-- 	keys = {
+	-- 		{
+	-- 			"<C-l>",
+	-- 			function()
+	-- 				local suggestion = require("copilot.suggestion")
+	-- 				if suggestion.is_visible() then
+	-- 					suggestion.accept()
+	-- 				else
+	-- 					suggestion.next()
+	-- 				end
+	-- 			end,
+	-- 			mode = "i",
+	-- 			desc = "Copilot trigger/accept",
+	-- 		},
+	-- 	},
+	-- }
 })
 
 local function idtool_data(stage)
@@ -807,3 +807,13 @@ vim.keymap.set("n", "<Leader>f", function()
 		vim.lsp.buf.format({ async = true })
 	end
 end)
+
+vim.keymap.set('n', '<Leader>e', function()
+  local current = vim.api.nvim_get_current_buf()
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].buflisted then
+      vim.api.nvim_buf_call(buf, function() vim.cmd('e!') end)
+    end
+  end
+  vim.api.nvim_set_current_buf(current)
+end, { desc = 'Reload all buffers from disk' })

@@ -190,6 +190,8 @@ function _xagent() {
     
     docker run -it \
       --rm \
+      -e DISABLE_AUTOUPDATER=1 \
+      -e CLAUDE_CODE_OAUTH_TOKEN="$CLAUDE_CODE_OAUTH_TOKEN" \
       -v "$mount_dir:/workspace" \
       -w /workspace \
       -v credentials:/mnt/credentials \
@@ -200,12 +202,21 @@ function _xagent() {
       bash -c "$bash_cmd"
 }
 
-alias xclaude="_xagent 'claude --dangerously-skip-permissions'"
+alias xclaude="_xagent 'claude --dangerously-skip-permissions --model opus'"
 alias xcopilot="_xagent 'copilot --allow-all-paths --allow-all-tools'"
 alias xcursor="_xagent 'cursor-agent -f'"
 
-a() {
-    alacritty --working-directory $(pwd) -e zsh -ic "_xagent cursor-agent -w -f agent $@"  &>/dev/null & disown;
+function xconfig() {
+    local docker_gid=$(getent group docker | cut -d: -f3)
+    docker run -it \
+      --entrypoint /entrypoint-config.sh \
+      -e DISABLE_AUTOUPDATER=1 \
+      -v credentials:/mnt/credentials \
+      -v /var/run/docker.sock:/var/run/docker.sock \
+      --group-add "$docker_gid" \
+      --network metamcp_metamcp-network \
+      containeragent \
+      bash
 }
 
 source /home/icholy/.secrets

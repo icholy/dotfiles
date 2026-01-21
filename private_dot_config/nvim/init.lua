@@ -733,7 +733,7 @@ require("lazy").setup({
 local function idtool_data(stage)
 	local id = vim.fn.expand("<cword>")
 	vim.cmd.new()
-	local res = vim.fn.system("idtool -e " .. stage .. " " .. id)
+	local res = vim.fn.system("idtool -s " .. stage .. " " .. id)
 	vim.api.nvim_buf_set_lines(0, 0, -1, true, vim.split(res, "\n"))
 	vim.cmd.setfiletype("json")
 end

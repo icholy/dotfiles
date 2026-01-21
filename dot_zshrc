@@ -95,7 +95,7 @@ function czz() {
 
 function czp() {
     local REPO_DIR="/home/icholy/src/github.com/compassdigital/cdl"
-    local SUB_DIR=$(p4 list --dir $REPO_DIR | jq -r '.dir' | fzf)
+    local SUB_DIR=$(p4 list --strict=false --dir $REPO_DIR | jq -r '.dir' | fzf)
     if [ -n "$SUB_DIR" ]; then
         cd "$REPO_DIR/$SUB_DIR"
     fi

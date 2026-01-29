@@ -325,7 +325,10 @@ require("lazy").setup({
 					},
 				},
 				snippets = {
-					preset = "default",
+				  expand = function(snippet)
+					vim.snippet.expand(snippet)
+					vim.snippet.stop()
+				  end,
 				},
 				sources = {
 					default = { "lsp", "path", "snippets", "buffer" },

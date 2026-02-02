@@ -6,4 +6,5 @@
 	"editor_argument_format": "-e nvim +${line} ${file}",
 	"editor_path": "alacritty",
 	"font_size": 11,
+	"update_check": false,
 }

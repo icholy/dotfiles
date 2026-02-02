@@ -148,6 +148,16 @@ require("lazy").setup({
 	"tpope/vim-sleuth",
 	"wsdjeg/vim-fetch",
 	{
+		"jellydn/hurl.nvim",
+		dependencies = {
+			"MunifTanjim/nui.nvim",
+			"nvim-lua/plenary.nvim",
+			"nvim-treesitter/nvim-treesitter",
+		},
+		ft = "hurl",
+		opts = {},
+	},
+	{
 		"FabijanZulj/blame.nvim",
 		config = function()
 			local blame = require("blame")

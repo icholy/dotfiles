@@ -67,6 +67,13 @@ vim.api.nvim_create_autocmd("FileType", {
 	command = "compiler tsc | setlocal makeprg=npx\\ tsc",
 })
 
+-- make for Go
+vim.api.nvim_create_autocmd("FileType", {
+	group = group,
+	pattern = "go",
+	command = "compiler go | setlocal makeprg=go\\ vet\\ ./...",
+})
+
 -- setup lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then

@@ -72,6 +72,7 @@ alias inpm='NODE_OPTIONS="--inspect-brk" mise x node@23.10.0 -- npm'
 alias inpx='NODE_OPTIONS="--inspect-brk" mise x node@23.10.0 -- npx'
 alias sc='sudo systemctl'
 alias zn='nvim $(tv text)'
+alias av='aws-vault'
 
 function vg() {
     rg --vimgrep $@ > /tmp/vgfile
@@ -195,6 +196,7 @@ function _xagent() {
       -v "$mount_dir:/workspace" \
       -w /workspace \
       -v credentials:/mnt/credentials \
+      -v mise_data:/home/vscode/.local/share/mise \
       -v /var/run/docker.sock:/var/run/docker.sock \
       --group-add "$(getent group docker | cut -d: -f3)" \
       --network metamcp_metamcp-network \

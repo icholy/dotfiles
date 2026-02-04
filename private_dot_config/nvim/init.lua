@@ -151,6 +151,10 @@ require("lazy").setup({
 	},
 	"prisma/vim-prisma",
 	"tpope/vim-surround",
+	{
+		"likec4/likec4.nvim",
+		build = "npm install -g @likec4/language-server",
+	},
 	"tpope/vim-rhubarb",
 	"tpope/vim-sleuth",
 	"wsdjeg/vim-fetch",

@@ -276,19 +276,15 @@ require("lazy").setup({
 		end
 	},
 	{
-		"saghen/blink.compat",
-		version = "2.*",
-		lazy = true,
-		opts = {},
-	},
-	{
 		"saghen/blink.cmp",
 		version = "1.*",
-		dependencies = { "saghen/blink.compat", "rcarriga/cmp-dap" },
+		dependencies = { "mayromr/blink-cmp-dap" },
 		config = function()
 			require("blink.cmp").setup({
 				enabled = function()
-					return vim.bo.buftype ~= "prompt" or require("cmp_dap").is_dap_buffer()
+					return vim.bo.buftype ~= "prompt"
+					or vim.bo.filetype == "dap-repl"
+					or vim.startswith(vim.bo.filetype, "dapui_")
 				end,
 				keymap = {
 					preset = "none",
@@ -384,13 +380,9 @@ require("lazy").setup({
 							module = "blink.cmp.sources.snippets",
 							score_offset = -50,
 						},
-						-- DAP source via compat layer
 						dap = {
 							name = "DAP",
-							module = "blink.compat.source",
-							enabled = function()
-								return require("cmp_dap").is_dap_buffer()
-							end,
+							module = "blink-cmp-dap",
 						},
 					},
 				},

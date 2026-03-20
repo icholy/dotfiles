@@ -119,6 +119,13 @@ require("lazy").setup({
 		end
 	},
 	{
+	  "kyytox/data-explorer.nvim",
+	  dependencies = { "nvim-telescope/telescope.nvim" },
+	  config = function()
+		require("data-explorer").setup()
+	  end,
+	},
+	{
 		"jay-babu/mason-nvim-dap.nvim",
 		dependencies = { "williamboman/mason.nvim", "mfussenegger/nvim-dap" },
 		config = function()

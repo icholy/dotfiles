@@ -60,6 +60,10 @@ export HUSKY=0
 # Use ripgrep config
 export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
 
+# difftasktic
+export DFT_BACKGROUND=light
+export GIT_EXTERNAL_DIFF=difft
+
 alias clip="xclip -i -selection clipboard"
 alias n='nautilus'
 alias sagi='sudo apt install'
@@ -77,6 +81,10 @@ alias av='aws-vault'
 function vg() {
     rg --vimgrep $@ > /tmp/vgfile
     nvim -q /tmp/vgfile
+}
+
+function im() {
+  snap run obsidian daily:append content="- $*"
 }
 
 function cz() {
@@ -239,7 +247,9 @@ export PATH="$GRIT_INSTALL/bin:$PATH"
 [[ -f /home/icholy/.dart-cli-completion/zsh-config.zsh ]] && . /home/icholy/.dart-cli-completion/zsh-config.zsh || true
 ## [/Completion]
 
-alias claude="/home/icholy/.claude/local/claude"
 
 export P4_PROJECTS_TABLE_NAME=arn:aws:dynamodb:us-east-1:428358352287:table/p4-projects
 eval "$(mise activate zsh)"
+
+
+if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi

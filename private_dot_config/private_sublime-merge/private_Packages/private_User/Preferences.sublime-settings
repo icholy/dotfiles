@@ -5,6 +5,7 @@
 	"side_bar_layout": "tabs",
 	"editor_argument_format": "-e nvim +${line} ${file}",
 	"editor_path": "alacritty",
-	"font_size": 11,
+	"font_size": 12,
 	"update_check": false,
+	"expand_merge_commits_by_default": true,
 }

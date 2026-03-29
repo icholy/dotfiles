@@ -265,14 +265,12 @@ require("lazy").setup({
 			vim.lsp.enable('prismals', { capabilities = capabilities })
 			vim.lsp.enable('eslint', { capabilities = capabilities })
 			vim.lsp.enable('ast-grep', { capabilities = capabilities })
-			vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-				vim.lsp.diagnostic.on_publish_diagnostics,
-				{
-					virtual_text = false,
-					signs = true,
-					update_in_insert = false,
-					severity_sort = true,
-				})
+			vim.diagnostic.config({
+				virtual_text = false,
+				signs = true,
+				update_in_insert = false,
+				severity_sort = true,
+			})
 		end
 	},
 	{

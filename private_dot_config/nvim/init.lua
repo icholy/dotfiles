@@ -480,14 +480,6 @@ require("lazy").setup({
 				indent = {
 					enable = true,
 				},
-				incremental_selection = {
-					enable = true,
-					keymaps = {
-						init_selection = '<CR>',
-						node_incremental = '<CR>',
-						node_decremental = '<BS>',
-					},
-				},
 			})
 		end
 	},
@@ -777,6 +769,11 @@ vim.keymap.set("n", "<Leader>id", function() idtool_data("dev") end)
 vim.keymap.set("n", "<Leader>is", function() idtool_data("staging") end)
 vim.keymap.set("n", "<Leader>ip", function() idtool_data("v1") end)
 vim.keymap.set("n", "<Leader>ii", idtool_info)
+
+-- treesitter incremental selection with CR/BS
+vim.keymap.set("n", "<CR>", "van", { remap = true })
+vim.keymap.set("x", "<CR>", "an", { remap = true })
+vim.keymap.set("x", "<BS>", "in", { remap = true })
 
 -- https://github.com/nvim-lualine/lualine.nvim/issues/122
 vim.keymap.set("n", "<C-c>", "<Nop>")

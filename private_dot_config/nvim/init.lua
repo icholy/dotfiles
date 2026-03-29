@@ -240,8 +240,9 @@ require("lazy").setup({
 		config = function()
 			local capabilities = require('blink.cmp').get_lsp_capabilities()
 
-			vim.lsp.enable('ts_ls', {
-				capabilities = capabilities,
+			vim.lsp.config('*', { capabilities = capabilities })
+
+			vim.lsp.config('ts_ls', {
 				init_options = {
 					disableAutomaticTypingAcquisitioninitializationOptions = true,
 					importModuleSpecifierPreference = "relative",
@@ -252,19 +253,23 @@ require("lazy").setup({
 				end
 			})
 
-			vim.lsp.enable('gopls', { capabilities = capabilities })
-			vim.lsp.enable('pyright', { capabilities = capabilities })
-			vim.lsp.enable('rust_analyzer', { capabilities = capabilities })
-			vim.lsp.enable('clangd', { capabilities = capabilities })
-			vim.lsp.enable('yamlls', { capabilities = capabilities })
-			vim.lsp.enable('jsonls', { capabilities = capabilities })
-			vim.lsp.enable('terraformls', { capabilities = capabilities })
-			vim.lsp.enable('lua_ls', { capabilities = capabilities })
-			vim.lsp.enable('marksman', { capabilities = capabilities })
-			vim.lsp.enable('zls', { capabilities = capabilities })
-			vim.lsp.enable('prismals', { capabilities = capabilities })
-			vim.lsp.enable('eslint', { capabilities = capabilities })
-			vim.lsp.enable('ast-grep', { capabilities = capabilities })
+			vim.lsp.enable({
+				'ts_ls',
+				'gopls',
+				'pyright',
+				'rust_analyzer',
+				'clangd',
+				'yamlls',
+				'jsonls',
+				'terraformls',
+				'lua_ls',
+				'marksman',
+				'zls',
+				'prismals',
+				'eslint',
+				'ast-grep',
+			})
+
 			vim.diagnostic.config({
 				virtual_text = false,
 				signs = true,

@@ -467,19 +467,14 @@ require("lazy").setup({
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
 		config = function()
-			require("nvim-treesitter.configs").setup({
-				highlight = {
-					enable = true,
-					additional_vim_regex_highlighting = false,
-					disable = function(_, bufnr)
-						local name = vim.api.nvim_buf_get_name(bufnr)
-						local size = vim.fn.getfsize(name)
-						return size > bit.lshift(1, 20)
-					end,
-				},
-				indent = {
-					enable = true,
-				},
+			vim.api.nvim_create_autocmd("BufReadPost", {
+				callback = function(args)
+					local name = vim.api.nvim_buf_get_name(args.buf)
+					local size = vim.fn.getfsize(name)
+					if size > bit.lshift(1, 20) then
+						vim.treesitter.stop(args.buf)
+					end
+				end,
 			})
 		end
 	},

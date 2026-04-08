@@ -224,6 +224,7 @@ require("lazy").setup({
 				'prismals',
 				'eslint',
 				'ast-grep',
+				'buf_ls',
 			})
 
 			vim.diagnostic.config({

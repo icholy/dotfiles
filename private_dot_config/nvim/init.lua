@@ -496,7 +496,7 @@ require("lazy").setup({
 		config = function()
 			require("nvim-tree").setup({
 				-- I keep accidentally hitting 's' and opening libreoffice ...
-				system_open = { cmd = "echo" },
+				-- system_open = { cmd = "echo" },
 				sync_root_with_cwd = true,
 				actions = {
 					open_file = {

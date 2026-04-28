@@ -176,7 +176,7 @@ require("lazy").setup({
 		opts = {},
 	},
 	{
-		"FabijanZulj/blame.nvim",
+		"icholy/blame.nvim",
 		config = function()
 			require("blame").setup({
 				date_format = "%r",

@@ -697,7 +697,23 @@ require("lazy").setup({
 	-- 			desc = "Copilot trigger/accept",
 	-- 		},
 	-- 	},
-	-- }
+	-- },
+	{
+		"epwalsh/obsidian.nvim",
+		version = "*",  -- recommended, use latest release instead of latest commit
+		lazy = true,
+		cmd = "ObsidianSearch",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		opts = {
+			workspaces = {
+				{
+					name = "SlipBox",
+					path = "/home/icholy/Documents/SlipBox",
+				},
+			},
+			ui = { enable = false }
+		},
+	}
 })
 
 local function idtool_data(stage)
@@ -773,6 +789,7 @@ vim.keymap.set("n", "<Leader>x", ":let @+ = expand(\"%:p\")<CR>")
 vim.keymap.set("n", "<MiddleMouse>", "<Nop>")
 vim.keymap.set("i", "<MiddleMouse>", "<Nop>")
 vim.keymap.set("n", "<F4>", ":DapViewToggle<CR>")
+vim.keymap.set("n", "<C-Space><C-o>", ":ObsidianSearch<CR>")
 
 vim.keymap.set("n", "<Leader>f", function()
 	local bufnr = vim.api.nvim_get_current_buf()

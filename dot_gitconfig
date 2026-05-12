@@ -1,6 +1,7 @@
 [user]
 	name = Ilia Choly
 	email = ilia.choly@gmail.com
+	signingkey = /home/icholy/.ssh/id_rsa.pub
 
 [includeIf "gitdir:~/src/github.com/compassdigital/"]
 	path = .gitconfig-compassdigital
@@ -35,3 +36,15 @@
 	rebase = true
 [init]
 	defaultBranch = master
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[gpg]
+	format = ssh
+[commit]
+	gpgsign = true
+[gpg "ssh"]
+	allowedSignersFile = /home/icholy/.ssh/allowed_signers

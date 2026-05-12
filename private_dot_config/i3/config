@@ -18,7 +18,7 @@ set $win Mod4
 floating_modifier $win
 
 # start a terminal
-bindsym $win+Return exec i3-sensible-terminal
+bindsym $win+Return exec wezterm
 
 # kill focused window
 bindsym $win+Shift+Q kill

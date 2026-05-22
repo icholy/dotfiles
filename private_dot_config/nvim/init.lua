@@ -418,6 +418,7 @@ require("lazy").setup({
 			vim.keymap.set("n", "gd", ":Telescope lsp_definitions<CR>")
 			vim.keymap.set("n", "gt", ":Telescope lsp_type_definitions<CR>")
 			vim.keymap.set("n", "gr", ":Telescope lsp_references<CR>")
+			vim.keymap.set("n", "gri", ":Telescope lsp_implementations<CR>")
 		end
 	},
 	{

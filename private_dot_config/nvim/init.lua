@@ -209,6 +209,14 @@ require("lazy").setup({
 				end
 			})
 
+			vim.lsp.config('eslint', {
+				settings = {
+					-- Run eslint from the workspace folder (e.g. npm/core) instead of
+					-- an auto-inferred subdir, so `project: true` finds the tsconfig.json.
+					workingDirectory = { mode = 'location' },
+				},
+			})
+
 			vim.lsp.enable({
 				'ts_ls',
 				'gopls',

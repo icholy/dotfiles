@@ -1,0 +1,8 @@
+[Unit]
+Description=i3 session
+Documentation=man:systemd.special(7)
+# Started from the i3 config; binds to graphical-session.target (which must
+# not be started directly).
+BindsTo=graphical-session.target
+Wants=graphical-session-pre.target
+After=graphical-session-pre.target

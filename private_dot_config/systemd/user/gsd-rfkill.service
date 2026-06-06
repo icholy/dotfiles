@@ -1,6 +1,10 @@
 [Unit]
 Description=GNOME RFKill support (standalone, for non-GNOME sessions like i3)
 Documentation=man:gsd-rfkill(1)
+# Runs as part of the graphical session so /dev/rfkill is accessible at
+# startup (gnome-settings-daemon#52: it opens rfkill once, with no retry).
+After=graphical-session.target
+PartOf=graphical-session.target
 
 [Service]
 Type=dbus
@@ -9,4 +13,4 @@ ExecStart=/usr/libexec/gsd-rfkill
 Restart=on-failure
 
 [Install]
-WantedBy=default.target
+WantedBy=graphical-session.target

@@ -103,7 +103,7 @@ bindsym $win+Shift+C reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $win+Shift+R restart
 # exit i3 (logs you out of your X session)
-bindsym $win+Shift+E exit
+bindsym $win+Shift+E exec --no-startup-id "systemctl --user stop i3-session.target; i3-msg exit"
 
 # resizing
 set $resize_speed 50
@@ -178,6 +178,9 @@ workspace $ws3 output DP-4
 
 no_focus [all]
 focus_on_window_activation none
+
+# start the systemd user graphical session (imports X env, starts the target)
+exec --no-startup-id systemctl --user import-environment DISPLAY XAUTHORITY; dbus-update-activation-environment --systemd DISPLAY XAUTHORITY; systemctl --user start i3-session.target
 
 # screen layout
 exec --no-startup-id ~/.screenlayout/tripple.sh

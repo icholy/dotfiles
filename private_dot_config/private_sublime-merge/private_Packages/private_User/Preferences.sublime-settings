@@ -8,4 +8,5 @@
 	"font_size": 12,
 	"update_check": false,
 	"expand_merge_commits_by_default": true,
+	"diff_style": "inline",
 }

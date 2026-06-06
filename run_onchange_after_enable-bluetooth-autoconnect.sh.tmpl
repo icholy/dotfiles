@@ -1,0 +1,8 @@
+#!/bin/sh
+# Enable login-time auto-connect for trusted Bluetooth devices (one enable per
+# device MAC). Re-runs when the unit template changes.
+#
+# unit hash: {{ include "private_dot_config/systemd/user/bluetooth-autoconnect@.service" | sha256sum }}
+set -eu
+systemctl --user daemon-reload
+systemctl --user enable 'bluetooth-autoconnect@BC:87:FA:55:77:E4.service'

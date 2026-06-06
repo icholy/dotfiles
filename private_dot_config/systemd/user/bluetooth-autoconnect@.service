@@ -1,0 +1,15 @@
+[Unit]
+Description=Auto-connect Bluetooth device %i at login
+After=graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+Type=oneshot
+# Host-initiated connect for a trusted device that is already on but idle at
+# login (BlueZ won't reach out on its own). Best-effort: the leading '-' makes
+# systemd ignore failure, so an off device (page-timeout) or an already-
+# connected one (br-connection-busy) doesn't leave the unit in a failed state.
+ExecStart=-/usr/bin/bluetoothctl connect %i
+
+[Install]
+WantedBy=graphical-session.target

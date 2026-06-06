@@ -189,52 +189,8 @@ function lambdarole() {
         --role-session-name "lambdarole-$1"
 }
 
-function _xagent() {
-    local agent_cmd="$1"
-    local bash_cmd
-    shift
-    
-    # Check for -w flag
-    if [[ "$1" == "-w" ]]; then
-        shift
-        bash_cmd="WORK=\$(mktemp -p /tmp -d agent.XXXXXX) && git worktree add \$WORK && cd \$WORK && $agent_cmd $@; exec bash"
-    else
-        bash_cmd="$agent_cmd $@; exec bash"
-    fi
-    
-    # Find git root, fallback to current directory if not in a git repo
-    local mount_dir=$(git rev-parse --show-toplevel 2>/dev/null || echo "$PWD")
-    
-    docker run -it \
-      --rm \
-      -e DISABLE_AUTOUPDATER=1 \
-      -e CLAUDE_CODE_OAUTH_TOKEN="$CLAUDE_CODE_OAUTH_TOKEN" \
-      -v "$mount_dir:/workspace" \
-      -w /workspace \
-      -v credentials:/mnt/credentials \
-      -v mise_data:/home/vscode/.local/share/mise \
-      -v /var/run/docker.sock:/var/run/docker.sock \
-      --group-add "$(getent group docker | cut -d: -f3)" \
-      --network metamcp_metamcp-network \
-      containeragent \
-      bash -c "$bash_cmd"
-}
-
-alias xclaude="_xagent 'claude --dangerously-skip-permissions --model opus'"
-alias xcopilot="_xagent 'copilot --allow-all-paths --allow-all-tools'"
-alias xcursor="_xagent 'cursor-agent -f'"
-
-function xconfig() {
-    local docker_gid=$(getent group docker | cut -d: -f3)
-    docker run -it \
-      --entrypoint /entrypoint-config.sh \
-      -e DISABLE_AUTOUPDATER=1 \
-      -v credentials:/mnt/credentials \
-      -v /var/run/docker.sock:/var/run/docker.sock \
-      --group-add "$docker_gid" \
-      --network metamcp_metamcp-network \
-      containeragent \
-      bash
+function xclaude() {
+    CLAUDE_CODE_OAUTH_TOKEN=$CC_TOKEN claude --dangerously-load-development-channels server:xagent
 }
 
 source /home/icholy/.secrets

@@ -1,0 +1,26 @@
+#!/bin/sh
+# Sets up the standalone gsd-rfkill service for non-GNOME sessions (i3).
+#
+# Re-runs whenever this script's rendered content changes (chezmoi
+# run_onchange_), i.e. when the unit hash or the udev rule below changes.
+#
+# unit hash: {{ include "private_dot_config/systemd/user/gsd-rfkill.service" | sha256sum }}
+set -eu
+
+# --- user service (no privileges needed) -----------------------------------
+systemctl --user daemon-reload
+systemctl --user enable --now gsd-rfkill.service
+
+# --- system udev rule (needs root) -----------------------------------------
+# gsd-rfkill opens /dev/rfkill once and never retries (gnome-settings-daemon
+# #52). Restart it whenever any rfkill device appears so its view is fresh.
+# Device-agnostic: matches the rfkill subsystem, not a specific adapter.
+RULE_FILE=/etc/udev/rules.d/90-gsd-rfkill-restart.rules
+RULE='ACTION=="add", SUBSYSTEM=="rfkill", RUN+="/usr/bin/systemctl --user --machine={{ .chezmoi.username }}@.host --no-block restart gsd-rfkill.service"'
+
+# Only escalate when the installed rule differs from what we want, so a
+# no-op `chezmoi apply` does not prompt for a sudo password.
+if [ "$(cat "$RULE_FILE" 2>/dev/null || true)" != "$RULE" ]; then
+    printf '%s\n' "$RULE" | sudo tee "$RULE_FILE" >/dev/null
+    sudo udevadm control --reload
+fi

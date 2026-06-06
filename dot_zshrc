@@ -167,10 +167,33 @@ function fargateenv() {
         return 1
     fi
 
-    aws ecs describe-task-definition \
+    local def
+    def=$(aws ecs describe-task-definition \
         --task-definition "$1" \
-        --query 'taskDefinition.containerDefinitions[0].environment' \
-        | jq -r '.[] | "\(.name)=\(.value)"'
+        --query 'taskDefinition.containerDefinitions[0]') || return 1
+
+    # Plain environment variables
+    echo "$def" | jq -r '.environment[]? | "\(.name)=\(.value)"'
+
+    # Secrets: resolve each valueFrom (SSM param or Secrets Manager ARN)
+    echo "$def" | jq -r '.secrets[]? | "\(.name)\t\(.valueFrom)"' | \
+    while IFS=$'\t' read -r name src; do
+        local val
+        case "$src" in
+            arn:aws:secretsmanager:*)
+                val=$(aws secretsmanager get-secret-value \
+                    --secret-id "$src" \
+                    --query 'SecretString' --output text)
+                ;;
+            *)  # SSM parameter (arn:aws:ssm:...:parameter/foo  or  /foo)
+                val=$(aws ssm get-parameter \
+                    --name "${src##*:parameter}" \
+                    --with-decryption \
+                    --query 'Parameter.Value' --output text)
+                ;;
+        esac
+        echo "$name=$val"
+    done
 }
 
 function lambdarole() {

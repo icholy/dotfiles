@@ -1,0 +1,12 @@
+[Unit]
+Description=GNOME RFKill support (standalone, for non-GNOME sessions like i3)
+Documentation=man:gsd-rfkill(1)
+
+[Service]
+Type=dbus
+BusName=org.gnome.SettingsDaemon.Rfkill
+ExecStart=/usr/libexec/gsd-rfkill
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

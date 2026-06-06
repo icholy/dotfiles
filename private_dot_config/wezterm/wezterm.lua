@@ -116,7 +116,8 @@ config.keys = {
 }
 
 -- Optional: Additional WezTerm specific settings that might be useful
-config.enable_tab_bar = false
+config.enable_tab_bar = true
+config.hide_tab_bar_if_only_one_tab = true
 config.use_fancy_tab_bar = false
 config.tab_bar_at_bottom = false
 config.window_padding = {
@@ -128,5 +129,20 @@ config.window_padding = {
 
 -- Enable graphics protocol support (useful for image display in terminal)
 config.enable_kitty_graphics = true
+
+wezterm.on('augment-command-palette', function(window, pane)
+  return {
+    {
+      brief = 'Rename tab',
+      icon = 'md_rename_box',
+      action = wezterm.action.PromptInputLine {
+        description = 'Tab name:',
+        action = wezterm.action_callback(function(win, _, line)
+          if line then win:active_tab():set_title(line) end
+        end),
+      },
+    },
+  }
+end)
 
 return config

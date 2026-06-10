@@ -791,7 +791,34 @@ vim.keymap.set("n", "<Leader>.", function()
 		end
 	})
 end)
-vim.keymap.set("n", "gs", ":LspTypescriptGoToSourceDefinition<CR>")
+vim.keymap.set("n", "gs", function()
+	-- find tsserver client
+	local clients = vim.lsp.get_clients({ bufnr = 0 })
+	local tsserver = vim.iter(clients):find(function(c)
+		return c.name == "tsserver" or c.name == "typescript-tools" or c.name == "ts_ls"
+	end)
+	if not tsserver then
+		vim.notify("No TypeScript LSP client found", vim.log.levels.WARN)
+		return
+	end
+	-- go to source definition
+	local win = vim.api.nvim_get_current_win()
+	local params = vim.lsp.util.make_position_params(win, tsserver.offset_encoding or "utf-16")
+	tsserver.request("workspace/executeCommand", {
+		command = "_typescript.goToSourceDefinition",
+		arguments = { params.textDocument.uri, params.position },
+	}, function(err, result)
+		if err then
+			vim.notify("Go to source definition failed: " .. err.message, vim.log.levels.ERROR)
+			return
+		end
+		if not result or vim.tbl_isempty(result) then
+			vim.notify("No source definition found", vim.log.levels.INFO)
+			return
+		end
+		vim.lsp.util.jump_to_location(result[1], tsserver.offset_encoding)
+	end, 0)
+end)
 vim.keymap.set("n", "<Leader>l", ":set list!<CR>")
 vim.keymap.set("n", "<Leader>t", ":belowright split | resize 20 | terminal<CR>")
 vim.keymap.set("n", "<Leader>x", ":let @+ = expand(\"%:p\")<CR>")

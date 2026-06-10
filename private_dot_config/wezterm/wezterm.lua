@@ -56,7 +56,7 @@ config.colors = {
     '#268bd2', -- blue
     '#d33682', -- magenta
     '#2aa198', -- cyan
-    '#eee8d5', -- white (base2)
+    '#586e75', -- white -> base01 (was base2 #eee8d5, invisible on light bg)
   },
 
   brights = {
@@ -67,7 +67,7 @@ config.colors = {
     '#839496', -- bright blue (base0)
     '#6c71c4', -- bright magenta (violet)
     '#93a1a1', -- bright cyan (base1)
-    '#fdf6e3', -- bright white (base3)
+    '#657b83', -- bright white -> base00 (was base3 #fdf6e3 == bg, invisible)
   },
 
   -- Tab bar colors (matching Solarized Light theme)

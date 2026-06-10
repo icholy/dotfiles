@@ -804,7 +804,7 @@ vim.keymap.set("n", "gs", function()
 	-- go to source definition
 	local win = vim.api.nvim_get_current_win()
 	local params = vim.lsp.util.make_position_params(win, tsserver.offset_encoding or "utf-16")
-	tsserver.request("workspace/executeCommand", {
+	tsserver:request("workspace/executeCommand", {
 		command = "_typescript.goToSourceDefinition",
 		arguments = { params.textDocument.uri, params.position },
 	}, function(err, result)
@@ -816,7 +816,7 @@ vim.keymap.set("n", "gs", function()
 			vim.notify("No source definition found", vim.log.levels.INFO)
 			return
 		end
-		vim.lsp.util.jump_to_location(result[1], tsserver.offset_encoding)
+		vim.lsp.util.show_document(result[1], tsserver.offset_encoding, { focus = true })
 	end, 0)
 end)
 vim.keymap.set("n", "<Leader>l", ":set list!<CR>")

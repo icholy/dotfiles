@@ -213,7 +213,7 @@ function lambdarole() {
 }
 
 function xclaude() {
-    CLAUDE_CODE_OAUTH_TOKEN=$CC_TOKEN claude --dangerously-load-development-channels server:xagent
+    CLAUDE_CODE_OAUTH_TOKEN=$CC_TOKEN claude --dangerously-load-development-channels server:xagent $@
 }
 
 source /home/icholy/.secrets

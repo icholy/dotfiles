@@ -203,10 +203,18 @@ require("lazy").setup({
 					disableAutomaticTypingAcquisitioninitializationOptions = true,
 					importModuleSpecifierPreference = "relative",
 				},
-				on_attach = function(client)
-					-- I use prettier for formatting
-					client.server_capabilities.document_formatting = false
-				end
+			})
+
+			-- I use prettier for formatting. Done via LspAttach instead of an
+			-- on_attach override so nvim-lspconfig's own ts_ls on_attach still
+			-- runs (it registers :LspTypescriptGoToSourceDefinition).
+			vim.api.nvim_create_autocmd("LspAttach", {
+				callback = function(args)
+					local client = vim.lsp.get_client_by_id(args.data.client_id)
+					if client and client.name == "ts_ls" then
+						client.server_capabilities.document_formatting = false
+					end
+				end,
 			})
 
 			vim.lsp.config('eslint', {
@@ -791,34 +799,7 @@ vim.keymap.set("n", "<Leader>.", function()
 		end
 	})
 end)
-vim.keymap.set("n", "gs", function()
-	-- find tsserver client
-	local clients = vim.lsp.get_clients({ bufnr = 0 })
-	local tsserver = vim.iter(clients):find(function(c)
-		return c.name == "tsserver" or c.name == "typescript-tools" or c.name == "ts_ls"
-	end)
-	if not tsserver then
-		vim.notify("No TypeScript LSP client found", vim.log.levels.WARN)
-		return
-	end
-	-- go to source definition
-	local win = vim.api.nvim_get_current_win()
-	local params = vim.lsp.util.make_position_params(win, tsserver.offset_encoding or "utf-16")
-	tsserver:request("workspace/executeCommand", {
-		command = "_typescript.goToSourceDefinition",
-		arguments = { params.textDocument.uri, params.position },
-	}, function(err, result)
-		if err then
-			vim.notify("Go to source definition failed: " .. err.message, vim.log.levels.ERROR)
-			return
-		end
-		if not result or vim.tbl_isempty(result) then
-			vim.notify("No source definition found", vim.log.levels.INFO)
-			return
-		end
-		vim.lsp.util.show_document(result[1], tsserver.offset_encoding, { focus = true })
-	end, 0)
-end)
+vim.keymap.set("n", "gs", ":LspTypescriptGoToSourceDefinition<CR>")
 vim.keymap.set("n", "<Leader>l", ":set list!<CR>")
 vim.keymap.set("n", "<Leader>t", ":belowright split | resize 20 | terminal<CR>")
 vim.keymap.set("n", "<Leader>x", ":let @+ = expand(\"%:p\")<CR>")

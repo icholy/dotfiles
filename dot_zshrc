@@ -25,6 +25,7 @@ export GOOSE_CLI_THEME=light
 
 # Add Go bins to PATH
 export PATH=$PATH:/usr/local/go/bin
+export PATH=$PATH:$HOME/go/bin
 export PATH=$PATH:$(go env GOPATH)/bin
 
 # Add swift to PATH

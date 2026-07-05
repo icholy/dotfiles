@@ -1,6 +1,6 @@
 [tools]
 age = "latest"
-aws = "latest"
+aws = { version = "2.35.11", symlink_bins = "true" }
 node = "24"
 cursor-agent = "latest"
 flutter = "3.38.5"
@@ -54,6 +54,12 @@ kind = "latest"
 "npm:reasonix" = "latest"
 yarn = "latest"
 zig = "0.16.0"
+opencode = "latest"
+
+[env]
+# Keep `go install` binaries in the version-independent ~/go/bin (already on PATH)
+# instead of mise's per-version installs/go/<ver>/bin, which disappears on version switch.
+GOBIN = "{{env.HOME}}/go/bin"
 
 [settings]
 experimental = true

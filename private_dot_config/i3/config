@@ -18,7 +18,7 @@ set $win Mod4
 floating_modifier $win
 
 # start a terminal
-bindsym $win+Return exec wezterm
+bindsym $win+Return exec wezterm start --always-new-process
 
 # kill focused window
 bindsym $win+Shift+Q kill

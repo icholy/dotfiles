@@ -213,9 +213,7 @@ function lambdarole() {
         --role-session-name "lambdarole-$1"
 }
 
-function xclaude() {
-    CLAUDE_CODE_OAUTH_TOKEN=$CC_TOKEN claude --dangerously-load-development-channels server:xagent $@
-}
+alias xclaude="claude --dangerously-load-development-channels server:xagent"
 
 source /home/icholy/.secrets
 

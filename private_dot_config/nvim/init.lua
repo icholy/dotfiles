@@ -74,663 +74,577 @@ vim.api.nvim_create_autocmd("FileType", {
 	command = "compiler go | setlocal makeprg=go\\ vet\\ ./...",
 })
 
--- setup lazy.nvim
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.uv.fs_stat(lazypath) then
-	vim.fn.system({
-		"git",
-		"clone",
-		"--filter=blob:none",
-		"https://github.com/folke/lazy.nvim.git",
-		"--branch=stable", -- latest stable release
-		lazypath,
-	})
-end
-vim.opt.rtp:prepend(lazypath)
+-- run plugin build steps on install/update (replaces lazy's `build`)
+local build_commands = {
+	["nvim-treesitter"] = function()
+		vim.cmd("TSUpdate")
+	end,
+	["likec4.nvim"] = function()
+		vim.system({ "npm", "install", "-g", "@likec4/language-server" })
+	end,
+	["markdown-preview.nvim"] = function(path)
+		vim.system({ "yarn", "install" }, { cwd = path .. "/app" })
+	end,
+}
 
-require("lazy").setup({
-	{
-		"williamboman/mason.nvim",
-		config = function()
-			require("mason").setup()
+vim.api.nvim_create_autocmd("PackChanged", {
+	group = group,
+	callback = function(args)
+		local data = args.data
+		if data.kind == "delete" then
+			return
 		end
-	},
-	{
-		"williamboman/mason-lspconfig.nvim",
-		dependencies = { "williamboman/mason.nvim", "neovim/nvim-lspconfig" },
-		config = function()
-			require("mason-lspconfig").setup({
-				ensure_installed = {
-					"ts_ls",
-					"gopls",
-					"pyright",
-					"rust_analyzer",
-					"clangd",
-					"yamlls",
-					"jsonls",
-					"terraformls",
-					"lua_ls",
-					"marksman",
-					"zls",
-					"prismals",
-					"eslint",
-				},
-			})
+		local build = build_commands[data.spec.name]
+		if build then
+			build(data.path)
 		end
+	end,
+})
+
+-- fugitive: opt out of legacy commands (must be set before fugitive is used)
+vim.g.fugitive_legacy_commands = false
+
+-- setup plugins with the built-in package manager (nvim 0.12+)
+vim.pack.add({
+	{ src = "https://github.com/williamboman/mason.nvim" },
+	{ src = "https://github.com/williamboman/mason-lspconfig.nvim" },
+	{ src = "https://github.com/neovim/nvim-lspconfig" },
+	{ src = "https://github.com/kyytox/data-explorer.nvim" },
+	{ src = "https://github.com/jay-babu/mason-nvim-dap.nvim" },
+	{ src = "https://github.com/mfussenegger/nvim-dap" },
+	{ src = "https://github.com/tpope/vim-fugitive" },
+	{ src = "https://github.com/nyngwang/NeoZoom.lua" },
+	{ src = "https://github.com/prisma/vim-prisma" },
+	{ src = "https://github.com/tpope/vim-surround" },
+	{ src = "https://github.com/likec4/likec4.nvim" },
+	{ src = "https://github.com/tpope/vim-rhubarb" },
+	{ src = "https://github.com/tpope/vim-sleuth" },
+	{ src = "https://github.com/wsdjeg/vim-fetch" },
+	{ src = "https://github.com/MunifTanjim/nui.nvim" },
+	{ src = "https://github.com/nvim-lua/plenary.nvim" },
+	{ src = "https://github.com/jellydn/hurl.nvim" },
+	{ src = "https://github.com/icholy/blame.nvim" },
+	{ src = "https://github.com/windwp/nvim-autopairs" },
+	{ src = "https://github.com/mayromr/blink-cmp-dap" },
+	{ src = "https://github.com/saghen/blink.cmp", version = vim.version.range("1.*") },
+	{ src = "https://github.com/icholy/lsplinks.nvim" },
+	{ src = "https://github.com/nvim-telescope/telescope.nvim" },
+	{ src = "https://github.com/nvim-telescope/telescope-ui-select.nvim" },
+	{ src = "https://github.com/nvim-telescope/telescope-dap.nvim" },
+	{ src = "https://github.com/Marskey/telescope-sg" },
+	{ src = "https://github.com/nvim-treesitter/nvim-treesitter" },
+	{ src = "https://github.com/ishan9299/nvim-solarized-lua" },
+	{ src = "https://github.com/linrongbin16/lsp-progress.nvim" },
+	{ src = "https://github.com/kyazdani42/nvim-web-devicons" },
+	{ src = "https://github.com/nvim-lualine/lualine.nvim" },
+	{ src = "https://github.com/kyazdani42/nvim-tree.lua" },
+	{ src = "https://github.com/iamcco/markdown-preview.nvim" },
+	{ src = "https://github.com/igorlfs/nvim-dap-view" },
+	{ src = "https://github.com/leoluz/nvim-dap-go" },
+	{ src = "https://github.com/Funk66/jira.nvim" },
+	{ src = "https://github.com/epwalsh/obsidian.nvim", version = vim.version.range("*") },
+})
+
+require("mason").setup()
+
+require("mason-lspconfig").setup({
+	ensure_installed = {
+		"ts_ls",
+		"gopls",
+		"pyright",
+		"rust_analyzer",
+		"clangd",
+		"yamlls",
+		"jsonls",
+		"terraformls",
+		"lua_ls",
+		"marksman",
+		"zls",
+		"prismals",
+		"eslint",
 	},
-	{
-	  "kyytox/data-explorer.nvim",
-	  dependencies = { "nvim-telescope/telescope.nvim" },
-	  config = function()
-		require("data-explorer").setup()
-	  end,
+})
+
+require("mason-nvim-dap").setup({
+	ensure_installed = { "js-debug-adapter", "debugpy" },
+})
+
+-- fugitive
+vim.keymap.set("n", "<Leader>gs", ":Git status<CR>")
+vim.keymap.set("n", "<Leader>gd", ":Git vdiff<CR>")
+vim.keymap.set("n", "<Leader>gc", ":Git commit<CR>")
+vim.keymap.set("n", "<Leader>ge", ":Gedit<CR>")
+vim.keymap.set("n", "<Leader>gr", ":Gread<CR>")
+vim.keymap.set("n", "<Leader>gw", ":Gwrite<CR>")
+vim.keymap.set("n", "<Leader>gp", ":Git push<CR>")
+
+require("neo-zoom").setup()
+vim.keymap.set("n", "<C-w><C-w>", ":NeoZoomToggle<CR>")
+
+require("hurl").setup({})
+
+require("blame").setup({
+	date_format = "%r",
+	relative_date_if_recent = false,
+})
+vim.keymap.set("n", "<Leader>b", ":BlameToggle<CR>")
+
+require("nvim-autopairs").setup()
+
+require("blink.cmp").setup({
+	enabled = function()
+		return vim.bo.buftype ~= "prompt"
+		or vim.bo.filetype == "dap-repl"
+		or vim.startswith(vim.bo.filetype, "dapui_")
+	end,
+	keymap = {
+		preset = "none",
+		["<C-n>"] = { "select_next", "fallback" },
+		["<C-p>"] = { "select_prev", "fallback" },
+		["<C-Space>"] = { "show" },
+		["<Tab>"] = { "select_and_accept", "fallback" },
+		["<CR>"] = { "accept", "fallback" },
+		["<C-d>"] = { "scroll_documentation_down", "fallback" },
+		["<C-u>"] = { "scroll_documentation_up", "fallback" },
 	},
-	{
-		"jay-babu/mason-nvim-dap.nvim",
-		dependencies = { "williamboman/mason.nvim", "mfussenegger/nvim-dap" },
-		config = function()
-			require("mason-nvim-dap").setup({
-				ensure_installed = { "js-debug-adapter", "debugpy" },
-			})
-		end
-	},
-	{
-		"tpope/vim-fugitive",
-		init = function()
-			vim.g.fugitive_legacy_commands = false
-		end,
-		config = function()
-			vim.keymap.set("n", "<Leader>gs", ":Git status<CR>")
-			vim.keymap.set("n", "<Leader>gd", ":Git vdiff<CR>")
-			vim.keymap.set("n", "<Leader>gc", ":Git commit<CR>")
-			vim.keymap.set("n", "<Leader>ge", ":Gedit<CR>")
-			vim.keymap.set("n", "<Leader>gr", ":Gread<CR>")
-			vim.keymap.set("n", "<Leader>gw", ":Gwrite<CR>")
-			vim.keymap.set("n", "<Leader>gp", ":Git push<CR>")
-		end
-	},
-	{
-		"nyngwang/NeoZoom.lua",
-		config = function()
-			require("neo-zoom").setup()
-			vim.keymap.set("n", "<C-w><C-w>", ":NeoZoomToggle<CR>")
-		end
-	},
-	"prisma/vim-prisma",
-	"tpope/vim-surround",
-	{
-		"likec4/likec4.nvim",
-		build = "npm install -g @likec4/language-server",
-	},
-	"tpope/vim-rhubarb",
-	"tpope/vim-sleuth",
-	"wsdjeg/vim-fetch",
-	{
-		"jellydn/hurl.nvim",
-		dependencies = {
-			"MunifTanjim/nui.nvim",
-			"nvim-lua/plenary.nvim",
-			"nvim-treesitter/nvim-treesitter",
+	cmdline = {
+		enabled = true,
+		completion = { menu = { auto_show = true } },
+		keymap = {
+			preset = "none",
+			["<C-n>"] = { "select_next", "fallback" },
+			["<C-p>"] = { "select_prev", "fallback" },
+			["<C-Space>"] = { "show" },
+			["<Tab>"] = { "select_and_accept", "fallback" },
 		},
-		ft = "hurl",
-		opts = {},
-	},
-	{
-		"icholy/blame.nvim",
-		config = function()
-			require("blame").setup({
-				date_format = "%r",
-				relative_date_if_recent = false,
-			})
-			vim.keymap.set("n", "<Leader>b", ":BlameToggle<CR>")
-		end
-	},
-	{
-		'windwp/nvim-autopairs',
-		event = "InsertEnter",
-		config = true
-	},
-	{
-		"neovim/nvim-lspconfig",
-		dependencies = { "blink.cmp", "williamboman/mason-lspconfig.nvim" },
-		config = function()
-			local capabilities = require('blink.cmp').get_lsp_capabilities()
-
-			vim.lsp.config('*', { capabilities = capabilities })
-
-			vim.lsp.config('ts_ls', {
-				init_options = {
-					disableAutomaticTypingAcquisitioninitializationOptions = true,
-					importModuleSpecifierPreference = "relative",
-				},
-			})
-
-			-- I use prettier for formatting. Done via LspAttach instead of an
-			-- on_attach override so nvim-lspconfig's own ts_ls on_attach still
-			-- runs (it registers :LspTypescriptGoToSourceDefinition).
-			vim.api.nvim_create_autocmd("LspAttach", {
-				callback = function(args)
-					local client = vim.lsp.get_client_by_id(args.data.client_id)
-					if client and client.name == "ts_ls" then
-						client.server_capabilities.document_formatting = false
-					end
-				end,
-			})
-
-			vim.lsp.config('eslint', {
-				settings = {
-					-- Run eslint from the workspace folder (e.g. npm/core) instead of
-					-- an auto-inferred subdir, so `project: true` finds the tsconfig.json.
-					workingDirectory = { mode = 'location' },
-				},
-			})
-
-			vim.lsp.enable({
-				'ts_ls',
-				'gopls',
-				'pyright',
-				'rust_analyzer',
-				'clangd',
-				'yamlls',
-				'jsonls',
-				'terraformls',
-				'lua_ls',
-				'marksman',
-				'zls',
-				'prismals',
-				'eslint',
-				'ast-grep',
-				'buf_ls',
-			})
-
-			vim.diagnostic.config({
-				virtual_text = false,
-				signs = true,
-				update_in_insert = false,
-				severity_sort = true,
-			})
-		end
-	},
-	{
-		"saghen/blink.cmp",
-		version = "1.*",
-		dependencies = { "mayromr/blink-cmp-dap" },
-		config = function()
-			require("blink.cmp").setup({
-				enabled = function()
-					return vim.bo.buftype ~= "prompt"
-					or vim.bo.filetype == "dap-repl"
-					or vim.startswith(vim.bo.filetype, "dapui_")
-				end,
-				keymap = {
-					preset = "none",
-					["<C-n>"] = { "select_next", "fallback" },
-					["<C-p>"] = { "select_prev", "fallback" },
-					["<C-Space>"] = { "show" },
-					["<Tab>"] = { "select_and_accept", "fallback" },
-					["<CR>"] = { "accept", "fallback" },
-					["<C-d>"] = { "scroll_documentation_down", "fallback" },
-					["<C-u>"] = { "scroll_documentation_up", "fallback" },
-				},
-				cmdline = {
-					enabled = true,
-					completion = { menu = { auto_show = true } },
-					keymap = {
-						preset = "none",
-						["<C-n>"] = { "select_next", "fallback" },
-						["<C-p>"] = { "select_prev", "fallback" },
-						["<C-Space>"] = { "show" },
-						["<Tab>"] = { "select_and_accept", "fallback" },
-					},
-					sources = function()
-						local type = vim.fn.getcmdtype()
-						if type == "/" or type == "?" then
-							return { "buffer" }
-						end
-						if type == ":" then
-							return { "cmdline", "path" }
-						end
-						return {}
-					end,
-				},
-				completion = {
-					list = {
-						selection = {
-							preselect = false,
-							auto_insert = false,
-						},
-					},
-					menu = {
-						auto_show = true,
-						draw = {
-							columns = {
-								{ "kind_icon" },
-								{ "label", "label_description", gap = 1 },
-								{ "source_name" },
-							},
-							components = {
-								source_name = {
-									width = { max = 30 },
-									text = function(ctx)
-										return "[" .. ctx.source_name .. "]"
-									end,
-									highlight = "BlinkCmpSource",
-								},
-							},
-						},
-					},
-					documentation = {
-						auto_show = true,
-						auto_show_delay_ms = 200,
-					},
-				},
-				snippets = {
-				  expand = function(snippet)
-					vim.snippet.expand(snippet)
-					vim.snippet.stop()
-				  end,
-				},
-				sources = {
-					default = { "lsp", "path", "snippets", "buffer" },
-					-- DAP-specific sources
-					per_filetype = {
-						["dap-repl"] = { "dap", "buffer" },
-					},
-					providers = {
-						lsp = {
-							name = "LSP",
-							module = "blink.cmp.sources.lsp",
-							score_offset = 100,
-						},
-						path = {
-							name = "Path",
-							module = "blink.cmp.sources.path",
-						},
-						buffer = {
-							name = "Buffer",
-							module = "blink.cmp.sources.buffer",
-							score_offset = -50,
-						},
-						snippets = {
-							name = "Snippets",
-							module = "blink.cmp.sources.snippets",
-							score_offset = -50,
-						},
-						dap = {
-							name = "DAP",
-							module = "blink-cmp-dap",
-						},
-					},
-				},
-				signature = {
-					enabled = true,
-				},
-				appearance = {
-					use_nvim_cmp_as_default = true, -- Use nvim-cmp highlight groups for theme compat
-					nerd_font_variant = "mono",
-				},
-			})
+		sources = function()
+			local type = vim.fn.getcmdtype()
+			if type == "/" or type == "?" then
+				return { "buffer" }
+			end
+			if type == ":" then
+				return { "cmdline", "path" }
+			end
+			return {}
 		end,
 	},
-	{
-		"icholy/lsplinks.nvim",
-		config = function()
-			local lsplinks = require("lsplinks")
-			lsplinks.setup()
-			vim.keymap.set("n", "gx", lsplinks.gx)
-		end
-	},
-	{
-		"nvim-telescope/telescope.nvim",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"nvim-telescope/telescope-ui-select.nvim",
-			"nvim-telescope/telescope-dap.nvim",
-			"Marskey/telescope-sg",
+	completion = {
+		list = {
+			selection = {
+				preselect = false,
+				auto_insert = false,
+			},
 		},
-		config = function()
-			local actions = require("telescope.actions")
-			require("telescope").setup({
-				defaults = {
-					shorten_path = true,
-					layout_strategy = "vertical",
-					vimgrep_arguments = {
-						"rg",
-						"--color=never",
-						"--no-heading",
-						"--with-filename",
-						"--line-number",
-						"--column",
-						"--smart-case",
-						"--fixed-strings"
+		menu = {
+			auto_show = true,
+			draw = {
+				columns = {
+					{ "kind_icon" },
+					{ "label", "label_description", gap = 1 },
+					{ "source_name" },
+				},
+				components = {
+					source_name = {
+						width = { max = 30 },
+						text = function(ctx)
+							return "[" .. ctx.source_name .. "]"
+						end,
+						highlight = "BlinkCmpSource",
 					},
-					mappings = {
-						n = {
-							["<C-Space>"] = actions.close,
-						},
-						i = {
-							["<C-Space>"] = actions.close,
-						}
-					}
-				},
-				extensions = {
-					ast_grep = {
-						command = { "ast-grep", "--json=stream" },
-						grep_open_files = false,
-						lang = nil,
-					}
-				}
-			})
-			require("telescope").load_extension("ui-select")
-			require('telescope').load_extension('dap')
-			vim.keymap.set("n", "<C-Space><C-b>", ":Telescope buffers<CR>")
-			vim.keymap.set("n", "<C-Space><C-g>", ":Telescope live_grep<CR>")
-			vim.keymap.set("n", "<C-Space><C-f>", ":Telescope find_files<CR>")
-			vim.keymap.set("n", "<C-Space><C-a>", ":Telescope ast_grep<CR>")
-			vim.keymap.set("n", "<C-Space><C-h>", ":Telescope help_tags<CR>")
-			vim.keymap.set("n", "<C-Space><C-t>", ":Telescope lsp_dynamic_workspace_symbols<CR>")
-			vim.keymap.set("n", "<C-p>", ":Telescope find_files<CR>")
-			vim.keymap.set("n", "<C-Space><C-m>", ":Telescope marks<CR>")
-			vim.keymap.set("n", "gd", ":Telescope lsp_definitions<CR>")
-			vim.keymap.set("n", "gt", ":Telescope lsp_type_definitions<CR>")
-			vim.keymap.set("n", "gr", ":Telescope lsp_references<CR>")
-			vim.keymap.set("n", "gri", ":Telescope lsp_implementations<CR>")
-		end
-	},
-	{
-		"nvim-treesitter/nvim-treesitter",
-		build = ":TSUpdate",
-		config = function()
-			vim.api.nvim_create_autocmd("BufReadPost", {
-				callback = function(args)
-					local name = vim.api.nvim_buf_get_name(args.buf)
-					local size = vim.fn.getfsize(name)
-					if size > bit.lshift(1, 20) then
-						vim.treesitter.stop(args.buf)
-					end
-				end,
-			})
-		end
-	},
-	{
-		"ishan9299/nvim-solarized-lua",
-		config = function()
-			vim.cmd.colorscheme("solarized")
-		end
-	},
-	{
-		"linrongbin16/lsp-progress.nvim",
-		config = function()
-			require("lsp-progress").setup({})
-			vim.api.nvim_create_autocmd("User", {
-				group = group,
-				pattern = "LspProgressStatusUpdated",
-				callback = require("lualine").refresh,
-			})
-		end
-	},
-	{
-		"nvim-lualine/lualine.nvim",
-		dependencies = {
-			"kyazdani42/nvim-web-devicons",
-			"linrongbin16/lsp-progress.nvim"
-		},
-		config = function()
-			local function recording_macro()
-				local letter = vim.fn.reg_recording()
-				if letter == "" then
-					return ""
-				end
-				return "RECORDING:" .. letter
-			end
-
-			local lualine = require("lualine")
-
-			lualine.setup({
-				options = {
-					globalstatus = true,
-				},
-				sections = {
-					lualine_a = { recording_macro, "mode" },
-					lualine_c = {
-						function()
-							return require('lsp-progress').progress()
-						end
-					}
-				}
-			})
-
-			vim.api.nvim_create_autocmd("User", {
-				group = group,
-				pattern = "LspProgressStatusUpdated",
-				callback = lualine.refresh,
-			})
-		end
-	},
-	{
-		"kyazdani42/nvim-tree.lua",
-		dependencies = { "kyazdani42/nvim-web-devicons" },
-		config = function()
-			require("nvim-tree").setup({
-				-- I keep accidentally hitting 's' and opening libreoffice ...
-				-- system_open = { cmd = "echo" },
-				sync_root_with_cwd = true,
-				actions = {
-					open_file = {
-						resize_window = false,
-					},
-				},
-			})
-			vim.keymap.set("n", "<Leader>n", ":NvimTreeToggle<CR>")
-			vim.keymap.set("n", "<Leader>m", ":NvimTreeFindFile<CR>")
-			vim.keymap.set("n", "<Leader>c", ":cd %:p:h<CR>")
-		end
-	},
-	{
-		"iamcco/markdown-preview.nvim",
-		build = "cd app && yarn install",
-		config = function()
-			vim.g.mkdp_filetypes = { "markdown" }
-		end,
-		ft = { "markdown" },
-	},
-	{
-		"mfussenegger/nvim-dap",
-		config = function()
-			local dap = require("dap")
-
-
-			dap.adapters["local-lua"] = {
-				type = "executable",
-				command = "node",
-				args = {
-					"/home/icholy/src/github.com/tomblind/local-lua-debugger-vscode/extension/debugAdapter.js"
-				},
-				enrich_config = function(config, on_config)
-					if not config["extensionPath"] then
-						local c = vim.deepcopy(config)
-						-- 💀 If this is missing or wrong you'll see
-						-- "module 'lldebugger' not found" errors in the dap-repl when trying to launch a debug session
-						c.extensionPath =
-						"/home/icholy/src/github.com/tomblind/local-lua-debugger-vscode/"
-						on_config(c)
-					else
-						on_config(config)
-					end
-				end,
-			}
-
-			-- setup nlua debugger
-			dap.configurations.lua = {
-				{
-					name = 'Current file (local-lua-dbg, nlua)',
-					type = 'local-lua',
-					request = 'launch',
-					cwd = '${workspaceFolder}',
-					program = {
-						lua = 'nlua',
-						file = '${file}',
-					},
-					verbose = true,
-					args = {},
-				},
-			}
-
-			dap.configurations.python = {
-				{
-					name = 'Current file (python)',
-					type = 'python',
-					request = 'launch',
-					cwd = '${workspaceFolder}',
-					program = 'python3',
-					verbose = true,
-					args = { '${file}' },
-				},
-			}
-
-			dap.adapters.python = {
-				type = "executable",
-				command = "python3",
-				args = { "-m", "debugpy.adapter" },
-				options = {
-					source_filetype = "python",
-				},
-			}
-
-			dap.adapters.lldb = {
-				type = "executable",
-				command = "/usr/lib/llvm-14/bin/lldb-vscode",
-			}
-
-			dap.adapters["pwa-node"] = {
-				type = "server",
-				port = "${port}",
-				host = "localhost",
-				executable = {
-					command = "js-debug-adapter",
-					args = { "${port}" },
-				}
-			}
-
-			for _, lang in ipairs({ "typescript", "javascript" }) do
-				dap.configurations[lang] = {
-					{
-						type = "pwa-node",
-						request = "attach",
-						name = "Attach",
-						cwd = "${workspaceFolder}",
-						continueOnAttach = true,
-						skipFiles = {
-							"<node_internals>/**",
-							"**/cls-hooked/**",
-						},
-					},
-				}
-			end
-
-			-- filter out source map errors
-			dap.defaults.fallback.on_output = function(session, event)
-				local repl = require("dap.repl")
-				if event.category == "stdout" and not string.find(event.output, "Could not read source map for file") then
-					repl.append(event.output, "$", { newline = false })
-				end
-			end
-
-			vim.keymap.set("n", "<F5>", dap.continue)
-
-			vim.keymap.set("n", "<Left>", dap.toggle_breakpoint)
-			vim.keymap.set("n", "<Right>", dap.step_over)
-			vim.keymap.set("n", "<Down>", dap.step_into)
-			vim.keymap.set("n", "<Up>", dap.step_out)
-
-			-- nicer icons for breakpoints
-			vim.fn.sign_define('DapBreakpoint', { text = '○', texthl = '', linehl = '', numhl = '' })
-			vim.fn.sign_define('DapStopped',
-				{ text = '➔', texthl = '', linehl = 'DapStoppedLine', numhl = '' })
-		end
-	},
-	{
-		"igorlfs/nvim-dap-view",
-		opts = {},
-	},
-	{
-		"leoluz/nvim-dap-go",
-		dependencies = { "mfussenegger/nvim-dap" },
-		config = function()
-			require("dap-go").setup()
-		end
-	},
-	{
-		"Funk66/jira.nvim",
-		dependencies = { "nvim-lua/plenary.nvim" },
-		opts = {
-			domain = "teamideaworks.atlassian.net",
-			user = "ilia.choly@compassdigital.io",
-			token = vim.env.JIRA_API_TOKEN,
-			key = { "CDL", "SRE", "OD", "CPLAT" },
-			format = function(issue)
-				local utils = require("jira.utils")
-				local assignee = vim.tbl_get(issue.fields, { 'assignee', 'displayName' }) or 'None'
-				return {
-					issue.fields.summary,
-					"---",
-					"Status:   " .. issue.fields.status.name,
-					"Assignee: " .. assignee,
-					"---",
-					utils.adf_to_markdown(issue.fields.description),
-					"---",
-					"Created:  " .. issue.fields.created,
-					"Updated:  " .. issue.fields.updated,
-				}
-			end
-		},
-		keys = {
-			{ "<leader>jj", ":JiraView<cr>", desc = "View Jira issue",            silent = true },
-			{ "<leader>jo", ":JiraOpen<cr>", desc = "Open Jira issue in browser", silent = true },
-		},
-	},
-	-- {
-	-- 	"zbirenbaum/copilot.lua",
-	-- 	cmd = "Copilot",
-	-- 	event = "InsertEnter",
-	-- 	opts = {
-	-- 		suggestion = {
-	-- 			enabled = true,
-	-- 			auto_trigger = false,
-	-- 		},
-	-- 	},
-	-- 	keys = {
-	-- 		{
-	-- 			"<C-l>",
-	-- 			function()
-	-- 				local suggestion = require("copilot.suggestion")
-	-- 				if suggestion.is_visible() then
-	-- 					suggestion.accept()
-	-- 				else
-	-- 					suggestion.next()
-	-- 				end
-	-- 			end,
-	-- 			mode = "i",
-	-- 			desc = "Copilot trigger/accept",
-	-- 		},
-	-- 	},
-	-- },
-	{
-		"epwalsh/obsidian.nvim",
-		version = "*",  -- recommended, use latest release instead of latest commit
-		lazy = true,
-		cmd = "ObsidianSearch",
-		dependencies = { "nvim-lua/plenary.nvim" },
-		opts = {
-			workspaces = {
-				{
-					name = "SlipBox",
-					path = "/home/icholy/Documents/SlipBox",
 				},
 			},
-			ui = { enable = false }
+		},
+		documentation = {
+			auto_show = true,
+			auto_show_delay_ms = 200,
+		},
+	},
+	snippets = {
+	  expand = function(snippet)
+		vim.snippet.expand(snippet)
+		vim.snippet.stop()
+	  end,
+	},
+	sources = {
+		default = { "lsp", "path", "snippets", "buffer" },
+		-- DAP-specific sources
+		per_filetype = {
+			["dap-repl"] = { "dap", "buffer" },
+		},
+		providers = {
+			lsp = {
+				name = "LSP",
+				module = "blink.cmp.sources.lsp",
+				score_offset = 100,
+			},
+			path = {
+				name = "Path",
+				module = "blink.cmp.sources.path",
+			},
+			buffer = {
+				name = "Buffer",
+				module = "blink.cmp.sources.buffer",
+				score_offset = -50,
+			},
+			snippets = {
+				name = "Snippets",
+				module = "blink.cmp.sources.snippets",
+				score_offset = -50,
+			},
+			dap = {
+				name = "DAP",
+				module = "blink-cmp-dap",
+			},
+		},
+	},
+	signature = {
+		enabled = true,
+	},
+	appearance = {
+		use_nvim_cmp_as_default = true, -- Use nvim-cmp highlight groups for theme compat
+		nerd_font_variant = "mono",
+	},
+})
+
+-- nvim-lspconfig
+do
+	local capabilities = require('blink.cmp').get_lsp_capabilities()
+
+	vim.lsp.config('*', { capabilities = capabilities })
+
+	vim.lsp.config('ts_ls', {
+		init_options = {
+			disableAutomaticTypingAcquisitioninitializationOptions = true,
+			importModuleSpecifierPreference = "relative",
+		},
+	})
+
+	-- I use prettier for formatting. Done via LspAttach instead of an
+	-- on_attach override so nvim-lspconfig's own ts_ls on_attach still
+	-- runs (it registers :LspTypescriptGoToSourceDefinition).
+	vim.api.nvim_create_autocmd("LspAttach", {
+		callback = function(args)
+			local client = vim.lsp.get_client_by_id(args.data.client_id)
+			if client and client.name == "ts_ls" then
+				client.server_capabilities.document_formatting = false
+			end
+		end,
+	})
+
+	vim.lsp.config('eslint', {
+		settings = {
+			-- Run eslint from the workspace folder (e.g. npm/core) instead of
+			-- an auto-inferred subdir, so `project: true` finds the tsconfig.json.
+			workingDirectory = { mode = 'location' },
+		},
+	})
+
+	vim.lsp.enable({
+		'ts_ls',
+		'gopls',
+		'pyright',
+		'rust_analyzer',
+		'clangd',
+		'yamlls',
+		'jsonls',
+		'terraformls',
+		'lua_ls',
+		'marksman',
+		'zls',
+		'prismals',
+		'eslint',
+		'ast-grep',
+		'buf_ls',
+	})
+
+	vim.diagnostic.config({
+		virtual_text = false,
+		signs = true,
+		update_in_insert = false,
+		severity_sort = true,
+	})
+end
+
+-- lsplinks
+do
+	local lsplinks = require("lsplinks")
+	lsplinks.setup()
+	vim.keymap.set("n", "gx", lsplinks.gx)
+end
+
+-- telescope
+do
+	local actions = require("telescope.actions")
+	require("telescope").setup({
+		defaults = {
+			shorten_path = true,
+			layout_strategy = "vertical",
+			vimgrep_arguments = {
+				"rg",
+				"--color=never",
+				"--no-heading",
+				"--with-filename",
+				"--line-number",
+				"--column",
+				"--smart-case",
+				"--fixed-strings"
+			},
+			mappings = {
+				n = {
+					["<C-Space>"] = actions.close,
+				},
+				i = {
+					["<C-Space>"] = actions.close,
+				}
+			}
+		},
+		extensions = {
+			ast_grep = {
+				command = { "ast-grep", "--json=stream" },
+				grep_open_files = false,
+				lang = nil,
+			}
+		}
+	})
+	require("telescope").load_extension("ui-select")
+	require('telescope').load_extension('dap')
+	vim.keymap.set("n", "<C-Space><C-b>", ":Telescope buffers<CR>")
+	vim.keymap.set("n", "<C-Space><C-g>", ":Telescope live_grep<CR>")
+	vim.keymap.set("n", "<C-Space><C-f>", ":Telescope find_files<CR>")
+	vim.keymap.set("n", "<C-Space><C-a>", ":Telescope ast_grep<CR>")
+	vim.keymap.set("n", "<C-Space><C-h>", ":Telescope help_tags<CR>")
+	vim.keymap.set("n", "<C-Space><C-t>", ":Telescope lsp_dynamic_workspace_symbols<CR>")
+	vim.keymap.set("n", "<C-p>", ":Telescope find_files<CR>")
+	vim.keymap.set("n", "<C-Space><C-m>", ":Telescope marks<CR>")
+	vim.keymap.set("n", "gd", ":Telescope lsp_definitions<CR>")
+	vim.keymap.set("n", "gt", ":Telescope lsp_type_definitions<CR>")
+	vim.keymap.set("n", "gr", ":Telescope lsp_references<CR>")
+	vim.keymap.set("n", "gri", ":Telescope lsp_implementations<CR>")
+end
+
+require("data-explorer").setup()
+
+-- nvim-treesitter
+vim.api.nvim_create_autocmd("BufReadPost", {
+	callback = function(args)
+		local name = vim.api.nvim_buf_get_name(args.buf)
+		local size = vim.fn.getfsize(name)
+		if size > bit.lshift(1, 20) then
+			vim.treesitter.stop(args.buf)
+		end
+	end,
+})
+
+vim.cmd.colorscheme("solarized")
+
+require("lsp-progress").setup({})
+vim.api.nvim_create_autocmd("User", {
+	group = group,
+	pattern = "LspProgressStatusUpdated",
+	callback = require("lualine").refresh,
+})
+
+-- lualine
+do
+	local function recording_macro()
+		local letter = vim.fn.reg_recording()
+		if letter == "" then
+			return ""
+		end
+		return "RECORDING:" .. letter
+	end
+
+	local lualine = require("lualine")
+
+	lualine.setup({
+		options = {
+			globalstatus = true,
+		},
+		sections = {
+			lualine_a = { recording_macro, "mode" },
+			lualine_c = {
+				function()
+					return require('lsp-progress').progress()
+				end
+			}
+		}
+	})
+
+	vim.api.nvim_create_autocmd("User", {
+		group = group,
+		pattern = "LspProgressStatusUpdated",
+		callback = lualine.refresh,
+	})
+end
+
+-- nvim-tree
+require("nvim-tree").setup({
+	-- I keep accidentally hitting 's' and opening libreoffice ...
+	-- system_open = { cmd = "echo" },
+	sync_root_with_cwd = true,
+	actions = {
+		open_file = {
+			resize_window = false,
+		},
+	},
+})
+vim.keymap.set("n", "<Leader>n", ":NvimTreeToggle<CR>")
+vim.keymap.set("n", "<Leader>m", ":NvimTreeFindFile<CR>")
+vim.keymap.set("n", "<Leader>c", ":cd %:p:h<CR>")
+
+-- markdown-preview
+vim.g.mkdp_filetypes = { "markdown" }
+
+-- nvim-dap
+do
+	local dap = require("dap")
+
+
+	dap.adapters["local-lua"] = {
+		type = "executable",
+		command = "node",
+		args = {
+			"/home/icholy/src/github.com/tomblind/local-lua-debugger-vscode/extension/debugAdapter.js"
+		},
+		enrich_config = function(config, on_config)
+			if not config["extensionPath"] then
+				local c = vim.deepcopy(config)
+				-- 💀 If this is missing or wrong you'll see
+				-- "module 'lldebugger' not found" errors in the dap-repl when trying to launch a debug session
+				c.extensionPath =
+				"/home/icholy/src/github.com/tomblind/local-lua-debugger-vscode/"
+				on_config(c)
+			else
+				on_config(config)
+			end
+		end,
+	}
+
+	-- setup nlua debugger
+	dap.configurations.lua = {
+		{
+			name = 'Current file (local-lua-dbg, nlua)',
+			type = 'local-lua',
+			request = 'launch',
+			cwd = '${workspaceFolder}',
+			program = {
+				lua = 'nlua',
+				file = '${file}',
+			},
+			verbose = true,
+			args = {},
 		},
 	}
+
+	dap.configurations.python = {
+		{
+			name = 'Current file (python)',
+			type = 'python',
+			request = 'launch',
+			cwd = '${workspaceFolder}',
+			program = 'python3',
+			verbose = true,
+			args = { '${file}' },
+		},
+	}
+
+	dap.adapters.python = {
+		type = "executable",
+		command = "python3",
+		args = { "-m", "debugpy.adapter" },
+		options = {
+			source_filetype = "python",
+		},
+	}
+
+	dap.adapters.lldb = {
+		type = "executable",
+		command = "/usr/lib/llvm-14/bin/lldb-vscode",
+	}
+
+	dap.adapters["pwa-node"] = {
+		type = "server",
+		port = "${port}",
+		host = "localhost",
+		executable = {
+			command = "js-debug-adapter",
+			args = { "${port}" },
+		}
+	}
+
+	for _, lang in ipairs({ "typescript", "javascript" }) do
+		dap.configurations[lang] = {
+			{
+				type = "pwa-node",
+				request = "attach",
+				name = "Attach",
+				cwd = "${workspaceFolder}",
+				continueOnAttach = true,
+				skipFiles = {
+					"<node_internals>/**",
+					"**/cls-hooked/**",
+				},
+			},
+		}
+	end
+
+	-- filter out source map errors
+	dap.defaults.fallback.on_output = function(session, event)
+		local repl = require("dap.repl")
+		if event.category == "stdout" and not string.find(event.output, "Could not read source map for file") then
+			repl.append(event.output, "$", { newline = false })
+		end
+	end
+
+	vim.keymap.set("n", "<F5>", dap.continue)
+
+	vim.keymap.set("n", "<Left>", dap.toggle_breakpoint)
+	vim.keymap.set("n", "<Right>", dap.step_over)
+	vim.keymap.set("n", "<Down>", dap.step_into)
+	vim.keymap.set("n", "<Up>", dap.step_out)
+
+	-- nicer icons for breakpoints
+	vim.fn.sign_define('DapBreakpoint', { text = '○', texthl = '', linehl = '', numhl = '' })
+	vim.fn.sign_define('DapStopped',
+		{ text = '➔', texthl = '', linehl = 'DapStoppedLine', numhl = '' })
+end
+
+require("dap-view").setup({})
+
+require("dap-go").setup()
+
+require("jira").setup({
+	domain = "teamideaworks.atlassian.net",
+	user = "ilia.choly@compassdigital.io",
+	token = vim.env.JIRA_API_TOKEN,
+	key = { "CDL", "SRE", "OD", "CPLAT" },
+	format = function(issue)
+		local utils = require("jira.utils")
+		local assignee = vim.tbl_get(issue.fields, { 'assignee', 'displayName' }) or 'None'
+		return {
+			issue.fields.summary,
+			"---",
+			"Status:   " .. issue.fields.status.name,
+			"Assignee: " .. assignee,
+			"---",
+			utils.adf_to_markdown(issue.fields.description),
+			"---",
+			"Created:  " .. issue.fields.created,
+			"Updated:  " .. issue.fields.updated,
+		}
+	end
+})
+vim.keymap.set("n", "<leader>jj", ":JiraView<cr>", { desc = "View Jira issue", silent = true })
+vim.keymap.set("n", "<leader>jo", ":JiraOpen<cr>", { desc = "Open Jira issue in browser", silent = true })
+
+require("obsidian").setup({
+	workspaces = {
+		{
+			name = "SlipBox",
+			path = "/home/icholy/Documents/SlipBox",
+		},
+	},
+	ui = { enable = false }
 })
 
 local function idtool_data(stage)

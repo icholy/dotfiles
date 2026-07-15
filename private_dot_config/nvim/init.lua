@@ -535,6 +535,13 @@ require("lazy").setup({
 		ft = { "markdown" },
 	},
 	{
+		"3rd/image.nvim",
+		build = false,
+		opts = {
+			processor = "magick_cli",
+		},
+	},
+	{
 		"mfussenegger/nvim-dap",
 		config = function()
 			local dap = require("dap")
